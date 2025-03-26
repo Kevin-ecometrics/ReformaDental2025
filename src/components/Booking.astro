@@ -1,10 +1,17 @@
+---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
 <section id="Booking" class="booking-section bg-white py-8 lg:py-24">
   <div class="container mx-auto text-center">
     <h1 class="mb-4 text-4xl font-bold text-black lg:text-5xl">
-      RESÉRVANOS AHORA
+      {t("booking.title")}
     </h1>
     <p class="text-[#9DC216] text-2xl lg:text-3xl py-4">
-      Selecciona una fecha y hora para guardar tu día de atención dental
+      {t("booking.subtitle")}
     </p>
 
     <div class="grid grid-cols-1 gap-4 py-4 lg:grid-cols-2 lg:py-8">
@@ -21,7 +28,7 @@
       <div>
         <div class="flex flex-col px-4 bg-[#f9fdf3] rounded-lg shadow-md">
           <h1 class="font-medium px-6 py-4 text-2xl text-black lg:text-start">
-            CREAR CITA DENTAL
+            {t("booking.formTitle")}
           </h1>
 
           <!-- Información de ubicación -->
@@ -30,8 +37,7 @@
           >
             <img src="images/ubi.svg" class="w-12 h-12" alt="Icono ubicación" />
             <h3 class="text-start ml-2">
-              8169-206 Ignacio Zaragoza, Zona Centro, Tijuana, Baja California,
-              México.
+              {t("booking.location")}
             </h3>
           </div>
 
@@ -43,7 +49,7 @@
               class="w-12 h-12"
               alt="Icono comillas"
             />
-            <h3 class="font-bold ml-2">Elige tu cita aquí</h3>
+            <h3 class="font-bold ml-2">{t("booking.chooseAppointment")}</h3>
             <img
               src="images/comilla.svg"
               class="w-12 h-12 transform rotate-180"
@@ -56,7 +62,7 @@
             <h3
               class="flex justify-center lg:justify-start px-8 text-[#74af50]"
             >
-              Zona horaria del evento: America/Tijuana GMT-07:00
+              {t("booking.timezone")}
             </h3>
           </div>
         </div>

@@ -1,5 +1,9 @@
 ---
 import Modal from "../components/Modal.astro";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
 <footer class="w-full p-4 bg-white md:p-8">
@@ -14,7 +18,7 @@ import Modal from "../components/Modal.astro";
           onclick="window.openModal('aboutModal')"
           class="text-blue-gray-900 hover:text-green-300 transition-colors"
         >
-          Acerca de nosotros
+          {t("footer.about")}
         </button>
       </li>
 
@@ -23,7 +27,7 @@ import Modal from "../components/Modal.astro";
           onclick="window.openModal('termsModal')"
           class="text-blue-gray-900 hover:text-green-300 transition-colors"
         >
-          Términos del servicio
+          {t("footer.terms")}
         </button>
       </li>
 
@@ -31,22 +35,23 @@ import Modal from "../components/Modal.astro";
         <button
           onclick="window.openModal('privacyModal')"
           class="text-blue-gray-900 hover:text-green-300 transition-colors"
-          >Política de privacidad
+        >
+          {t("footer.privacy")}
         </button>
       </li>
 
       <li>
         <a
-          href="https://reformadental.com/contact"
+          href="/contacto"
           class="block antialiased font-sans text-base leading-relaxed text-blue-gray-900 font-normal cursor-pointer transition-colors hover:text-green-300 focus:text-green-300"
-          >Contáctenos</a
+          >{t("footer.contact")}</a
         >
       </li>
       <li>
         <a
-          href="https://reformadental.com/#Booking"
+          href="/#Booking"
           class="block antialiased font-sans text-base leading-relaxed text-blue-gray-900 font-normal cursor-pointer transition-colors hover:text-green-300 focus:text-green-300"
-          >Reserva</a
+          >{t("footer.booking")}</a
         >
       </li>
     </ul>
@@ -60,24 +65,19 @@ import Modal from "../components/Modal.astro";
     rel="noopener noreferrer"
     class="block antialiased font-sans text-base leading-relaxed text-blue-gray-900 font-normal text-center transition-colors hover:text-green-300 focus:text-green-300"
   >
-    Todos los derechos reservados a Reforma Dental, @2023 desarrollado por
-    Ecommetrica.com
+    {t("footer.rights")}
   </a>
 
-  <Modal id="aboutModal" title="Acerca de nosotros">
+  <Modal id="aboutModal" title={String(t("modal.about.title"))}>
     <div class="prose max-w-none">
       <div class="space-y-6">
         <!-- Sección 1: Introducción -->
         <div class="bg-white p-6 rounded-lg shadow-sm border border-green-100">
           <h3 class="text-2xl font-bold text-green-600 mb-4">
-            Nuestra Historia
+            {t("footer.historia")}
           </h3>
           <p class="text-gray-700">
-            La Dra. Karen Pérez y su esposo, Juan González, siempre soñaron con
-            establecer su propio negocio en el centro de Tijuana, Baja
-            California. Después de años de trabajo duro, educación especializada
-            y múltiples prácticas exitosas, la pareja finalmente reunió los
-            fondos necesarios para hacer realidad su sueño.
+            {t("footer.karendesc")}
           </p>
         </div>
 
@@ -87,17 +87,16 @@ import Modal from "../components/Modal.astro";
             <h4 class="text-xl font-semibold text-green-700 mb-3">
               <span
                 class="inline-block w-6 h-6 bg-green-100 text-green-700 rounded-full text-center mr-2"
-                >1</span
+                >{t("footer.1")}</span
               >
-              Dra. Karen Pérez
+              {t("footer.namekaren")}
             </h4>
             <ul class="list-disc pl-6 space-y-2 text-gray-700">
               <li>
-                Licenciatura en Odontología (UABC), Facultad de Ciencias de la
-                Salud, Campus Valle de Las Palmas
+                {t("footer.karen1")}
               </li>
-              <li>Especialidad en Endodoncia (CUPIS)</li>
-              <li>Doctora en Cirugía Dental (DDS)</li>
+              <li>{t("footer.karen2")}</li>
+              <li>{t("footer.karen3")}</li>
             </ul>
           </div>
 
@@ -105,14 +104,14 @@ import Modal from "../components/Modal.astro";
             <h4 class="text-xl font-semibold text-green-700 mb-3">
               <span
                 class="inline-block w-6 h-6 bg-green-100 text-green-700 rounded-full text-center mr-2"
-                >2</span
+                >{t("footer.2")}</span
               >
-              Juan González
+              {t("footer.namemanuel")}
             </h4>
             <ul class="list-disc pl-6 space-y-2 text-gray-700">
-              <li>Licenciatura en Negocios Internacionales (SDSU)</li>
-              <li>Maestría en Economía (COLEF)</li>
-              <li>Especialista en administración de clínicas dentales</li>
+              <li>{t("footer.manu1")}</li>
+              <li>{t("footer.manu2")}</li>
+              <li>{t("footer.manu3")}</li>
             </ul>
           </div>
         </div>
@@ -120,30 +119,32 @@ import Modal from "../components/Modal.astro";
         <!-- Sección 3: La Clínica -->
         <div class="bg-white p-6 rounded-lg shadow-sm border border-green-100">
           <h3 class="text-2xl font-bold text-green-600 mb-4">
-            Nuestra Clínica
+            {t("footer.nuestraclinica")}
           </h3>
           <div class="space-y-4 text-gray-700">
             <p>
-              Identificamos la necesidad de servicios dentales de calidad en
-              zonas de bajos ingresos de Tijuana, donde creamos un concepto
-              único:
+              {t("footer.nuestraclinicadesc")}
             </p>
 
             <div class="grid md:grid-cols-2 gap-4 mt-4">
               <div class="border-l-4 border-green-500 pl-4">
-                <h5 class="font-semibold text-green-700">Infraestructura</h5>
+                <h5 class="font-semibold text-green-700">
+                  {t("footer.infraestructura")}
+                </h5>
                 <ul class="list-disc pl-5 space-y-1 mt-2 text-gray-700">
-                  <li>Local renovado en zona estratégica</li>
-                  <li>Diseño moderno y acogedor</li>
-                  <li>Tecnología dental de última generación</li>
+                  <li>{t("footer.infraestructuradesc1")}</li>
+                  <li>{t("footer.infraestructuradesc2")}</li>
+                  <li>{t("footer.infraestructuradesc3")}</li>
                 </ul>
               </div>
               <div class="border-l-4 border-green-500 pl-4">
-                <h5 class="font-semibold text-green-700">Equipo</h5>
+                <h5 class="font-semibold text-green-700">
+                  {t("footer.equipo")}
+                </h5>
                 <ul class="list-disc pl-5 space-y-1 mt-2 text-gray-700">
-                  <li>Especialistas certificados</li>
-                  <li>Higienistas capacitados</li>
-                  <li>Asistentes profesionales</li>
+                  <li>{t("footer.equipo1")}</li>
+                  <li>{t("footer.equipo2")}</li>
+                  <li>{t("footer.equipo3")}</li>
                 </ul>
               </div>
             </div>
@@ -153,15 +154,15 @@ import Modal from "../components/Modal.astro";
         <!-- Sección 4: Tecnología -->
         <div class="bg-green-50 p-6 rounded-lg border border-green-100">
           <h3 class="text-2xl font-bold text-green-700 mb-4">
-            Tecnología Avanzada
+            {t("footer.tecnologia")}
           </h3>
           <div class="space-y-3 text-gray-700">
-            <p>Nuestro equipamiento incluye:</p>
+            <p>{t("footer.desc")}</p>
             <ul class="list-disc pl-6 space-y-2">
-              <li>Sillas dentales ergonómicas de última generación</li>
-              <li>Sistemas de diagnóstico digital</li>
-              <li>Equipos de radiografía de baja radiación</li>
-              <li>Instrumental de precisión para endodoncia</li>
+              <li>{t("footer.desc1")}</li>
+              <li>{t("footer.desc2")}</li>
+              <li>{t("footer.desc3")}</li>
+              <li>{t("footer.desc4")}</li>
             </ul>
           </div>
         </div>
@@ -169,10 +170,10 @@ import Modal from "../components/Modal.astro";
         <!-- Sección 5: Impacto Social -->
         <div class="bg-white p-6 rounded-lg shadow-sm border border-green-100">
           <h3 class="text-2xl font-bold text-green-600 mb-4">
-            Compromiso Social
+            {t("footer.comopromiso")}
           </h3>
           <div class="space-y-4 text-gray-700">
-            <p>Nuestros programas de responsabilidad social:</p>
+            <p>{t("footer.compromisodesc")}</p>
 
             <div class="grid md:grid-cols-2 gap-4 mt-3">
               <div class="bg-green-50 p-4 rounded-lg">
@@ -190,10 +191,10 @@ import Modal from "../components/Modal.astro";
                       d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
                     ></path>
                   </svg>
-                  Programa de Becas
+                  {t("footer.becas")}
                 </h5>
                 <p class="mt-2 text-sm text-gray-700">
-                  Apoyo a estudiantes de odontología en México y EEUU
+                  {t("footer.estudiantes")}
                 </p>
               </div>
               <div class="bg-green-50 p-4 rounded-lg">
@@ -211,10 +212,10 @@ import Modal from "../components/Modal.astro";
                       d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
                     ></path>
                   </svg>
-                  Atención Comunitaria
+                  {t("footer.atencion")}
                 </h5>
                 <p class="mt-2 text-sm text-gray-700">
-                  Servicios dentales gratuitos en comunidades necesitadas
+                  {t("footer.serviciosgratituo")}
                 </p>
               </div>
             </div>
@@ -225,18 +226,18 @@ import Modal from "../components/Modal.astro";
         <div
           class="bg-gray-800 text-white p-6 rounded-lg border border-green-700"
         >
-          <h3 class="text-2xl font-bold text-green-300 mb-3">Nuestra Visión</h3>
+          <h3 class="text-2xl font-bold text-green-300 mb-3">
+            {t("footer.vision")}
+          </h3>
           <p class="text-gray-300">
-            Continuamos expandiendo nuestro alcance para llevar atención dental
-            accesible a más pacientes, eliminando barreras económicas y
-            geográficas en la región Tijuana-San Diego.
+            {t("footer.visiondesc")}
           </p>
         </div>
       </div>
     </div>
   </Modal>
 
-  <Modal id="termsModal" title="Términos del servicio">
+  <Modal id="termsModal" title={t("footer.terms")}>
     <div class="prose max-w-none">
       <div class="space-y-6">
         <!-- Sección 1: Reservas -->
@@ -258,27 +259,24 @@ import Modal from "../components/Modal.astro";
               </svg>
             </div>
             <h3 class="text-xl font-bold text-green-700">
-              Política de Reservas
+              {t("footer.politica")}
             </h3>
           </div>
           <ul class="list-disc pl-6 space-y-2 text-gray-700">
             <li>
-              Una vez seleccionado el servicio, debe reservar en los horarios
-              disponibles en la plataforma.
+              {t("footer.politica1")}
             </li>
             <li>
-              Nuestro sistema asigna el espacio según su selección y solo
-              permite modificaciones mediante la página.
+              {t("footer.politica2")}
             </li>
             <li>
-              Recibirá un correo de confirmación dentro de 2 horas máximo.
+              {t("footer.politica3")}
             </li>
             <li>
-              Para reservas con depósito, recibirá una llamada de confirmación
-              hasta 24 horas antes de la cita.
+              {t("footer.politica4")}
             </li>
             <li>
-              Todas las reservas requieren validación administrativa previa.
+              {t("footer.politica5")}
             </li>
           </ul>
         </div>
@@ -301,24 +299,21 @@ import Modal from "../components/Modal.astro";
               </svg>
             </div>
             <h3 class="text-xl font-bold text-green-700">
-              Política de Cancelación
+              {t("footer.cancelacion")}
             </h3>
           </div>
           <ul class="list-disc pl-6 space-y-2 text-gray-700">
             <li>
-              Las citas deben confirmarse por teléfono entre 48 y 24 horas
-              antes.
+              {t("footer.cancelacion1")}
             </li>
             <li>
-              Las citas no confirmadas podrán darse por canceladas
-              automáticamente.
+              {t("footer.cancelacion2")}
             </li>
             <li>
-              Cancelaciones con reembolso requieren 72 horas de anticipación.
+              {t("footer.cancelacion3")}
             </li>
             <li>
-              Dentro de las 72 horas previas, solo se permite reprogramación (no
-              reembolso).
+              {t("footer.cancelacion4")}
             </li>
           </ul>
         </div>
@@ -342,21 +337,21 @@ import Modal from "../components/Modal.astro";
               </svg>
             </div>
             <h3 class="text-xl font-bold text-green-700">
-              Procedimiento de Reembolsos
+              {t("footer.reembolso")}
             </h3>
           </div>
           <div class="space-y-4 text-gray-700">
             <p>
-              Enviar solicitud a <a
+              {t("footer.reembolso1")}<a
                 href="mailto:mydentist@dentalreforma.com"
                 class="text-green-600 hover:underline font-medium"
-                >mydentist@dentalreforma.com</a
-              > incluyendo:
+                >{t("footer.reembolso2")}</a
+              >{t("footer.reembolso3")}
             </p>
             <ul class="list-disc pl-6 space-y-2">
-              <li>Número de reserva</li>
-              <li>Motivo de la cancelación</li>
-              <li>Datos bancarios para el reembolso (si aplica)</li>
+              <li>{t("footer.reembolso4")}</li>
+              <li>{t("footer.reembolso5")}</li>
+              <li>{t("footer.reembolso6")}</li>
             </ul>
             <div
               class="bg-yellow-50 p-3 rounded-lg border-l-4 border-yellow-400 mt-4"
@@ -375,10 +370,7 @@ import Modal from "../components/Modal.astro";
                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
                   ></path>
                 </svg>
-                <span
-                  >Los reembolsos pueden tardar de 5 a 7 días hábiles en
-                  procesarse.</span
-                >
+                <span>{t("footer.reembolso7")}</span>
               </p>
             </div>
           </div>
@@ -387,47 +379,47 @@ import Modal from "../components/Modal.astro";
     </div>
   </Modal>
 
-  <Modal id="privacyModal" title="Política de Privacidad">
+  <Modal id="privacyModal" title={t("footer.privacy")}>
     <div class="prose max-w-none">
       <div class="space-y-6">
         <!-- Sección 1: Introducción -->
         <div class="bg-white p-6 rounded-lg shadow-sm border border-green-100">
           <h3 class="text-2xl font-bold text-green-600 mb-4">
-            Protección de Datos
+            {t("footer.protecciondedatos")}
           </h3>
           <p class="text-gray-700">
-            En Reformadental.com (https://www.reformadental.com) priorizamos su
-            privacidad. Esta política detalla qué información recopilamos y cómo
-            la utilizamos, incluyendo:
+            {t("footer.protecciondedatos1")}
           </p>
         </div>
 
         <!-- Sección 2: Datos -->
         <div class="bg-green-50 p-6 rounded-lg border border-green-100">
           <h4 class="text-xl font-semibold text-green-700 mb-3">
-            Información Recopilada
+            {t("footer.infosrecopilada")}
           </h4>
           <div class="grid md:grid-cols-2 gap-4">
             <div>
-              <h5 class="font-medium text-green-700 mb-2">Comunicaciones</h5>
+              <h5 class="font-medium text-green-700 mb-2">
+                {t("footer.comunicaciones")}
+              </h5>
               <ul class="list-disc pl-6 space-y-1 text-gray-700">
-                <li>Contacto directo o mediante socios</li>
-                <li>Actualizaciones del servicio</li>
-                <li>Soporte al cliente</li>
-                <li>Fines promocionales</li>
-                <li>Prevención de fraudes</li>
+                <li>{t("footer.comunicaciones1")}</li>
+                <li>{t("footer.comunicaciones2")}</li>
+                <li>{t("footer.comunicaciones3")}</li>
+                <li>{t("footer.comunicaciones4")}</li>
+                <li>{t("footer.comunicaciones5")}</li>
               </ul>
             </div>
             <div>
               <h5 class="font-medium text-green-700 mb-2">
-                Archivos de registro
+                {t("footer.registro")}
               </h5>
               <ul class="list-disc pl-6 space-y-1 text-gray-700">
-                <li>Dirección IP</li>
-                <li>Tipo de navegador</li>
-                <li>Proveedor de internet (ISP)</li>
-                <li>Fechas/horas de acceso</li>
-                <li>Páginas visitadas</li>
+                <li>{t("footer.registro1")}</li>
+                <li>{t("footer.registro2")}</li>
+                <li>{t("footer.registro3")}</li>
+                <li>{t("footer.registro4")}</li>
+                <li>{t("footer.registro5")}</li>
               </ul>
             </div>
           </div>
@@ -436,29 +428,28 @@ import Modal from "../components/Modal.astro";
         <!-- Sección 3: Cookies -->
         <div class="bg-white p-6 rounded-lg shadow-sm border border-green-100">
           <h4 class="text-xl font-semibold text-green-700 mb-3">
-            Uso de Cookies
+            {t("footer.cookies")}
           </h4>
           <div class="space-y-3 text-gray-700">
-            <p>Utilizamos cookies para:</p>
+            <p>{t("footer.cookies1")}</p>
             <ul class="list-disc pl-6 space-y-2">
-              <li>Almacenar preferencias</li>
-              <li>Optimizar la experiencia de usuario</li>
-              <li>Personalizar contenido según el navegador</li>
+              <li>{t("footer.cookies2")}</li>
+              <li>{t("footer.cookies3")}</li>
+              <li>{t("footer.cookies4")}</li>
             </ul>
 
             <div class="bg-green-50 p-3 rounded-lg mt-4">
               <h5 class="font-medium text-green-700 mb-1">
-                Cookies de Terceros
+                {t("footer.cookiesterceros")}
               </h5>
               <p class="text-sm text-gray-700">
-                Google utiliza cookies DART para mostrar anuncios basados en
-                visitas a nuestro y otros sitios. Puede desactivarlas en:
+                {t("footer.google")}
                 <a
                   href="https://policies.google.com/technologies/ads"
                   class="text-green-600 hover:underline break-all"
                   target="_blank"
                 >
-                  https://policies.google.com/technologies/ads
+                  {t("footer.googlelink")}
                 </a>
               </p>
             </div>
@@ -467,18 +458,19 @@ import Modal from "../components/Modal.astro";
 
         <!-- Sección 4: Publicidad -->
         <div class="bg-green-50 p-6 rounded-lg border border-green-100">
-          <h4 class="text-xl font-semibold text-green-700 mb-3">Publicidad</h4>
+          <h4 class="text-xl font-semibold text-green-700 mb-3">
+            {t("footer.publicidad")}
+          </h4>
           <div class="space-y-3 text-gray-700">
-            <p>Nuestros socios publicitarios pueden usar:</p>
+            <p>{t("footer.publicidad1")}</p>
             <ul class="list-disc pl-6 space-y-2">
-              <li>Cookies para medir efectividad de campañas</li>
-              <li>Web beacons para personalizar anuncios</li>
+              <li>{t("footer.publicidad2")}</li>
+              <li>{t("footer.publicidad3")}</li>
             </ul>
             <p
               class="mt-3 text-sm bg-white p-2 rounded border border-green-100"
             >
-              <strong class="text-green-700">Nota:</strong> Reforma Dental no controla
-              estas cookies de terceros.
+              {t("footer.publicidad4")}
             </p>
           </div>
         </div>
@@ -488,21 +480,21 @@ import Modal from "../components/Modal.astro";
           class="bg-gray-800 text-white p-6 rounded-lg border border-green-700"
         >
           <h4 class="text-xl font-semibold text-green-300 mb-3">
-            Sus Derechos
+            {t("footer.derechos")}
           </h4>
           <ul class="list-disc pl-6 space-y-2 text-gray-300">
-            <li>Acceso a sus datos personales</li>
-            <li>Rectificación de información</li>
-            <li>Cancelación de tratamiento</li>
-            <li>Oposición al uso de datos</li>
+            <li>{t("footer.derechos1")}</li>
+            <li>{t("footer.derechos2")}</li>
+            <li>{t("footer.derechos3")}</li>
+            <li>{t("footer.derechos4")}</li>
           </ul>
           <p class="mt-4 text-green-200">
-            Para ejercer estos derechos, contáctenos en:
+            {t("footer.derechosejercer")}
             <a
               href="mailto:privacidad@reformadental.com"
               class="text-white hover:underline"
             >
-              privacidad@reformadental.com
+              {t("footer.privacidad")}
             </a>
           </p>
         </div>

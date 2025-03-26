@@ -1,9 +1,16 @@
+---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
 <section id="Treatments" class="treatments-section bg-[#F5FFE5] py-8 lg:py-24">
   <div class="container mx-auto">
     <h1
       class="px-4 py-4 mb-2 text-4xl font-poppins font-bold text-center text-black lg:py-8"
     >
-      Desde chequeos simples hasta procedimientos complejos, ¡lo hacemos todo!
+      {t("treatments.title")}
     </h1>
 
     <div
@@ -15,98 +22,124 @@
           transition:name="Endodoncia"
           src="images/endodoncia.webp"
           class="h-auto mx-auto w-52"
-          alt="Endodoncia"
+          alt={t("treatments.endodoncia")}
         />
-        <p class="text-center">TRATAMIENTO DE CANAL / ENDODONCIA</p>
-        <p class="text-[#9DC216] text-center">$300.00</p>
+        <p class="text-center">{t("treatments.endodoncia")}</p>
+        <p class="text-[#9DC216] text-center">
+          {t("treatments.price.endodoncia")}
+        </p>
       </div>
 
       <!-- Tratamiento 2 -->
       <div class="treatment-card flex flex-col mb-7">
         <img
+          transition:name="Ortodoncia"
           src="images/ortodoncia.webp"
           class="h-auto mx-auto w-52"
-          alt="Ortodoncia"
+          alt={t("treatments.ortodoncia")}
         />
-        <p class="text-center">BRACKETS / ORTODONCIA</p>
-        <p class="text-[#9DC216] text-center">$650.00</p>
+        <p class="text-center">{t("treatments.ortodoncia")}</p>
+        <p class="text-[#9DC216] text-center">
+          {t("treatments.price.ortodoncia")}
+        </p>
       </div>
 
       <!-- Tratamiento 3 -->
       <div class="treatment-card flex flex-col mb-7">
         <img
+          transition:name="Implantes"
           src="images/implantes.webp"
           class="h-auto mx-auto w-52"
-          alt="Implantes"
+          alt={t("treatments.implantes")}
         />
-        <p class="text-center">IMPLANTES</p>
-        <p class="text-[#9DC216] text-center">$1650.00</p>
+        <p class="text-center">{t("treatments.implantes")}</p>
+        <p class="text-[#9DC216] text-center">
+          {t("treatments.price.implantes")}
+        </p>
       </div>
 
       <!-- Tratamiento 4 -->
       <div class="treatment-card flex flex-col mb-7">
         <img
+          transition:name="Extracción"
           src="images/extracion.webp"
           class="h-auto mx-auto w-52"
-          alt="Extracción"
+          alt={t("treatments.extraccion")}
         />
-        <p class="text-center">EXTRACCIÓN</p>
-        <p class="text-[#9DC216] text-center">$150.00</p>
+        <p class="text-center">{t("treatments.extraccion")}</p>
+        <p class="text-[#9DC216] text-center">
+          {t("treatments.price.extraccion")}
+        </p>
       </div>
 
       <!-- Tratamiento 5 -->
       <div class="treatment-card flex flex-col mb-7">
         <img
+          transition:name="Coronas"
           src="images/corona.webp"
           class="h-auto mx-auto w-52"
-          alt="Coronas"
+          alt={t("treatments.coronas")}
         />
-        <p class="text-center">CORONAS</p>
-        <p class="text-[#9DC216] text-center">$300.00</p>
+        <p class="text-center">{t("treatments.coronas")}</p>
+        <p class="text-[#9DC216] text-center">
+          {t("treatments.price.coronas")}
+        </p>
       </div>
 
       <!-- Tratamiento 6 -->
       <div class="treatment-card flex flex-col mb-7">
         <img
+          transition:name="Resinas"
           src="images/recina.webp"
           class="h-auto mx-auto w-52"
-          alt="Resinas"
+          alt={t("treatments.resinas")}
         />
-        <p class="text-center">RELLENOS</p>
-        <p class="text-[#9DC216] text-center">$50.00</p>
+        <p class="text-center">{t("treatments.resinas")}</p>
+        <p class="text-[#9DC216] text-center">
+          {t("treatments.price.resinas")}
+        </p>
       </div>
 
       <!-- Tratamiento 7 -->
       <div class="treatment-card flex flex-col mb-7">
         <img
+          transition:name="Periodoncia"
           src="images/perio.webp"
           class="h-auto mx-auto w-52"
-          alt="Periodoncia"
+          alt={t("treatments.periodoncia")}
         />
-        <p class="text-center">PERIODONCIA</p>
-        <p class="text-[#9DC216] text-center">$400.00</p>
+        <p class="text-center">{t("treatments.periodoncia")}</p>
+        <p class="text-[#9DC216] text-center">
+          {t("treatments.price.periodoncia")}
+        </p>
       </div>
 
       <!-- Tratamiento 8 -->
       <div class="treatment-card flex flex-col mb-7">
         <img
+          transition:name="Prótesis"
           src="images/dentadura.webp"
           class="h-auto mx-auto w-52"
-          alt="Prótesis"
+          alt={t("treatments.protesis")}
         />
-        <p class="text-center">DENTADURAS/PROSTODONCIA</p>
-        <p class="text-[#9DC216] text-center">$700.00</p>
+        <p class="text-center">{t("treatments.protesis")}</p>
+        <p class="text-[#9DC216] text-center">
+          {t("treatments.price.protesis")}
+        </p>
       </div>
 
       <!-- Tratamiento 9 -->
       <div class="treatment-card flex flex-col mb-7">
         <img
+          transition:name="Tratamientos generales"
           src="images/tratamiento.webp"
           class="h-auto mx-auto w-52"
-          alt="Tratamientos generales"
+          alt={t("treatments.generales")}
         />
-        <p class="text-center">TRATAMIENTOS GENERALES</p>
-        <p class="text-[#9DC216] text-center">$50.00</p>
+        <p class="text-center">{t("treatments.generales")}</p>
+        <p class="text-[#9DC216] text-center">
+          {t("treatments.price.generales")}
+        </p>
       </div>
     </div>
   </div>

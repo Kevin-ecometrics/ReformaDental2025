@@ -1,6 +1,14 @@
+---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
 <div class="react-parallax" style="position: relative; overflow: hidden;">
   <div
     class="w-[100%] h-[100px] bg-[url('images/silla.jpg')] bg-cover bg-center bg-no-repeat bg-fixed"
+    aria-label={t("mission.backgroundAlt")}
   >
   </div>
 
@@ -8,21 +16,19 @@
     <div class="container mx-auto text-center">
       <div class="css-0" style="animation-delay: 700ms; opacity: 0;">
         <p class="mb-10 text-4xl font-bold text-black">
-          ¿Dolor dental? Podemos ayudarte
+          {t("mission.title")}
         </p>
       </div>
 
       <div class="css-0" style="animation-delay: 700ms; opacity: 0;">
         <p class="text-[#9DC216] text-3xl font-bold mb-4 mr-4 ml-4">
-          ¡NUNCA ES DEMASIADO TARDE PARA COMENZAR A CUIDAR TU SALUD ORAL!
+          {t("mission.subtitle")}
         </p>
       </div>
 
       <div class="css-0" style="animation-delay: 700ms; opacity: 0;">
         <p class="text-[#9DC216] text-3xl mb-4">
-          En Reforma Dental brindamos atención experta para todas las
-          necesidades dentales. Hacemos que el cuidado dental sea fácil y sin
-          estrés.
+          {t("mission.description")}
         </p>
       </div>
 
@@ -32,18 +38,16 @@
             <img
               src="images/Imagen profesionalismo.svg"
               class="w-24 h-24 mr-4 sm:h-32 sm:w-32"
-              alt="Profesionalismo dental"
+              alt={t("mission.professionalism.alt")}
             />
             <div class="flex flex-col">
               <h1
                 class="px-4 text-xl font-bold text-left text-black sm:text-2xl"
               >
-                PROFESIONALISMO
+                {t("mission.professionalism.title")}
               </h1>
               <h2 class="px-4 text-justify">
-                Experimenta la diferencia con nuestro equipo de profesionales
-                dentales. Vamos más allá por tu sonrisa utilizando la última
-                tecnología para una mejor experiencia dental.
+                {t("mission.professionalism.text")}
               </h2>
             </div>
           </div>
@@ -52,19 +56,16 @@
             <img
               src="images/smile.svg"
               class="w-24 h-24 mr-4 sm:h-32 sm:w-32"
-              alt="Sonrisa y estética dental"
+              alt={t("mission.smile.alt")}
             />
             <div class="flex flex-col">
               <h1
                 class="px-4 text-xl font-bold text-left text-black sm:text-2xl"
               >
-                SONRISA Y ESTÉTICA
+                {t("mission.smile.title")}
               </h1>
               <h2 class="px-4 text-justify">
-                Confía en nosotros para restaurar la función y belleza de tu
-                boca. Contáctanos para una atención experta en todas las
-                necesidades dentales y transforma tu sonrisa, transforma tu
-                vida.
+                {t("mission.smile.text")}
               </h2>
             </div>
           </div>
@@ -79,18 +80,16 @@
             <img
               src="images/Technology.svg"
               class="w-24 h-24 mr-4 sm:h-32 sm:w-32"
-              alt="Tecnología dental avanzada"
+              alt={t("mission.technology.alt")}
             />
             <div class="flex flex-col">
               <h1
                 class="px-4 text-xl font-bold text-left text-black sm:text-2xl"
               >
-                TECNOLOGÍA
+                {t("mission.technology.title")}
               </h1>
               <h2 class="px-4 text-justify">
-                Siéntete cómodo y seguro en nuestra clínica dental. Obtén la
-                sonrisa que mereces con nuestra amplia gama de servicios en
-                nuestras instalaciones de vanguardia.
+                {t("mission.technology.text")}
               </h2>
             </div>
           </div>
@@ -100,18 +99,16 @@
             <img
               src="images/experience.svg"
               class="w-24 h-24 mr-4 sm:h-32 sm:w-32"
-              alt="Experiencia en odontología"
+              alt={t("mission.experience.alt")}
             />
             <div class="flex flex-col">
               <h1
                 class="px-4 text-xl font-bold text-left text-black sm:text-2xl"
               >
-                EXPERIENCIA
+                {t("mission.experience.title")}
               </h1>
               <h2 class="px-4 text-justify">
-                Tu salud oral es nuestra máxima prioridad. Desde limpiezas
-                rutinarias hasta procedimientos complejos, te tenemos cubierto.
-                Tu salud oral está en buenas manos con nosotros.
+                {t("mission.experience.text")}
               </h2>
             </div>
           </div>

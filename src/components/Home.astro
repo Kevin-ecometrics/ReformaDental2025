@@ -1,23 +1,30 @@
+---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
 <section id="Home" class="bg-gray-100">
   <div class="container mx-auto text-center">
     <img
       src="images/animacion2.gif"
-      alt="Video Hero"
+      alt={t("home.videoAlt")}
       class="w-2/3 h-auto mx-auto"
     />
 
     <h1 class="mb-4 text-4xl font-bold text-gray-500">
-      Consultorio dental familiar
+      {t("home.title")}
     </h1>
     <h2 class="mb-5 text-3xl text-gray-500">
-      Bienvenidos, hemos abierto calendario en el centro de Tijuana
+      {t("home.subtitle")}
     </h2>
 
     <a href="https://reformadental.com/#Booking">
       <button
         class="bg-[#87D717] hover:bg-[#95F50E] text-1xl mb-12 text-white font-bold py-3 px-20 mt-5 rounded-full"
       >
-        RESÉRVANOS AHORA
+        {t("home.ctaButton")}
       </button>
     </a>
   </div>
