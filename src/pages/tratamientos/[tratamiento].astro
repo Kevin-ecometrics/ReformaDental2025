@@ -1,0 +1,136 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Navbar from "@components/Navbar.astro";
+
+export function getStaticPaths() {
+  return [
+    { params: { tratamiento: "corona" } },
+    { params: { tratamiento: "dentadura" } },
+    { params: { tratamiento: "endodoncia" } },
+    { params: { tratamiento: "extracion" } },
+    { params: { tratamiento: "implantes" } },
+    { params: { tratamiento: "tratamiento" } },
+    { params: { tratamiento: "recina" } },
+    { params: { tratamiento: "ortodoncia" } },
+    { params: { tratamiento: "periodoncia" } },
+  ];
+}
+
+const { tratamiento } = Astro.params;
+
+// Datos de los tratamientos
+const tratamientos = {
+  corona: {
+    nombre: "Corona",
+    precio: "$300",
+    imagen: "/images/corona.webp",
+    descripcion:
+      "Restauración dental que cubre un diente dañado para protegerlo y mejorar su apariencia.",
+  },
+  dentadura: {
+    nombre: "Dentadura",
+    precio: "$700",
+    imagen: "/images/dentadura.webp",
+    descripcion:
+      "Prótesis removible que reemplaza los dientes faltantes y mejora la función masticatoria.",
+  },
+  endodoncia: {
+    nombre: "Endodoncia",
+    precio: "$300",
+    imagen: "/images/endodoncia.webp",
+    descripcion:
+      "Tratamiento del conducto radicular para salvar un diente infectado o dañado.",
+  },
+  extracion: {
+    nombre: "Extracción",
+    precio: "$150",
+    imagen: "/images/extracion.webp",
+    descripcion:
+      "Remoción de un diente que no puede ser salvado o que causa problemas.",
+  },
+  implantes: {
+    nombre: "Implantes",
+    precio: "$1650",
+    imagen: "/images/implantes.webp",
+    descripcion:
+      "Reemplazo permanente de dientes faltantes con raíces artificiales de titanio.",
+  },
+  tratamiento: {
+    nombre: "Tratamiento",
+    precio: "$50",
+    imagen: "/images/tratamiento.webp",
+    descripcion:
+      "Consulta y evaluación inicial para determinar el mejor tratamiento dental.",
+  },
+  recina: {
+    nombre: "Recina",
+    precio: "$50",
+    imagen: "/images/recina.webp",
+    descripcion:
+      "Material de relleno del color del diente para reparar caries o fracturas menores.",
+  },
+  ortodoncia: {
+    nombre: "Ortodoncia",
+    precio: "$650",
+    imagen: "/images/ortodoncia.webp",
+    descripcion:
+      "Corrección de la alineación dental y mordida usando brackets o alineadores.",
+  },
+  periodoncia: {
+    nombre: "Periodoncia",
+    precio: "$400",
+    imagen: "/images/perio.webp",
+    descripcion:
+      "Tratamiento de las encías y estructuras de soporte de los dientes.",
+  },
+};
+const tratamientoData = tratamientos[tratamiento];
+---
+
+<Layout
+  title={`Tratamiento de ${tratamiento}`}
+  description="Descripcion del Tratamiento"
+>
+  <Navbar />
+
+  <main class="container mx-auto px-4 py-8">
+    <div
+      class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden"
+    >
+      <div class="p-8">
+        <div class="flex flex-col md:flex-row gap-8">
+          <div class="md:w-1/3">
+            <img
+              src={tratamientoData.imagen}
+              alt={tratamientoData.nombre}
+              width="300"
+              height="300"
+              class="w-full h-auto object-cover"
+            />
+          </div>
+          <div class="md:w-2/3">
+            <h1 class="text-3xl font-bold text-green-600 mb-4">
+              {tratamientoData.nombre}
+            </h1>
+            <p class="text-xl font-semibold mb-6">
+              Precio: <span class="text-green-500"
+                >{tratamientoData.precio}</span
+              >
+            </p>
+            <p class="text-gray-700 mb-6">
+              Descripción detallada del tratamiento de {
+                tratamientoData.nombre.toLowerCase()
+              }
+            </p>
+            <a
+              href="/contacto"
+              class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300 inline-block"
+            >
+              Solicitar cita
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>

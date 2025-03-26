@@ -1,1 +1,165 @@
 @import "tailwindcss";
+
+.logo {
+    object-fit: cover;
+    width: auto;
+    height: 24rem;
+}
+
+/* Estilos para la sección Solutions */
+#Solutions {
+    background-color: #F5FFE5;
+    padding-top: 6rem;    /* py-24 */
+    padding-bottom: 6rem; /* py-24 */
+  }
+  
+  /* Contenedor principal */
+  #Solutions .container {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Contenedor de imagen de horario */
+  #Solutions .container.flex.justify-center.mx-auto {
+    display: flex;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Contenedor de contenido principal */
+  #Solutions .container.py-8.mx-auto.text-center {
+    padding-top: 2rem;    /* py-8 */
+    padding-bottom: 2rem; /* py-8 */
+    text-align: center;
+  }
+  
+  /* Texto descriptivo */
+  #Solutions h3.text-lg.text-gray-500 {
+    font-size: 1.125rem;  /* text-lg */
+    line-height: 1.75rem;
+    color: #6B7280;      /* text-gray-500 */
+    margin-bottom: 1rem;  /* mb-4 */
+    padding-left: 1rem;   /* px-4 */
+    padding-right: 1rem;  /* px-4 */
+  }
+  
+  /* Botón de reserva */
+  #Solutions button.bg-\[\#87D717\] {
+    background-color: #87D717;
+    color: white;
+    font-weight: 700;     /* font-bold */
+    font-size: 1.125rem;  /* text-lg */
+    padding-top: 0.5rem;  /* py-2 */
+    padding-bottom: 0.5rem; /* py-2 */
+    padding-left: 3rem;   /* px-12 */
+    padding-right: 3rem;  /* px-12 */
+    margin-top: 1rem;     /* mt-4 */
+    border-radius: 9999px; /* rounded-full */
+    transition: background-color 0.3s ease;
+  }
+  
+  #Solutions button.bg-\[\#87D717\]:hover {
+    background-color: #95F50E; /* hover:bg-[#95F50E] */
+  }
+  
+  /* Título principal */
+  #Solutions h1.text-3xl.font-bold.text-black {
+    font-size: 1.875rem;  /* text-3xl */
+    line-height: 2.25rem;
+    font-weight: 700;     /* font-bold */
+    color: #000;          /* text-black */
+    padding-top: 2rem;    /* py-8 */
+    padding-bottom: 2rem; /* py-8 */
+    margin-bottom: 1rem;  /* mb-4 */
+  }
+  
+  /* Textos destacados en verde */
+  #Solutions h2.text-\[\#9DC216\],
+  #Solutions h3.text-\[\#9DC216\] {
+    color: #9DC216;
+    font-weight: 700;     /* font-bold */
+    padding-top: 0.5rem;  /* py-2 */
+    padding-bottom: 0.5rem; /* py-2 */
+  }
+  
+  #Solutions h2.text-xl {
+    font-size: 1.25rem;   /* text-xl */
+    line-height: 1.75rem;
+    margin-left: 0.5rem;  /* ml-2 */
+    margin-right: 0.5rem; /* mr-2 */
+  }
+  
+  /* Efecto parallax */
+  .react-parallax {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .react-parallax-bgimage {
+    position: absolute;
+    left: 50%;
+    transform: translate3d(-50%, -38.6364px, 0px);
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    height: auto;
+    width: 1446.86px;
+    filter: none;
+  }
+  
+  .react-parallax-content {
+    position: relative;
+  }
+  
+  /* Media queries para versión desktop */
+  @media (min-width: 768px) {
+    #Solutions .container.py-8.mx-auto.text-center {
+      padding-top: 4rem;    /* md:py-16 */
+      padding-bottom: 4rem; /* md:py-16 */
+    }
+    
+    #Solutions h3.text-lg.md\:text-2xl {
+      font-size: 1.5rem;    /* md:text-2xl */
+      line-height: 2rem;
+      padding-left: 6rem;   /* md:px-24 */
+      padding-right: 6rem;  /* md:px-24 */
+    }
+    
+    #Solutions button.text-lg.md\:text-xl {
+      font-size: 1.25rem;  /* md:text-xl */
+      padding-top: 0.75rem; /* md:py-3 */
+      padding-bottom: 0.75rem; /* md:py-3 */
+      padding-left: 5rem;  /* md:px-20 */
+      padding-right: 5rem; /* md:px-20 */
+      margin-top: 1.25rem; /* md:mt-5 */
+    }
+    
+    #Solutions h1.text-3xl.md\:text-4xl {
+      font-size: 2.25rem;  /* md:text-4xl */
+      line-height: 2.5rem;
+    }
+    
+    #Solutions h2.text-xl.md\:text-2xl,
+    #Solutions h3.text-xl.md\:text-2xl {
+      font-size: 1.5rem;   /* md:text-2xl */
+      line-height: 2rem;
+    }
+  }
+  
+  /* Animaciones (para los elementos con css-0) */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .css-0 {
+    animation: fadeIn 0.5s ease forwards;
+  }
+  
+  .css-0[style*="animation-delay: 700ms"] {
+    animation-delay: 0.7s;
+  }
+  

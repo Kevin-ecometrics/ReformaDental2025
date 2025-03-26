@@ -1,12 +1,26 @@
 ---
+import Footer from "@components/Footer.astro";
+import Navbar from "../components/Navbar.astro";
+import Home from "../components/Home.astro";
+import Mision from "../components/Mision.astro";
+import Solutions from "../components/Solutions.astro";
+import Treatments from "../components/Treatments.astro";
+import Booking from "../components/Booking.astro";
+import Contact from "../components/Contact.astro";
+import Modal from "../components/Modal.astro";
 import Layout from "@layouts/Layout.astro";
 ---
 
 <Layout
   title="Reforma Dental"
-  description="Reforma Dental es una clínica dental en la que nos preocupamos por tu salud dental."
+  description="Reforma dental clinica dental atendiendo personas de tijuana y san diego."
 >
-  <div>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor, possimus!
-  </div>
+  <Navbar />
+  <Home />
+  <Mision />
+  <Solutions />
+  <Treatments />
+  <Booking />
+  <Contact />
+  <Footer />
 </Layout>
