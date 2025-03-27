@@ -1,0 +1,139 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Footer from "@components/Footer.astro";
+import { getLangFromUrl, useTranslations } from "@i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const tratamientos = [
+  {
+    slug: "corona",
+    nombre: t("tratamientos.Corona"),
+    precio: t("treatments.price.coronas"),
+    imagen: "/images/corona.webp",
+    descripcion: t("tratamientos.coronadesc"),
+  },
+  {
+    slug: "dentadura",
+    nombre: t("tratamientos.Dentadura"),
+    precio: t("treatments.price.dentadura"),
+    imagen: "/images/dentadura.webp",
+    descripcion: t("tratamientos.dentaduradesc"),
+  },
+  {
+    slug: "endodoncia",
+    nombre: t("tratamientos.Endodoncia"),
+    precio: t("treatments.price.endodoncia"),
+    imagen: "/images/endodoncia.webp",
+    descripcion: t("tratamientos.endodonciadesc"),
+  },
+  {
+    slug: "extracion",
+    nombre: t("tratamientos.Extraccion"),
+    precio: t("treatments.price.extraccion"),
+    imagen: "/images/extracion.webp",
+    descripcion: t("tratamientos.extracciondesc"),
+  },
+  {
+    slug: "implantes",
+    nombre: t("tratamientos.Implante"),
+    precio: t("treatments.price.implantes"),
+    imagen: "/images/implantes.webp",
+    descripcion: t("tratamientos.implantedesc"),
+  },
+  {
+    slug: "tratamiento",
+    nombre: t("tratamientos.Tratamiento"),
+    precio: t("treatments.price.tratamientos"),
+    imagen: "/images/tratamiento.webp",
+    descripcion: t("tratamientos.tratamientodesc"),
+  },
+  {
+    slug: "recina",
+    nombre: t("tratamientos.Recina"),
+    precio: t("treatments.price.resinas"),
+    imagen: "/images/recina.webp",
+    descripcion: t("tratamientos.recinadesc"),
+  },
+  {
+    slug: "ortodoncia",
+    nombre: t("tratamientos.Ortodoncia"),
+    precio: t("treatments.price.ortodoncia"),
+    imagen: "/images/ortodoncia.webp",
+    descripcion: t("tratamientos.ortodonciadesc"),
+  },
+  {
+    slug: "periodoncia",
+    nombre: t("tratamientos.Periodoncia"),
+    precio: t("treatments.price.periodoncia"),
+    imagen: "/images/perio.webp",
+    descripcion: t("tratamientos.periodonciadesc"),
+  },
+];
+---
+
+<Layout
+  title="Tratamientos Dentales"
+  description="Conoce nuestros tratamientos dentales"
+>
+  <main class="container mx-auto px-4 py-12">
+    <h1 class="text-4xl font-bold text-center text-green-600 mb-4">
+      {t("tratamientos.dentales")}
+    </h1>
+    <p class="text-xl text-center text-gray-600 mb-12">
+      {t("tratamientos.dentales1")}
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {
+        tratamientos.map((tratamiento) => (
+          <a
+            href={`/tratamientos/${tratamiento.slug}`}
+            class="bg-white rounded-xl shadow-md overflow-hidden tratamiento-card transition duration-300 hover:transform hover:-translate-y-1"
+          >
+            <div class="p-6">
+              <img
+                transition:name={tratamiento.nombre}
+                src={tratamiento.imagen}
+                alt={tratamiento.nombre}
+                width="200"
+                height="200"
+                class="mx-auto h-40 object-contain mb-4"
+                loading="lazy"
+              />
+              <div class="text-center">
+                <h2 class="text-xl font-bold text-green-600 mb-2">
+                  {tratamiento.nombre}
+                </h2>
+                <p class="text-lg font-semibold text-gray-800 mb-3">
+                  {tratamiento.precio}
+                </p>
+                <p class="text-gray-600 mb-4">{tratamiento.descripcion}</p>
+                <button class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded-lg transition duration-300">
+                  {t("tratamientos.detalles")}
+                </button>
+              </div>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+
+    <section class="mt-16 bg-green-50 rounded-xl p-8 text-center">
+      <h2 class="text-2xl font-bold text-green-700 mb-4">
+        {t("tratamientos.buscas")}
+      </h2>
+      <p class="text-gray-700 mb-6">
+        {t("tratamientos.contactanos")}
+      </p>
+      <a
+        href="/contacto"
+        class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300"
+      >
+        {t("tratamientos.agendarcita")}
+      </a>
+    </section>
+  </main>
+  <Footer />
+</Layout>
