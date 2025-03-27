@@ -6,7 +6,6 @@ const t = useTranslations(lang);
 ---
 
 <script is:inline>
-  // Usamos is:inline para que el script se ejecute en el cliente
   const initAnimations = () => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -40,7 +39,6 @@ const t = useTranslations(lang);
       {t("booking.title")}
     </h1>
 
-    <!-- Subtítulo con animación (con retardo) -->
     <p
       class="scroll-animate animate-fade-up text-[#9DC216] text-2xl lg:text-3xl py-4"
       style="transition-delay: 0.2s"
@@ -49,7 +47,6 @@ const t = useTranslations(lang);
     </p>
 
     <div class="grid grid-cols-1 gap-4 py-4 lg:grid-cols-2 lg:py-8">
-      <!-- Columna izquierda (imagen) con animación desde la izquierda -->
       <div
         class="scroll-animate animate-fade-left flex flex-col lg:mb-0"
         style="transition-delay: 0.3s"
@@ -61,13 +58,11 @@ const t = useTranslations(lang);
         />
       </div>
 
-      <!-- Columna derecha (formulario) con animación desde la derecha -->
       <div
         class="scroll-animate animate-fade-right"
         style="transition-delay: 0.4s"
       >
         <div class="flex flex-col px-4 bg-[#f9fdf3] rounded-lg shadow-md">
-          <!-- Título del formulario -->
           <h1
             class="scroll-animate animate-fade-up font-medium px-6 py-4 text-2xl text-black lg:text-start"
             style="transition-delay: 0.5s"
@@ -75,7 +70,6 @@ const t = useTranslations(lang);
             {t("booking.formTitle")}
           </h1>
 
-          <!-- Información de ubicación -->
           <div
             class="scroll-animate animate-fade-up flex items-center justify-start lg:justify-start mb-4 ml-4 mr-4"
             style="transition-delay: 0.6s"
@@ -86,7 +80,6 @@ const t = useTranslations(lang);
             </h3>
           </div>
 
-          <!-- Cita con animación -->
           <div
             class="scroll-animate animate-fade-up flex items-center justify-center lg:justify-start mb-4 ml-4 mr-4"
             style="transition-delay: 0.7s"
@@ -104,7 +97,6 @@ const t = useTranslations(lang);
             />
           </div>
 
-          <!-- Zona horaria con animación -->
           <div
             class="scroll-animate animate-fade-up mb-4"
             style="transition-delay: 0.8s"
