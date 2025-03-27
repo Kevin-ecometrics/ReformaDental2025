@@ -2,7 +2,6 @@ export const languages = {
     en: 'English',
     es: 'Español',
   };
-  
   export const defaultLang = 'en';
   
   export const ui = {
@@ -20,7 +19,7 @@ export const languages = {
       // Home
       'home.videoAlt': 'Hero Video',
       'home.title': 'Family dental office',
-      'home.subtitle': 'Welcome, we have opened our schedule in downtown Tijuana',
+      'home.subtitle': 'Welcome, we\'ve open calendar at downtown Tijuana',
       'home.ctaButton': 'BOOK US NOW',
   
       // Mission
@@ -112,17 +111,18 @@ export const languages = {
       'tratamientos.periodonciadescLarge' : 'If you experience pain, inflammation or bleeding in your gums, you might have periodontal disease. These conditions affect bones and tissues that support teeth, making everyday actions like chewing or brushing difficult. Periodontics treats gingivitis and periodontitis (main causes of tooth loss), through deep cleanings to remove plaque, tartar and bacteria accumulated in tooth roots. Early diagnosis is key to preserving oral health.',
       
       // Booking
-      'booking.title': 'BOOK NOW',
+      'booking.title': 'BOOK US NOW',
       'booking.subtitle': 'Select a date and time to save your dental care day',
       'booking.formTitle': 'CREATE DENTAL APPOINTMENT',
-      'booking.location': '8169-206 Ignacio Zaragoza, Downtown Area, Tijuana, Baja California, Mexico.',
+      'booking.location': '8169-206 Ignacio Zaragoza, Zona Centro, Tijuana, Baja California, México.',
       'booking.chooseAppointment': 'Choose your appointment here',
       'booking.timezone': 'Event timezone: America/Tijuana GMT-07:00',
 
       // Contact
       'contact.title': 'Where to find us?',
-      'contact.subtitle': 'For any questions, don\'t hesitate to contact us',
+      'contact.subtitle': 'At any doubt don\'t hesitate to reach for us',
       'contact.locationButton': 'Show location',
+      'contact.hidemap': 'Hide location',
       'contact.email': 'Email',
       'contact.hours': 'Business Hours',
       'contact.hoursValue': 'Monday to Friday: 9:00 AM - 6:00 PM',
@@ -136,17 +136,18 @@ export const languages = {
       'contact.contactButton': 'Contact Us',
       'contact.whatsappLink': 'https://api.whatsapp.com/send?phone=+16195861436&text=Hello,%20I%20visited%20your%20website%20and%20would%20like%20to%20know%20more%20about%20your%20dental%20services',
       'contact.location': 'Location',
-      'contact.address': '8169-206 Ignacio Zaragoza, Downtown Area, Tijuana, Baja California, Mexico.',
+      'contact.address': '8169-206 Ignacio Zaragoza, Zona Centro, Tijuana, Baja California, México.',
       'contact.phone': '+1 619-586-1436',
       'contact.mapEmbedUrl': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3365.041086665743!2d-116.9915996848226!3d32.51446998103575!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80d938f5c5b6d6a9%3A0x8169a206f9a0c1b1!2sIgnacio%20Zaragoza%20206%2C%20Zona%20Centro%2C%2022000%20Tijuana%2C%20B.C.%2C%20M%C3%A9xico!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus',
       'contact.mapTitle': 'Reforma Dental Location on Google Maps',
+
   
       // Footer
       'footer.about': 'About Us',
       'footer.terms': 'Terms of Service',
       'footer.privacy': 'Privacy Policy',
       'footer.contact': 'Contact Us',
-      'footer.booking': 'Book Appointment',
+      'footer.booking': 'Booking',
       'footer.rights': 'All rights reserved to Reforma Dental, @2023 developed by Ecommetrica.com',
       'footer.historia' : 'Our History',
       'footer.karendesc' : 'Dr. Karen Pérez and her husband, Juan González, always dreamed of establishing their own business in downtown Tijuana, Baja California. After years of hard work, specialized education and multiple successful practices, the couple finally gathered the necessary funds to make their dream come true.',
@@ -204,7 +205,7 @@ export const languages = {
       'footer.reembolso6' : 'Bank details for refund (if applicable)',
       'footer.reembolso7' : 'Refunds may take 5 to 7 business days to process.',
       'footer.protecciondedatos' : 'Data Protection',
-      'footer.protecciondedatos1' : 'At Reformadental.com (https://www.reformadental.com) we prioritize your privacy. This policy details what information we collect and how we use it, including:',
+      'footer.protecciondedatos1' : 'At Reformadental.com (https://reformadental.com) we prioritize your privacy. This policy details what information we collect and how we use it, including:',
       'footer.infosrecopilada' : 'Collected Information',
       'footer.comunicaciones' : 'Communications',
       'footer.comunicaciones1' : 'Direct contact or through partners',
@@ -374,6 +375,7 @@ export const languages = {
       'contact.title': '¿Dónde encontrarnos?',
       'contact.subtitle': 'Ante cualquier duda, no dudes en contactarnos',
       'contact.locationButton': 'Mostrar ubicación',
+      'contact.hidemap': 'Ocultar ubicación',
       'contact.email': 'Correo Electrónico',
       'contact.hours': 'Horario de Atención',
       'contact.hoursValue': 'Lunes a Viernes: 9:00 AM - 6:00 PM',

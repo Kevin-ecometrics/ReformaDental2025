@@ -4,56 +4,92 @@ import { getLangFromUrl, useTranslations } from "../i18n/utils";
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const currentUrl = Astro.url.pathname;
+
+const withLang = (path: string) => {
+  if (path.startsWith("#")) return path;
+  return lang === "es" ? `/es${path}` : path;
+};
+
+const getOppositeLangPath = () => {
+  const oppositeLang = lang === "en" ? "es" : "en";
+  const cleanPath = currentUrl.replace(/^\/es/, "");
+
+  if (oppositeLang === "es") {
+    return `/es${cleanPath === "/" ? "" : cleanPath}`;
+  } else {
+    return cleanPath || "/";
+  }
+};
+
+const getNavLink = (anchor: string) => {
+  const basePath = lang === "es" ? "/es" : "/";
+  return currentUrl === basePath ? `#${anchor}` : `${basePath}#${anchor}`;
+};
+
+const mobileMenuOpen = false;
 ---
 
 <nav class="bg-white p-4 sticky top-0 z-50">
   <div class="container mx-auto">
     <div class="flex items-center justify-between">
-      <img
-        src="/images/logo.webp"
-        alt="Logo"
-        class="flex justify-start w-8 h-8 ml-4 mr-2"
-      />
+      <!-- Logo -->
+      <a href={lang === "es" ? "/es" : "/"} class="flex items-center">
+        <img src="/images/logo.webp" alt="Logo" class="w-8 h-8" />
+      </a>
 
-      <div class="flex items-center justify-center w-full lg:w-center">
+      <div
+        class="hidden lg:flex items-center justify-center w-full lg:w-center"
+      >
         <a
-          href={currentUrl === "/" ? "#Home" : "/#Home"}
-          class="hidden text-black hover:text-green-300 lg:inline-block"
-          >{t("nav.home")}</a
+          href={getNavLink("Home")}
+          class="text-black hover:text-green-300 mx-4"
         >
+          {t("nav.home")}
+        </a>
+
         <a
-          href={currentUrl === "/" ? "#Mission" : "/#Mission"}
-          class="hidden ml-4 text-black hover:text-green-300 lg:inline-block"
-          >{t("nav.mision")}</a
+          href={getNavLink("Mission")}
+          class="text-black hover:text-green-300 mx-4"
         >
+          {t("nav.mision")}
+        </a>
+
         <a
-          href={currentUrl === "/" ? "#Solutions" : "/#Solutions"}
-          class="hidden ml-4 text-black hover:text-green-300 lg:inline-block"
-          >{t("nav.soluciones")}</a
+          href={getNavLink("Solutions")}
+          class="text-black hover:text-green-300 mx-4"
         >
+          {t("nav.soluciones")}
+        </a>
+
         <a
-          href="/tratamientos"
-          class="hidden ml-4 text-black hover:text-green-300 lg:inline-block"
-          >{t("nav.tratamientos")}</a
+          href={withLang("/tratamientos")}
+          class="text-black hover:text-green-300 mx-4"
         >
+          {t("nav.tratamientos")}
+        </a>
+
         <a
-          href={currentUrl === "/" ? "#Booking" : "/#Booking"}
-          class="hidden ml-4 text-black hover:text-green-300 lg:inline-block"
-          >{t("nav.reservar")}</a
+          href={getNavLink("Booking")}
+          class="text-black hover:text-green-300 mx-4"
         >
+          {t("nav.reservar")}
+        </a>
+
         <a
-          href="/contacto"
-          class="hidden ml-4 text-black hover:text-green-300 lg:inline-block"
-          >{t("nav.contacto")}</a
+          href={withLang("/contacto")}
+          class="text-black hover:text-green-300 mx-4"
         >
+          {t("nav.contacto")}
+        </a>
 
         <a
           href="https://api.whatsapp.com/send?phone=+16195861436&text=Hola,%20visite%20su%20pagina%20y%20quisiera%20conocer%20m%C3%A1s%20sobre%20sus%20servicios%20dentales"
           target="_blank"
           rel="noreferrer"
+          class="ml-8"
         >
           <button
-            class="hidden lg:inline-block select-none items-center gap-4 ml-16 mr-4 rounded-lg border border-green-700 py-1 px-2 text-center align-middle font-sans text-sm font-bold uppercase text-blue-gray-500 transition-all hover:opacity-75 focus:ring focus:ring-blue-gray-200 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            class="select-none items-center gap-4 rounded-lg border border-green-700 py-1 px-2 text-center align-middle font-sans text-sm font-bold uppercase text-blue-gray-500 transition-all hover:opacity-75 focus:ring focus:ring-blue-gray-200 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             type="button"
             data-ripple-dark="true"
           >
@@ -63,7 +99,7 @@ const currentUrl = Astro.url.pathname;
                 focusable="false"
                 data-prefix="fab"
                 data-icon="whatsapp"
-                class="svg-inline--fa fa-whatsapp w-8 h-8"
+                class="svg-inline--fa fa-whatsapp w-5 h-5"
                 role="img"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 448 512"
@@ -78,56 +114,174 @@ const currentUrl = Astro.url.pathname;
           </button>
         </a>
 
-        <div class="w-36">
+        <div class="w-36 ml-4">
           <div class="relative w-36">
-            {
-              currentUrl === "/" ? (
-                <a
-                  href="/es"
-                  class="block w-full py-2 pl-8 pr-3 text-base border border-green-700 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                >
-                  English
-                  <span class="absolute left-2">
-                    <img src="/images/USA.png" alt="flag" class="w-5 h-5" />
-                  </span>
-                </a>
-              ) : (
-                <a
-                  href="/"
-                  class="block w-full py-2 pl-8 pr-3 text-base border border-green-700 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                >
-                  Español
-                  <span class="absolute left-2">
-                    <img src="/images/Mexico.png" alt="flag" class="w-5 h-5" />
-                  </span>
-                </a>
-              )
-            }
+            <a
+              href={getOppositeLangPath()}
+              class="block w-full py-2 pl-8 pr-3 text-base border border-green-700 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            >
+              {
+                lang === "en" ? (
+                  <>
+                    Español
+                    <span class="absolute left-2">
+                      <img
+                        src="/images/Mexico.png"
+                        alt="flag"
+                        class="w-5 h-5"
+                      />
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    English
+                    <span class="absolute left-2">
+                      <img src="/images/USA.png" alt="flag" class="w-5 h-5" />
+                    </span>
+                  </>
+                )
+              }
+            </a>
           </div>
         </div>
       </div>
 
-      <div class="ml-2 lg:hidden">
-        <button
-          class="text-black cursor-pointer hover:text-green-300 focus:outline-none"
+      <button
+        class="lg:hidden text-black cursor-pointer hover:text-green-300 focus:outline-none"
+        id="mobile-menu-button"
+      >
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          data-prefix="fas"
+          data-icon="bars"
+          class="svg-inline--fa fa-bars w-6 h-6"
+          role="img"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 448 512"
         >
-          <svg
-            aria-hidden="true"
-            focusable="false"
-            data-prefix="fas"
-            data-icon="bars"
-            class="svg-inline--fa fa-bars"
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 448 512"
+          <path
+            fill="currentColor"
+            d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="lg:hidden hidden" id="mobile-menu">
+      <div class="pt-2 pb-4 space-y-1">
+        <a
+          href={getNavLink("Home")}
+          class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-green-300 hover:bg-gray-50"
+        >
+          {t("nav.home")}
+        </a>
+
+        <a
+          href={getNavLink("Mission")}
+          class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-green-300 hover:bg-gray-50"
+        >
+          {t("nav.mision")}
+        </a>
+
+        <a
+          href={getNavLink("Solutions")}
+          class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-green-300 hover:bg-gray-50"
+        >
+          {t("nav.soluciones")}
+        </a>
+
+        <a
+          href={withLang("/tratamientos")}
+          class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-green-300 hover:bg-gray-50"
+        >
+          {t("nav.tratamientos")}
+        </a>
+
+        <a
+          href={getNavLink("Booking")}
+          class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-green-300 hover:bg-gray-50"
+        >
+          {t("nav.reservar")}
+        </a>
+
+        <a
+          href={withLang("/contacto")}
+          class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-green-300 hover:bg-gray-50"
+        >
+          {t("nav.contacto")}
+        </a>
+
+        <div class="px-3 py-2">
+          <a
+            href={getOppositeLangPath()}
+            class="inline-flex items-center px-4 py-2 border border-green-700 rounded-md text-base font-medium"
           >
-            <path
-              fill="currentColor"
-              d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"
-            ></path>
-          </svg>
-        </button>
+            {
+              lang === "en" ? (
+                <>
+                  <img
+                    src="/images/Mexico.png"
+                    alt="flag"
+                    class="w-5 h-5 mr-2"
+                  />
+                  Español
+                </>
+              ) : (
+                <>
+                  <img src="/images/USA.png" alt="flag" class="w-5 h-5 mr-2" />
+                  English
+                </>
+              )
+            }
+          </a>
+        </div>
+
+        <div class="px-3 pt-2">
+          <a
+            href="https://api.whatsapp.com/send?phone=+16195861436&text=Hola,%20visite%20su%20pagina%20y%20quisiera%20conocer%20m%C3%A1s%20sobre%20sus%20servicios%20dentales"
+            target="_blank"
+            rel="noreferrer"
+            class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
+          >
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              data-prefix="fab"
+              data-icon="whatsapp"
+              class="svg-inline--fa fa-whatsapp w-5 h-5 mr-2"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 448 512"
+            >
+              <path
+                fill="currentColor"
+                d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"
+              ></path>
+            </svg>
+            {t("nav.whatsapp")}
+          </a>
+        </div>
       </div>
     </div>
   </div>
 </nav>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const mobileMenuButton = document.getElementById("mobile-menu-button");
+    const mobileMenu = document.getElementById("mobile-menu");
+
+    mobileMenuButton.addEventListener("click", () => {
+      const isHidden = mobileMenu.classList.contains("hidden");
+
+      if (isHidden) {
+        mobileMenu.classList.remove("hidden");
+        mobileMenu.classList.add("");
+      } else {
+        mobileMenu.classList.remove("");
+        mobileMenu.classList.add("hidden");
+      }
+    });
+  });
+</script>
