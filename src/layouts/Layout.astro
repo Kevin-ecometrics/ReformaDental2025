@@ -1,4 +1,5 @@
 ---
+import "@fontsource-variable/roboto";
 import "@styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import { getLangFromUrl } from "@i18n/utils";
@@ -38,5 +39,9 @@ const lang = getLangFromUrl(Astro.url);
 <style is:global>
   html {
     scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: "Roboto Variable", sans-serif;
   }
 </style>
