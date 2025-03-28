@@ -3,6 +3,11 @@ import Layout from "@layouts/Layout.astro";
 import Footer from "@components/Footer.astro";
 import { getLangFromUrl, useTranslations } from "@i18n/utils";
 
+const withLang = (path: string) => {
+  if (path.startsWith("#")) return path;
+  return lang === "es" ? `/es${path}` : path;
+};
+
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
@@ -85,11 +90,64 @@ const tratamientoData = tratamientos[tratamiento];
   description="Descripcion del Tratamiento"
 >
   <main class="container mx-auto px-4 py-8">
+    <!-- Botón de regreso -->
+    <button
+      onclick="window.history.back()"
+      class="mb-6 flex items-center text-green-600 hover:text-green-800 transition-colors"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5 mr-1"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+          clip-rule="evenodd"></path>
+      </svg>
+    </button>
+
     <div
       class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden"
     >
       <div class="p-8">
-        <div class="flex flex-col md:flex-row gap-8">
+        <div class="flex flex-col md:hidden">
+          <div class="flex flex-row gap-4">
+            <div class="w-2/3">
+              <h1 class="text-xl font-bold text-green-600 mb-2">
+                {tratamientoData.nombre}
+              </h1>
+              <p class="text-base font-semibold mb-3">
+                Price: <span class="text-green-500"
+                  >{tratamientoData.precio}</span
+                >
+              </p>
+              <p class="text-gray-700 mb-4 text-xs">
+                {tratamientoData.descripcion}
+              </p>
+              <a
+                href={withLang("/contacto")}
+                class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-lg transition duration-300 inline-block text-xs"
+              >
+                {t("tratamientos.cita")}
+              </a>
+            </div>
+            <div class="w-1/3">
+              <img
+                transition:name={tratamientoData.nombre}
+                src={tratamientoData.imagen}
+                alt={tratamientoData.nombre}
+                width="150"
+                height="150"
+                class="w-full h-auto object-cover rounded-lg"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Versión escritorio (sin cambios) -->
+        <div class="hidden md:flex flex-row gap-8">
           <div class="md:w-1/3">
             <img
               transition:name={tratamientoData.nombre}
@@ -105,15 +163,14 @@ const tratamientoData = tratamientos[tratamiento];
               {tratamientoData.nombre}
             </h1>
             <p class="text-xl font-semibold mb-6">
-              Precio: <span class="text-green-500"
-                >{tratamientoData.precio}</span
+              Price: <span class="text-green-500">{tratamientoData.precio}</span
               >
             </p>
             <p class="text-gray-700 mb-6">
               {tratamientoData.descripcion}
             </p>
             <a
-              href="/contacto"
+              href={withLang("/contacto")}
               class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300 inline-block"
             >
               {t("tratamientos.cita")}

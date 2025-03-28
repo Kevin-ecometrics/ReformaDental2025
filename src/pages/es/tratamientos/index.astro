@@ -5,6 +5,10 @@ import { getLangFromUrl, useTranslations } from "@i18n/utils";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+const withLang = (path: string) => {
+  if (path.startsWith("#")) return path;
+  return lang === "es" ? `/es${path}` : path;
+};
 
 const tratamientos = [
   {
@@ -89,7 +93,7 @@ const tratamientos = [
       {
         tratamientos.map((tratamiento) => (
           <a
-            href={`/tratamientos/${tratamiento.slug}`}
+            href={withLang(`/tratamientos/${tratamiento.slug}`)}
             class="bg-white rounded-xl shadow-md overflow-hidden tratamiento-card transition duration-300 hover:transform hover:-translate-y-1"
           >
             <div class="p-6">
@@ -128,7 +132,7 @@ const tratamientos = [
         {t("tratamientos.contactanos")}
       </p>
       <a
-        href="/contacto"
+        href={withLang("/contacto")}
         class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300"
       >
         {t("tratamientos.agendarcita")}
