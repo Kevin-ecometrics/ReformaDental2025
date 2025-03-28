@@ -34,7 +34,6 @@ const t = useTranslations(lang);
         </a>
       </div>
 
-      <!-- Sección de Ubicación -->
       <div class="font-poppins animate-fade-left animate-duration-[2000ms]">
         <h1 class="text-3xl text-green-500 font-medium">
           {t("contact.location")}
@@ -55,7 +54,7 @@ const t = useTranslations(lang);
                 d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"
               ></path>
             </svg>
-            <span>{t("contact.address")}.</span>
+            <span>{t("contact.address")}</span>
           </div>
           <div class="flex items-center">
             <svg
@@ -77,10 +76,13 @@ const t = useTranslations(lang);
         </div>
         <div class="relative h-0 mt-4" style="padding-bottom: 56.25%;">
           <iframe
-            class="absolute top-0 left-0 w-full h-full"
-            src={t("contact.mapEmbedUrl")}
-            title={t("contact.mapTitle")}
-            allowfullscreen></iframe>
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3363.9842950582993!2d-117.04156405641179!3d32.526566406341885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80d9499b13b355e9%3A0x33f0692b196212e5!2sReforma%20Dental!5e0!3m2!1ses-419!2smx!4v1743199144564!5m2!1ses-419!2smx"
+            width="600"
+            height="450"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
       </div>
     </section>

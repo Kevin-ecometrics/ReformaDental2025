@@ -52,24 +52,40 @@ const t = useTranslations(lang);
     </div>
   </div>
 
-  <script>
-    document
-      .getElementById("showMapButton")
-      ?.addEventListener("click", function () {
-        const mapContainer = document.getElementById("mapContainer");
-        const buttonText = this.querySelector("span");
+  <script is:inline>
+    document.addEventListener("DOMContentLoaded", setupMapToggle);
+    document.addEventListener("astro:page-load", setupMapToggle);
+    document.addEventListener("astro:after-swap", setupMapToggle);
 
-        if (mapContainer && buttonText) {
+    function setupMapToggle() {
+      const oldButton = document.getElementById("showMapButton");
+      if (oldButton) {
+        oldButton.replaceWith(oldButton.cloneNode(true));
+      }
+      const showMapButton = document.getElementById("showMapButton");
+      const mapContainer = document.getElementById("mapContainer");
+
+      if (showMapButton && mapContainer) {
+        const buttonText = showMapButton.querySelector("span");
+
+        showMapButton.addEventListener("click", function () {
           if (mapContainer.classList.contains("h-0")) {
             mapContainer.classList.remove("h-0");
             mapContainer.classList.add("h-[500px]");
-            buttonText.textContent = this.dataset.hideText ?? "";
+            if (buttonText) {
+              buttonText.textContent =
+                this.getAttribute("data-hide-text") || "";
+            }
           } else {
             mapContainer.classList.add("h-0");
             mapContainer.classList.remove("h-[500px]");
-            buttonText.textContent = this.dataset.showText ?? "";
+            if (buttonText) {
+              buttonText.textContent =
+                this.getAttribute("data-show-text") || "";
+            }
           }
-        }
-      });
+        });
+      }
+    }
   </script>
 </section>

@@ -25,14 +25,11 @@ const getNavLink = (anchor: string) => {
   const basePath = lang === "es" ? "/es" : "/";
   return currentUrl === basePath ? `#${anchor}` : `${basePath}#${anchor}`;
 };
-
-const mobileMenuOpen = false;
 ---
 
-<nav class="bg-white p-4 sticky top-0 z-50">
+<nav class="bg-white p-4 sticky top-0 z-50 shadow-sm">
   <div class="container mx-auto">
     <div class="flex items-center justify-between">
-      <!-- Logo -->
       <a href={lang === "es" ? "/es" : "/"} class="flex items-center">
         <img src="/images/logo.webp" alt="Logo" class="w-8 h-8" />
       </a>
@@ -42,42 +39,37 @@ const mobileMenuOpen = false;
       >
         <a
           href={getNavLink("Home")}
-          class="text-black hover:text-green-300 mx-4"
+          class="text-black hover:text-green-300 mx-4 transition-colors"
         >
           {t("nav.home")}
         </a>
-
         <a
           href={getNavLink("Mission")}
-          class="text-black hover:text-green-300 mx-4"
+          class="text-black hover:text-green-300 mx-4 transition-colors"
         >
           {t("nav.mision")}
         </a>
-
         <a
           href={getNavLink("Solutions")}
-          class="text-black hover:text-green-300 mx-4"
+          class="text-black hover:text-green-300 mx-4 transition-colors"
         >
           {t("nav.soluciones")}
         </a>
-
         <a
           href={withLang("/tratamientos")}
-          class="text-black hover:text-green-300 mx-4"
+          class="text-black hover:text-green-300 mx-4 transition-colors"
         >
           {t("nav.tratamientos")}
         </a>
-
         <a
           href={getNavLink("Booking")}
-          class="text-black hover:text-green-300 mx-4"
+          class="text-black hover:text-green-300 mx-4 transition-colors"
         >
           {t("nav.reservar")}
         </a>
-
         <a
           href={withLang("/contacto")}
-          class="text-black hover:text-green-300 mx-4"
+          class="text-black hover:text-green-300 mx-4 transition-colors"
         >
           {t("nav.contacto")}
         </a>
@@ -89,178 +81,279 @@ const mobileMenuOpen = false;
           class="ml-8"
         >
           <button
-            class="select-none items-center gap-4 rounded-lg border border-green-700 py-1 px-2 text-center align-middle font-sans text-sm font-bold uppercase text-blue-gray-500 transition-all hover:opacity-75 focus:ring focus:ring-blue-gray-200 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-            type="button"
-            data-ripple-dark="true"
+            class="flex items-center gap-2 rounded-lg border border-green-700 py-1 px-3 text-sm font-bold uppercase text-gray-700 hover:bg-green-50 transition-all"
           >
-            <div class="flex justify-center items-center gap-2">
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                data-prefix="fab"
-                data-icon="whatsapp"
-                class="svg-inline--fa fa-whatsapp w-5 h-5"
-                role="img"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 448 512"
-              >
-                <path
-                  fill="currentColor"
-                  d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"
-                ></path>
-              </svg>
-              {t("nav.whatsapp")}
-            </div>
+            <svg class="w-5 h-5" viewBox="0 0 448 512" fill="currentColor">
+              <path
+                d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"
+              ></path>
+            </svg>
+            {t("nav.whatsapp")}
           </button>
         </a>
 
-        <div class="w-36 ml-4">
-          <div class="relative w-36">
-            <a
-              href={getOppositeLangPath()}
-              class="block w-full py-2 pl-8 pr-3 text-base border border-green-700 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            >
-              {
-                lang === "en" ? (
-                  <>
-                    Español
-                    <span class="absolute left-2">
-                      <img
-                        src="/images/Mexico.png"
-                        alt="flag"
-                        class="w-5 h-5"
-                      />
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    English
-                    <span class="absolute left-2">
-                      <img src="/images/USA.png" alt="flag" class="w-5 h-5" />
-                    </span>
-                  </>
-                )
-              }
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <button
-        class="lg:hidden text-black cursor-pointer hover:text-green-300 focus:outline-none"
-        id="mobile-menu-button"
-      >
-        <svg
-          aria-hidden="true"
-          focusable="false"
-          data-prefix="fas"
-          data-icon="bars"
-          class="svg-inline--fa fa-bars w-6 h-6"
-          role="img"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 448 512"
-        >
-          <path
-            fill="currentColor"
-            d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"
-          ></path>
-        </svg>
-      </button>
-    </div>
-
-    <div class="lg:hidden hidden" id="mobile-menu">
-      <div class="pt-2 pb-4 space-y-1">
-        <a
-          href={getNavLink("Home")}
-          class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-green-300 hover:bg-gray-50"
-        >
-          {t("nav.home")}
-        </a>
-
-        <a
-          href={getNavLink("Mission")}
-          class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-green-300 hover:bg-gray-50"
-        >
-          {t("nav.mision")}
-        </a>
-
-        <a
-          href={getNavLink("Solutions")}
-          class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-green-300 hover:bg-gray-50"
-        >
-          {t("nav.soluciones")}
-        </a>
-
-        <a
-          href={withLang("/tratamientos")}
-          class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-green-300 hover:bg-gray-50"
-        >
-          {t("nav.tratamientos")}
-        </a>
-
-        <a
-          href={getNavLink("Booking")}
-          class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-green-300 hover:bg-gray-50"
-        >
-          {t("nav.reservar")}
-        </a>
-
-        <a
-          href={withLang("/contacto")}
-          class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-green-300 hover:bg-gray-50"
-        >
-          {t("nav.contacto")}
-        </a>
-
-        <div class="px-3 py-2">
+        <div class="ml-4">
           <a
             href={getOppositeLangPath()}
-            class="inline-flex items-center px-4 py-2 border border-green-700 rounded-md text-base font-medium"
+            class="flex items-center gap-2 rounded-lg border border-green-700 py-1 px-3 text-sm font-bold uppercase text-gray-700 hover:bg-green-50 transition-all"
           >
             {
               lang === "en" ? (
                 <>
-                  <img
-                    src="/images/Mexico.png"
-                    alt="flag"
-                    class="w-5 h-5 mr-2"
-                  />
+                  <img src="/images/Mexico.png" alt="flag" class="w-5 h-5" />
                   Español
                 </>
               ) : (
                 <>
-                  <img src="/images/USA.png" alt="flag" class="w-5 h-5 mr-2" />
+                  <img src="/images/USA.png" alt="flag" class="w-5 h-5" />
                   English
                 </>
               )
             }
           </a>
         </div>
+      </div>
 
-        <div class="px-3 pt-2">
-          <a
-            href="https://api.whatsapp.com/send?phone=+16195861436&text=Hola,%20visite%20su%20pagina%20y%20quisiera%20conocer%20m%C3%A1s%20sobre%20sus%20servicios%20dentales"
-            target="_blank"
-            rel="noreferrer"
-            class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
+      <button
+        id="mobile-menu-button"
+        class="lg:hidden text-black hover:text-green-300 transition-colors p-2"
+      >
+        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            fill-rule="evenodd"
+            d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+            clip-rule="evenodd"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div
+      id="mobile-menu"
+      class="lg:hidden fixed inset-0 z-40 overflow-hidden transition-opacity duration-500 ease-in-out opacity-0 pointer-events-none"
+    >
+      <div
+        class="absolute inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm transition-opacity duration-500 ease-in-out opacity-0"
+        id="mobile-menu-backdrop"
+      >
+      </div>
+
+      <div
+        class="absolute inset-y-0 right-0 w-full bg-white shadow-2xl transform transition-transform duration-500 ease-in-out translate-x-full"
+        id="mobile-menu-panel"
+      >
+        <div class="flex flex-col h-full">
+          <div
+            class="flex justify-between items-center p-6 border-b border-gray-100 bg-white"
           >
-            <svg
-              aria-hidden="true"
-              focusable="false"
-              data-prefix="fab"
-              data-icon="whatsapp"
-              class="svg-inline--fa fa-whatsapp w-5 h-5 mr-2"
-              role="img"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 448 512"
+            <a href={lang === "es" ? "/es" : "/"} class="flex items-center">
+              <img src="/images/logo.webp" alt="Logo" class="w-10 h-10" />
+              <span class="ml-3 text-xl font-bold text-gray-800"
+                >Reforma Dental</span
+              >
+            </a>
+            <button
+              id="mobile-menu-close"
+              class="p-2 rounded-full hover:bg-gray-100 transition-colors"
             >
-              <path
-                fill="currentColor"
-                d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"
-              ></path>
-            </svg>
-            {t("nav.whatsapp")}
-          </a>
+              <svg
+                class="w-6 h-6 text-gray-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+          <nav class="flex-grow overflow-y-auto p-6 space-y-3">
+            <a
+              href={getNavLink("Home")}
+              class="flex items-center p-4 rounded-xl hover:bg-green-50 hover:text-green-600 transition-all duration-300 group"
+            >
+              <div
+                class="w-10 h-10 flex items-center justify-center bg-green-100 rounded-lg mr-4 group-hover:bg-green-200 transition-colors"
+              >
+                <svg
+                  class="w-6 h-6 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                  ></path>
+                </svg>
+              </div>
+              <span class="text-lg font-medium">{t("nav.home")}</span>
+            </a>
+
+            <a
+              href={getNavLink("Mission")}
+              class="flex items-center p-4 rounded-xl hover:bg-green-50 hover:text-green-600 transition-all duration-300 group"
+            >
+              <div
+                class="w-10 h-10 flex items-center justify-center bg-green-100 rounded-lg mr-4 group-hover:bg-green-200 transition-colors"
+              >
+                <svg
+                  class="w-6 h-6 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16.5 18.75h-9m9 0a3 3 0 0 1 3 3h-15a3 3 0 0 1 3-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 0 1-.982-3.172M9.497 14.25a7.454 7.454 0 0 0 .981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 0 0 7.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 0 0 2.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 0 1 2.916.52 6.003 6.003 0 0 1-5.395 4.972m0 0a6.726 6.726 0 0 1-2.749 1.35m0 0a6.772 6.772 0 0 1-3.044 0"
+                  ></path>
+                </svg>
+              </div>
+              <span class="text-lg font-medium">{t("nav.mision")}</span>
+            </a>
+
+            <a
+              href={getNavLink("Solutions")}
+              class="flex items-center p-4 rounded-xl hover:bg-green-50 hover:text-green-600 transition-all duration-300 group"
+            >
+              <div
+                class="w-10 h-10 flex items-center justify-center bg-green-100 rounded-lg mr-4 group-hover:bg-green-200 transition-colors"
+              >
+                <svg
+                  class="w-6 h-6 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"
+                  ></path>
+                </svg>
+              </div>
+              <span class="text-lg font-medium">{t("nav.soluciones")}</span>
+            </a>
+
+            <a
+              href={withLang("/tratamientos")}
+              class="flex items-center p-4 rounded-xl hover:bg-green-50 hover:text-green-600 transition-all duration-300 group"
+            >
+              <div
+                class="w-10 h-10 flex items-center justify-center bg-green-100 rounded-lg mr-4 group-hover:bg-green-200 transition-colors"
+              >
+                <svg
+                  class="w-6 h-6 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                  ></path>
+                </svg>
+              </div>
+              <span class="text-lg font-medium">{t("nav.tratamientos")}</span>
+            </a>
+
+            <a
+              href={getNavLink("Booking")}
+              class="flex items-center p-4 rounded-xl hover:bg-green-50 hover:text-green-600 transition-all duration-300 group"
+            >
+              <div
+                class="w-10 h-10 flex items-center justify-center bg-green-100 rounded-lg mr-4 group-hover:bg-green-200 transition-colors"
+              >
+                <svg
+                  class="w-6 h-6 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  ></path>
+                </svg>
+              </div>
+              <span class="text-lg font-medium">{t("nav.reservar")}</span>
+            </a>
+
+            <a
+              href={withLang("/contacto")}
+              class="flex items-center p-4 rounded-xl hover:bg-green-50 hover:text-green-600 transition-all duration-300 group"
+            >
+              <div
+                class="w-10 h-10 flex items-center justify-center bg-green-100 rounded-lg mr-4 group-hover:bg-green-200 transition-colors"
+              >
+                <svg
+                  class="w-6 h-6 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"
+                  ></path>
+                </svg>
+              </div>
+              <span class="text-lg font-medium">{t("nav.contacto")}</span>
+            </a>
+          </nav>
+
+          <div class="p-6 border-t border-gray-100 bg-gray-50">
+            <div class="grid grid-cols-2 gap-4">
+              <a
+                href={getOppositeLangPath()}
+                class="flex items-center justify-center gap-2 py-3 px-4 bg-white border border-gray-200 rounded-lg hover:border-green-500 transition-colors"
+              >
+                {
+                  lang === "en" ? (
+                    <>
+                      <img
+                        src="/images/Mexico.png"
+                        alt="flag"
+                        class="w-6 h-6"
+                      />
+                      <span class="font-medium">Español</span>
+                    </>
+                  ) : (
+                    <>
+                      <img src="/images/USA.png" alt="flag" class="w-6 h-6" />
+                      <span class="font-medium">English</span>
+                    </>
+                  )
+                }
+              </a>
+
+              <a
+                href="https://api.whatsapp.com/send?phone=+16195861436&text=Hola,%20visite%20su%20pagina%20y%20quisiera%20conocer%20m%C3%A1s%20sobre%20sus%20servicios%20dentales"
+                class="flex items-center justify-center gap-2 py-3 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 448 512">
+                  <path
+                    d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"
+                  ></path>
+                </svg>
+                <span class="font-medium">WhatsApp</span>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -268,20 +361,61 @@ const mobileMenuOpen = false;
 </nav>
 
 <script is:inline>
-  document.addEventListener("DOMContentLoaded", () => {
+  // Función para manejar el menú móvil
+  function setupMobileMenu() {
     const mobileMenuButton = document.getElementById("mobile-menu-button");
+    const mobileMenuClose = document.getElementById("mobile-menu-close");
     const mobileMenu = document.getElementById("mobile-menu");
+    const mobileMenuBackdrop = document.getElementById("mobile-menu-backdrop");
+    const mobileMenuPanel = document.getElementById("mobile-menu-panel");
 
-    mobileMenuButton.addEventListener("click", () => {
-      const isHidden = mobileMenu.classList.contains("hidden");
+    function openMenu() {
+      // Activar el menú
+      mobileMenu.classList.remove("pointer-events-none");
 
-      if (isHidden) {
-        mobileMenu.classList.remove("hidden");
-        mobileMenu.classList.add("");
-      } else {
-        mobileMenu.classList.remove("");
-        mobileMenu.classList.add("hidden");
-      }
+      // Animaciones en paralelo
+      mobileMenu.classList.remove("opacity-0");
+      mobileMenuBackdrop.classList.remove("opacity-0");
+      mobileMenuPanel.classList.remove("translate-x-full");
+
+      // Bloquear scroll
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeMenu() {
+      // Iniciar animación de salida
+      mobileMenuBackdrop.classList.add("opacity-0");
+      mobileMenuPanel.classList.add("translate-x-full");
+      mobileMenu.classList.add("opacity-0");
+
+      // Desactivar interacción después de la animación
+      setTimeout(() => {
+        mobileMenu.classList.add("pointer-events-none");
+        document.body.style.overflow = "";
+      }, 500); // Duración debe coincidir con la CSS
+    }
+
+    // Event listeners
+    if (mobileMenuButton) mobileMenuButton.addEventListener("click", openMenu);
+    if (mobileMenuClose) mobileMenuClose.addEventListener("click", closeMenu);
+    if (mobileMenuBackdrop)
+      mobileMenuBackdrop.addEventListener("click", closeMenu);
+
+    // Cerrar al hacer clic en enlaces (con retraso para ver la animación)
+    const menuLinks = mobileMenu?.querySelectorAll("nav a");
+    menuLinks?.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const href = link.getAttribute("href");
+        closeMenu();
+        setTimeout(() => {
+          window.location.href = href;
+        }, 400);
+      });
     });
-  });
+  }
+
+  // Inicialización
+  document.addEventListener("DOMContentLoaded", setupMobileMenu);
+  document.addEventListener("astro:after-swap", setupMobileMenu);
 </script>
