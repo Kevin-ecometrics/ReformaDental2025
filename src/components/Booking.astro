@@ -1,6 +1,6 @@
 ---
-import { getLangFromUrl, useTranslations } from "../i18n/utils";
-
+import { getLangFromUrl, useTranslations } from "@i18n/utils";
+import BookingSection from "@components/Booking";
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
@@ -107,6 +107,9 @@ const t = useTranslations(lang);
             </h3>
           </div>
         </div>
+        <section>
+          <BookingSection client:only="react" />
+        </section>
       </div>
     </div>
   </div>
