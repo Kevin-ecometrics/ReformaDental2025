@@ -5,6 +5,10 @@ import tailwindcss from "@tailwindcss/vite";
 
 import react from "@astrojs/react";
 
+import sitemap from "@astrojs/sitemap";
+
+import robotsTxt from "astro-robots-txt";
+
 // https://astro.build/config
 export default defineConfig({
   vite: {
@@ -18,6 +22,6 @@ export default defineConfig({
       prefixDefaultLocale: false,
     },
   },
-
-  integrations: [react()],
+  site: "https://reformadental.com/",
+  integrations: [react(), sitemap(), robotsTxt()],
 });

@@ -7,13 +7,13 @@ import Navbar from "@components/Navbar.astro";
 interface Props {
   title: string;
   description: string;
+  keywords?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, keywords } = Astro.props;
 
 const lang = getLangFromUrl(Astro.url);
 const url = Astro.url.pathname;
-console.log(url);
 ---
 
 <!doctype html>
@@ -21,29 +21,43 @@ console.log(url);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content="Reforma Dental" />
+    <meta name="publisher" content="Ecommetrica" />
+    <link rel="canonical" href={url} />
+    <meta name="copyright" content="Reforma Dental" />
+    <meta name="language" content={lang} />
+    <meta name="url" content={url} />
+    <meta name="og:title" content={title} />
+    <meta name="og:description" content={description} />
+    <meta name="og:type" content="website" />
+    <meta name="og:image" content="https://reformadental.com/og.png" />
+    <meta name="og:url" content={url} />
+    <meta name="og:site_name" content="Reforma Dental" />
     <title>
       {title}
     </title>
-    <ClientRouter />
   </head>
+  <ClientRouter />
+
   <body>
     <Navbar />
     <slot />
   </body>
-</html>
-<style is:global>
-  html {
-    scroll-behavior: smooth;
-  }
 
-  body {
-    font-family: "Roboto Variable", sans-serif;
-  }
-</style>
+  <style is:global>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Roboto Variable", sans-serif;
+    }
+  </style>
+
+
+</html>
