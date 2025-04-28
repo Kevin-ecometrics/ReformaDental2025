@@ -6,14 +6,14 @@ const t = useTranslations(lang);
 const currentUrl = Astro.url.pathname;
 
 const getNavLink = (anchor: string) => {
-  const basePath = lang === "es" ? "/es" : "/";
+  const basePath = lang === "es" ? "/es/" : "/";
   return currentUrl === basePath ? `#${anchor}` : `${basePath}#${anchor}`;
 };
 ---
 
 <section id="Solutions" class="bg-[#F5FFE5] py-24">
   <div class="container flex justify-center mx-auto">
-    <img src="images/horario.webp" alt={t("solutions.scheduleAlt")} />
+    <img src="/images/horario.webp" alt={t("solutions.scheduleAlt")} />
   </div>
 
   <div class="container py-8 mx-auto text-center md:py-16">

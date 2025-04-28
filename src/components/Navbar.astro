@@ -5,32 +5,25 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const currentUrl = Astro.url.pathname;
 
+const URL = Astro.url.pathname;
+const getNavLink = (anchor: string) => {
+  const basePath = lang === "es" ? "/es/" : "/";
+  return currentUrl === basePath ? `#${anchor}` : `${basePath}#${anchor}`;
+};
 const withLang = (path: string) => {
   if (path.startsWith("#")) return path;
-  return lang === "es" ? `/es${path}` : path;
+  return lang === "es" ? `/es/${path}` : path;
 };
-
 const getOppositeLangPath = () => {
-  const oppositeLang = lang === "en" ? "es" : "en";
-  const cleanPath = currentUrl.replace(/^\/es/, "");
-
-  if (oppositeLang === "es") {
-    return `/es${cleanPath === "/" ? "" : cleanPath}`;
-  } else {
-    return cleanPath || "/";
-  }
-};
-
-const getNavLink = (anchor: string) => {
-  const basePath = lang === "es" ? "/es" : "/";
-  return currentUrl === basePath ? `#${anchor}` : `${basePath}#${anchor}`;
+  const basePath = lang === "es" ? "/es/" : "/";
+  return currentUrl.replace(basePath, lang === "es" ? "/" : "/es/");
 };
 ---
 
 <nav class="bg-white p-4 sticky top-0 z-50 shadow-sm">
   <div class="container mx-auto">
     <div class="flex items-center justify-between">
-      <a href={lang === "es" ? "/es" : "/"} class="flex items-center">
+      <a href={lang === "es" ? "/es/" : "/"} class="flex items-center">
         <img src="/images/logo.webp" alt="Logo" class="w-8 h-8" />
       </a>
 
@@ -56,7 +49,7 @@ const getNavLink = (anchor: string) => {
           {t("nav.soluciones")}
         </a>
         <a
-          href={withLang("/tratamientos")}
+          href={withLang("tratamientos")}
           class="text-black hover:text-green-300 mx-4 transition-colors"
         >
           {t("nav.tratamientos")}
@@ -68,7 +61,7 @@ const getNavLink = (anchor: string) => {
           {t("nav.reservar")}
         </a>
         <a
-          href={withLang("/contacto")}
+          href={withLang("contacto")}
           class="text-black hover:text-green-300 mx-4 transition-colors"
         >
           {t("nav.contacto")}
@@ -145,7 +138,7 @@ const getNavLink = (anchor: string) => {
           <div
             class="flex justify-between items-center p-6 border-b border-gray-100 bg-white"
           >
-            <a href={lang === "es" ? "/es" : "/"} class="flex items-center">
+            <a href={lang === "es" ? "/es/" : "/"} class="flex items-center">
               <img src="/images/logo.webp" alt="Logo" class="w-10 h-10" />
               <span class="ml-3 text-xl font-bold text-gray-800"
                 >Reforma Dental</span

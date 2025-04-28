@@ -1,16 +1,21 @@
 ---
+import { FaCopy } from "react-icons/fa";
 import Modal from "../components/Modal.astro";
 import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+
+const URL = Astro.url.pathname.startsWith("/es/");
+const YEAR = new Date().getFullYear();
+const Copy = "©";
 ---
 
 <footer class="w-full p-4 bg-white md:p-8">
   <div
     class="flex flex-col items-center justify-center gap-6 text-center bg-white md:flex-row md:justify-between"
   >
-    <a href={lang === "es" ? "/es" : "/"}>
+    <a href={lang === "es" ? "/es/" : "/"}>
       <img src="/images/logo.webp" alt="logo-ct" class="w-10" />
     </a>
 
@@ -44,14 +49,14 @@ const t = useTranslations(lang);
 
       <li>
         <a
-          href="/contacto"
+          href={lang === "es" ? "/es/contacto" : "/contact"}
           class="block antialiased font-sans text-base leading-relaxed text-blue-gray-900 font-normal cursor-pointer transition-colors hover:text-green-300 focus:text-green-300"
           >{t("footer.contact")}</a
         >
       </li>
       <li>
         <a
-          href="/#Booking"
+          href={lang === "es" ? "/es/#Booking" : "/#Booking"}
           class="block antialiased font-sans text-base leading-relaxed text-blue-gray-900 font-normal cursor-pointer transition-colors hover:text-green-300 focus:text-green-300"
           >{t("footer.booking")}</a
         >
@@ -61,14 +66,38 @@ const t = useTranslations(lang);
 
   <hr class="my-4 md:my-8 border-blue-gray-50" />
 
-  <a
-    href="https://www.e-commetrics.com/"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="block antialiased font-sans text-base leading-relaxed text-blue-gray-900 font-normal text-center transition-colors hover:text-green-300 focus:text-green-300"
-  >
-    {t("footer.rights")}
-  </a>
+  <div class="flex flex-col items-center justify-center gap-4 md:flex-row">
+    <p class="text-center text-md">
+      {
+        URL ? (
+          <>
+            {Copy} {YEAR} Reforma Dental. Todos los derechos reservados.
+            desarrollado por{" "}
+            <a
+              href="https://ecommetrica.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:underline hover:font-semibold hover:text-green-300"
+            >
+              Ecommetrica
+            </a>
+          </>
+        ) : (
+          <>
+            {Copy} {YEAR} Reforma Dental. All rights reserved. developed by{" "}
+            <a
+              href="https://ecommetrica.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:underline hover:font-semibold hover:text-green-300"
+            >
+              Ecommetrica
+            </a>
+          </>
+        )
+      }
+    </p>
+  </div>
 
   <Modal id="aboutModal" title={String(t("modal.about.title"))}>
     <div class="prose max-w-none">

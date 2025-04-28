@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 
 function Booking() {
   const isEnglish =
-    typeof window !== "undefined" && window.location.pathname !== "/es";
+    typeof window !== "undefined" && window.location.pathname !== "/es/";
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [showAllDays, setShowAllDays] = useState(false);
@@ -107,10 +107,15 @@ function Booking() {
     };
 
     try {
-      await axios.post(
-        "https://www.reformadental.com/guardar-datos",
-        bookingData
-      );
+      isEnglish
+        ? await axios.post(
+            "https://www.reformadental.com/guardar-datos",
+            bookingData
+          )
+        : await axios.post(
+            "https://www.reformadental.com/guardar-datos-es",
+            bookingData
+          );
       setTicket(bookingData);
       setIsTicketModalOpen(true);
       setName("");
