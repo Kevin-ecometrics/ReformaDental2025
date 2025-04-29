@@ -5,7 +5,6 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const currentUrl = Astro.url.pathname;
 
-const URL = Astro.url.pathname;
 const getNavLink = (anchor: string) => {
   const basePath = lang === "es" ? "/es/" : "/";
   return currentUrl === basePath ? `#${anchor}` : `${basePath}#${anchor}`;
@@ -28,7 +27,7 @@ const getOppositeLangPath = () => {
       </a>
 
       <div
-        class="hidden lg:flex items-center justify-center w-full lg:w-center"
+        class="hidden lg:flex items-center justify-center w-full lg:w-center font-semibold"
       >
         <a
           href={getNavLink("Home")}
@@ -163,7 +162,7 @@ const getOppositeLangPath = () => {
             </button>
           </div>
 
-          <nav class="flex-grow overflow-y-auto p-6 space-y-3">
+          <nav class="flex-grow overflow-y-auto p-6 space-y-3 font-semibold">
             <a
               href={getNavLink("Home")}
               class="flex items-center p-4 rounded-xl hover:bg-green-50 hover:text-green-600 transition-all duration-300 group"
