@@ -17,7 +17,8 @@ import {
   StyleSheet,
   Image,
 } from "@react-pdf/renderer";
-import QRCode from "qrcode"; // Usaremos la librería qrcode para generar el QR como base64
+import QRCode from "qrcode";
+import { toast, Toaster } from "react-hot-toast"; // Agrega react-hot-toast
 
 const styles = StyleSheet.create({
   page: { padding: 30 },
@@ -41,6 +42,7 @@ function Booking() {
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
   const [ticket, setTicket] = useState(null);
   const [qrCodeDataURL, setQrCodeDataURL] = useState(""); // Estado para almacenar el QR como base64
+  const [loading, setLoading] = useState(false); // Estado de loading
   const days = Array.from({ length: showAllDays ? 30 : 14 }, (_, i) => {
     const date = new Date();
     date.setDate(date.getDate() + i);
@@ -50,6 +52,7 @@ function Booking() {
   const hours = Array.from({ length: 9 }, (_, i) => 9 + i); // Horas de 9:00 AM a 5:00 PM
 
   const fetchBookedHours = () => {
+    setLoading(true);
     axios
       .get("https://www.reformadental.com/fechas-seleccionadas")
       .then((response) => {
@@ -59,9 +62,15 @@ function Booking() {
         }));
         setBookedHours(adjustedHours);
       })
-      .catch((error) =>
-        console.error("Error al cargar las horas reservadas:", error)
-      );
+      .catch((error) => {
+        console.error("Error al cargar las horas reservadas:", error);
+        toast.error(
+          isEnglish
+            ? "Error loading booked hours."
+            : "Error al cargar las horas reservadas."
+        );
+      })
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -87,7 +96,7 @@ function Booking() {
     event.preventDefault();
 
     if (!selectedDate || !selectedTime || !name || !email || !phone) {
-      alert(
+      toast.error(
         isEnglish
           ? "Please complete all fields."
           : "Por favor, completa todos los campos."
@@ -95,6 +104,7 @@ function Booking() {
       return;
     }
 
+    setLoading(true);
     const selectedDateTime = new Date(selectedDate);
     const [hours, minutes] = selectedTime.split(":").map(Number);
     selectedDateTime.setHours(hours, minutes, 0, 0);
@@ -107,15 +117,12 @@ function Booking() {
     };
 
     try {
-      isEnglish
-        ? await axios.post(
-            "https://www.reformadental.com/guardar-datos",
-            bookingData
-          )
-        : await axios.post(
+      await (isEnglish
+        ? axios.post("https://www.reformadental.com/guardar-datos", bookingData)
+        : axios.post(
             "https://www.reformadental.com/guardar-datos-es",
             bookingData
-          );
+          ));
       setTicket(bookingData);
       setIsTicketModalOpen(true);
       setName("");
@@ -123,13 +130,20 @@ function Booking() {
       setPhone("");
       setSelectedDate(null);
       setSelectedTime(null);
+      toast.success(
+        isEnglish
+          ? "Appointment successfully scheduled!"
+          : "¡Cita agendada exitosamente!"
+      );
     } catch (error) {
       console.error("Error al realizar la reservación:", error);
-      alert(
+      toast.error(
         isEnglish
           ? "Error making the reservation."
           : "Error al realizar la reservación."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -191,11 +205,11 @@ function Booking() {
 
   return (
     <div className="flex flex-col items-start gap-6 p-6">
+      <Toaster position="top-right" /> {/* Toaster para notificaciones */}
       <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
         <FaCalendarAlt className="text-green-500" />{" "}
         {isEnglish ? "Schedule Appointment" : "Agendar Cita"}
       </h1>
-
       {/* Selección de Fecha */}
       <div className="grid grid-cols-7 gap-2">
         {days.map((day) => {
@@ -205,7 +219,7 @@ function Booking() {
             <button
               key={formattedDate}
               onClick={() => setSelectedDate(day)}
-              disabled={isSunday}
+              disabled={isSunday || loading}
               className={`p-3 rounded-lg text-sm font-medium ${
                 isSunday
                   ? "bg-red-500 text-white cursor-not-allowed"
@@ -213,7 +227,7 @@ function Booking() {
                     format(selectedDate, "yyyy-MM-dd") === formattedDate
                   ? "bg-green-500 text-white"
                   : "bg-gray-100 hover:bg-gray-200 text-gray-800"
-              }`}
+              } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               {format(day, isEnglish ? "EEE, MMM d" : "EEE, d MMM")}
             </button>
@@ -224,6 +238,7 @@ function Booking() {
         <button
           onClick={() => setShowAllDays(true)}
           className="mt-2 px-8 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+          disabled={loading}
         >
           {isEnglish ? "Show more dates" : "Mostrar más fechas"}
         </button>
@@ -258,14 +273,14 @@ function Booking() {
                 <button
                   key={hour}
                   onClick={() => setSelectedTime(`${hour}:00`)}
-                  disabled={isDisabled}
+                  disabled={isDisabled || loading}
                   className={`p-2 rounded-lg text-sm font-medium ${
                     isBooked || isPastHour
                       ? "bg-red-500 text-white cursor-not-allowed"
                       : selectedTime === `${hour}:00`
                       ? "bg-green-500 text-white"
                       : "bg-gray-100 hover:bg-gray-200 text-gray-800"
-                  }`}
+                  } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   {formatHour(hour)}
                 </button>
@@ -274,7 +289,6 @@ function Booking() {
           </div>
         </div>
       )}
-
       {/* Formulario de Datos */}
       {selectedDate && selectedTime && (
         <form
@@ -290,6 +304,7 @@ function Booking() {
               onChange={(e) => setName(e.target.value)}
               required
               className="border p-2 rounded-md w-full"
+              disabled={loading}
             />
           </div>
           <div className="flex items-center gap-2 w-full">
@@ -301,6 +316,7 @@ function Booking() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="border p-2 rounded-md w-full"
+              disabled={loading}
             />
           </div>
           <div className="flex items-center gap-2 w-full">
@@ -313,17 +329,21 @@ function Booking() {
               required
               maxLength={10}
               className="border p-2 rounded-md w-full"
+              disabled={loading}
             />
           </div>
           <button
             type="submit"
-            className="bg-green-500 text-white p-2 rounded-md w-full hover:bg-green-600 transition"
+            className="bg-green-500 text-white p-2 rounded-md w-full hover:bg-green-600 transition flex items-center justify-center"
+            disabled={loading}
           >
+            {loading ? (
+              <span className="animate-spin mr-2 w-5 h-5 border-2 border-white border-t-transparent rounded-full"></span>
+            ) : null}
             {isEnglish ? "Schedule" : "Agendar"}
           </button>
         </form>
       )}
-
       {/* Modal de Confirmación */}
       {isTicketModalOpen && ticket && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -370,6 +390,7 @@ function Booking() {
               <button
                 onClick={handleCloseModal}
                 className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                disabled={loading}
               >
                 {isEnglish ? "Close" : "Cerrar"}
               </button>
@@ -377,6 +398,7 @@ function Booking() {
                 document={<AppointmentPDF ticket={ticket} />}
                 fileName="appointment.pdf"
                 className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                disabled={loading}
               >
                 {isEnglish ? "Download PDF" : "Descargar PDF"}
               </PDFDownloadLink>

@@ -10,13 +10,18 @@ const getNavLink = (anchor: string) => {
   return currentUrl === basePath ? `#${anchor}` : `${basePath}#${anchor}`;
 };
 const withLang = (path: string) => {
+  // Evita duplicar rutas como /tratamientos/tratamientos
   if (path.startsWith("#")) return path;
-  return lang === "es" ? `/es/${path}` : path;
+  // Elimina cualquier / inicial para evitar duplicados
+  const cleanPath = path.replace(/^\/+/, "");
+  return lang === "es" ? `/es/${cleanPath}` : `/${cleanPath}`;
 };
 const getOppositeLangPath = () => {
   const basePath = lang === "es" ? "/es/" : "/";
   return currentUrl.replace(basePath, lang === "es" ? "/" : "/es/");
 };
+
+const URL = Astro.url.pathname;
 ---
 
 <nav class="bg-white p-4 sticky top-0 z-50 shadow-sm">
