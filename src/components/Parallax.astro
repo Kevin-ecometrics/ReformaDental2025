@@ -1,0 +1,16 @@
+---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const { background } = Astro.props;
+---
+
+<div class="react-parallax" style="position: relative; overflow: hidden;">
+  <div
+    class={`w-[100%] h-[100px] bg-[url('${background}')] bg-cover bg-center bg-no-repeat bg-fixed`}
+    aria-label={t("mission.backgroundAlt")}
+  >
+  </div>
+</div>

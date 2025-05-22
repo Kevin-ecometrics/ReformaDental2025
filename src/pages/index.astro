@@ -1,14 +1,13 @@
 ---
 import Footer from "@components/Footer.astro";
-import Navbar from "@components/Navbar.astro";
 import Home from "@components/Home.astro";
 import Mision from "@components/Mision.astro";
 import Solutions from "@components/Solutions.astro";
-import Treatments from "@components/Treatments.astro";
+import Treatments from "@components/Treatments";
 import Booking from "@components/Booking.astro";
 import Contact from "@components/Contact.astro";
-import Modal from "@components/Modal.astro";
 import Layout from "@layouts/Layout.astro";
+import Parallax from "@components/Parallax.astro";
 ---
 
 <Layout
@@ -17,9 +16,12 @@ import Layout from "@layouts/Layout.astro";
   keywords="Reforma Dental, dental, dentist, dental clinic, dental care, dental aesthetics, prosthodontics, dental implants, orthodontics, endodontics, pediatric dentistry"
 >
   <Home />
+  <Parallax background="/images/silla.jpg" />
   <Mision />
   <Solutions />
-  <Treatments />
+  <Parallax background="/images/silla.jpg" />
+  <Treatments client:only="react" />
+  <Parallax background="/images/silla.jpg" />
   <Booking />
   <Contact />
   <Footer />
