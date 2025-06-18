@@ -12,7 +12,7 @@ const getNavLink = (anchor: string) => {
 };
 ---
 
-<section id="Home" class="bg-gray-100 md:h-screen">
+<section id="Home" class="bg-gray-100 xl:h-screen">
   <div class="container mx-auto text-center">
     {
       URL === "/" ? (
@@ -37,7 +37,7 @@ const getNavLink = (anchor: string) => {
       {t("home.subtitle")}
     </h2>
 
-    <div class="flex flex-col items-center gap-4 md:mb-0 mb-8">
+    <div class="flex flex-col items-center gap-4 xl:mb-0 mb-8">
       <a href={getNavLink("Booking")}>
         <button
           class="bg-[#87D717] hover:bg-[#95F50E] text-1xl text-white font-bold py-3 px-20 cursor-pointer rounded-full"
