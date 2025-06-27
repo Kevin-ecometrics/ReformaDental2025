@@ -1,0 +1,415 @@
+---
+const { URL } = Astro.props;
+---
+
+<section class="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-6xl mx-auto">
+    <!-- Images Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+      <!-- First Image -->
+      <div class="group fade-in">
+        <div
+          class="relative overflow-hidden rounded-2xl card-shadow bg-white p-6"
+        >
+          <!-- Decorative Background Element -->
+          <div
+            class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-fondo/10 to-fonfrom-fondo/20 rounded-full -translate-y-10 translate-x-10 opacity-60"
+          >
+          </div>
+
+          <div class="relative z-10">
+            <div
+              class="aspect-video overflow-hidden rounded-xl mb-6 group-hover:scale-[1.02] transition-transform duration-300"
+            >
+              <figure>
+                <img
+                  src="https://nakejidental.com/wp-content/uploads/2021/08/nueva-tecnica-de-rehabilitacion-oral-768x512.png.webp"
+                  alt={URL
+                    ? "New oral rehabilitation technique with All on 4 implants"
+                    : "Nueva técnica de rehabilitación oral con implantes All on 4"}
+                  title={URL
+                    ? "New oral rehabilitation technique with All on 4 implants"
+                    : "Nueva técnica de rehabilitación oral con implantes All on 4"}
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </figure>
+            </div>
+
+            <div class="text-center">
+              <h3 class="text-xl font-semibold text-principal mb-3">
+                {
+                  URL
+                    ? "Oral Rehabilitation Technique"
+                    : "Técnica de Rehabilitación Oral"
+                }
+              </h3>
+              <p class="text-gray-600 leading-relaxed">
+                {
+                  URL
+                    ? "Innovative technique that restores the entire smile with just four implants, providing immediate stability and functionality."
+                    : "Innovadora técnica que permite restaurar toda la sonrisa con solo cuatro implantes, proporcionando estabilidad y funcionalidad inmediata."
+                }
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Second Image -->
+      <div class="group fade-in">
+        <div
+          class="relative overflow-hidden rounded-2xl card-shadow bg-white p-6"
+        >
+          <!-- Decorative Background Element -->
+          <div
+            class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-background/20 to-background/30 rounded-full translate-y-8 -translate-x-8 opacity-60"
+          >
+          </div>
+
+          <div class="relative z-10">
+            <div
+              class="aspect-video overflow-hidden rounded-xl mb-6 group-hover:scale-[1.02] transition-transform duration-300"
+            >
+              <figure>
+                <img
+                  src="https://xdentistry.com.mx/wp-content/uploads/images/tijuana-all-on-4/all-on-4-implants.webp"
+                  alt={URL
+                    ? "All on 4 implants in Tijuana - Complete procedure"
+                    : "Implantes All on 4 en Tijuana - Procedimiento completo"}
+                  title={URL
+                    ? "All on 4 implants in Tijuana - Complete procedure"
+                    : "Implantes All on 4 en Tijuana - Procedimiento completo"}
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </figure>
+            </div>
+
+            <div class="text-center">
+              <h3 class="text-xl font-semibold text-principal mb-3">
+                {URL ? "The All on 4 Journey" : "El Proceso All on 4"}
+              </h3>
+              <p class="text-gray-600 leading-relaxed">
+                {
+                  URL
+                    ? "Complete process of All on 4 implants placement, from planning to final result with fixed prosthesis."
+                    : "Proceso completo de colocación de implantes All on 4, desde la planificación hasta el resultado final con prótesis fija."
+                }
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Third Image -->
+      <div class="group fade-in">
+        <div
+          class="relative overflow-hidden rounded-2xl card-shadow bg-white p-6"
+        >
+          <!-- Decorative Background Element -->
+          <div
+            class="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-background/20 to-background/30 rounded-full translate-y-8 -translate-x-8 opacity-60"
+          >
+          </div>
+
+          <div class="relative z-10">
+            <div
+              class="aspect-video overflow-hidden rounded-xl mb-6 group-hover:scale-[1.02] transition-transform duration-300"
+            >
+              <figure>
+                <img
+                  src="https://www.pacificimplantcenters.com/wp-content/uploads/2023/09/do-cavities-cause-bad-breath-768x512.webp"
+                  alt={URL
+                    ? "All on 4 implants - Fast and efficient recovery"
+                    : "Implantes All on 4 - Recuperación rápida y eficiente"}
+                  title={URL
+                    ? "All on 4 implants - Fast and efficient recovery"
+                    : "Implantes All on 4 - Recuperación rápida y eficiente"}
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </figure>
+            </div>
+
+            <div class="text-center">
+              <h3 class="text-xl font-semibold text-principal mb-3">
+                {
+                  URL
+                    ? "Fast and Efficient Recovery"
+                    : "Recuperación Rápida y Eficiente"
+                }
+              </h3>
+              <p class="text-gray-600 leading-relaxed">
+                {
+                  URL
+                    ? "The All on 4 protocol allows for immediate rehabilitation, reducing recovery time and improving patient's quality of life from day one."
+                    : "El protocolo All on 4 permite una rehabilitación inmediata, lo que reduce el tiempo de recuperación y mejora la calidad de vida del paciente desde el primer día."
+                }
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fourth Image -->
+      <div class="group fade-in">
+        <div
+          class="relative overflow-hidden rounded-2xl card-shadow bg-white p-6"
+        >
+          <!-- Decorative Background Element -->
+          <div
+            class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-fondo/10 to-fonfrom-fondo/20 rounded-full -translate-y-10 translate-x-10 opacity-60"
+          >
+          </div>
+
+          <div class="relative z-10">
+            <div
+              class="aspect-video overflow-hidden rounded-xl mb-6 group-hover:scale-[1.02] transition-transform duration-300"
+            >
+              <figure>
+                <img
+                  src="https://molarhouse.com/wp-content/uploads/2025/05/Depositphotos_10733789_S.jpg"
+                  alt={URL
+                    ? "Natural aesthetic results with All on 4 implants"
+                    : "Resultados estéticos naturales con implantes All on 4"}
+                  title={URL
+                    ? "Natural aesthetic results with All on 4 implants"
+                    : "Resultados estéticos naturales con implantes All on 4"}
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </figure>
+            </div>
+
+            <div class="text-center">
+              <h3 class="text-xl font-semibold text-principal mb-3">
+                {
+                  URL
+                    ? "Natural Aesthetic Results"
+                    : "Resultados Estéticos Naturales"
+                }
+              </h3>
+              <p class="text-gray-600 leading-relaxed">
+                {
+                  URL
+                    ? "The implants offer a highly natural appearance, restoring patient's confidence with a harmonious and functional smile."
+                    : "Los implantes ofrecen una apariencia estética altamente natural, devolviendo la confianza al paciente con una sonrisa armoniosa y funcional."
+                }
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Benefits Section -->
+    <div
+      id="benefits"
+      class="bg-gradient-to-br from-gray-50 to-white rounded-2xl card-shadow py-20 mb-12 p-4 fade-in relative overflow-hidden"
+    >
+      <!-- Decorative Background Elements -->
+      <div
+        class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-fondo/5 to-fonfrom-fondo/10 rounded-full -translate-y-20 translate-x-20"
+      >
+      </div>
+      <div
+        class="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-background/10 to-background/20 rounded-full translate-y-16 -translate-x-16"
+      >
+      </div>
+
+      <div class="relative z-10">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+            {URL ? "Benefits of " : "Beneficios de los "}
+            <span class="text-principal">All on 4</span>
+          </h2>
+          <div class="flex justify-center mb-4">
+            <div class="border-b-3 border-principal w-20 rounded-full"></div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Bone preservation -->
+          <div
+            class="bg-white rounded-xl p-6 card-shadow hover:shadow-lg transition-shadow duration-300"
+          >
+            <div class="flex items-start space-x-4">
+              <div
+                class="flex-shrink-0 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-green-600"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z"
+                  ></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-principal mb-2">
+                  {URL ? "Bone Preservation" : "Preservación Ósea"}
+                </h4>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                  {
+                    URL
+                      ? "The strategic placement of implants helps preserve jawbone, preventing the bone loss common after tooth loss."
+                      : "La colocación estratégica de los implantes ayuda a conservar el hueso maxilar, evitando la pérdida ósea común tras la pérdida de dientes."
+                  }
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Aesthetics -->
+          <div
+            class="bg-white rounded-xl p-6 card-shadow hover:shadow-lg transition-shadow duration-300"
+          >
+            <div class="flex items-start space-x-4">
+              <div
+                class="flex-shrink-0 w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-pink-600"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  ></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-principal mb-2">
+                  {URL ? "Aesthetics" : "Estética"}
+                </h4>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                  {
+                    URL
+                      ? "The prosthetic teeth are designed to look and feel like natural teeth, giving you an attractive and confident smile."
+                      : "Los dientes protésicos están diseñados para verse y sentirse como dientes naturales, brindándote una sonrisa atractiva y segura."
+                  }
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Durability -->
+          <div
+            class="bg-white rounded-xl p-6 card-shadow hover:shadow-lg transition-shadow duration-300 md:col-span-2 lg:col-span-1"
+          >
+            <div class="flex items-start space-x-4">
+              <div
+                class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-blue-600"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10.5V11.5C15.4,11.5 16,12.4 16,13V16C16,16.6 15.6,17 15,17H9C8.4,17 8,16.6 8,16V13C8,12.4 8.4,11.5 9,11.5V10.5C9,8.6 10.6,7 12,7M12,8.2C11.2,8.2 10.2,9.2 10.2,10.5V11.5H13.8V10.5C13.8,9.2 12.8,8.2 12,8.2Z"
+                  ></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-principal mb-2">
+                  {URL ? "Durability" : "Durabilidad"}
+                </h4>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                  {
+                    URL
+                      ? "When properly cared for, All on 4 implants can remain in excellent condition for decades, becoming a reliable and long-lasting solution for tooth loss."
+                      : "Cuando se cuidan correctamente, los implantes All on 4 pueden mantenerse en excelentes condiciones durante décadas, convirtiéndose en una solución confiable y duradera ante la pérdida dental."
+                  }
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comfort -->
+          <div
+            class="bg-white rounded-xl p-6 card-shadow hover:shadow-lg transition-shadow duration-300"
+          >
+            <div class="flex items-start space-x-4">
+              <div
+                class="flex-shrink-0 w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-yellow-600"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2a10 10 0 00-7.07 17.07A10 10 0 1012 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"
+                  ></path>
+                </svg>
+              </div>
+              <div>
+                <h4 class="font-semibold text-principal mb-2">
+                  {URL ? "Comfort" : "Comodidad"}
+                </h4>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                  {
+                    URL
+                      ? "Unlike removable dentures, All on 4 implants are fixed and feel like natural teeth, eliminating discomfort, rubbing, or the need for adhesives."
+                      : "A diferencia de las dentaduras removibles, los implantes All on 4 son fijos y se sienten como dientes naturales, eliminando incomodidades, roces o la necesidad de adhesivos."
+                  }
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  .fade-in:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
+  .fade-in:nth-child(2) {
+    animation-delay: 0.3s;
+  }
+
+  .fade-in:nth-child(3) {
+    animation-delay: 0.5s;
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .card-shadow {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .card-shadow:hover {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  }
+
+  .group:hover .card-shadow {
+    transform: translateY(-2px);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .aspect-video {
+      aspect-ratio: 4/3;
+    }
+  }
+</style>

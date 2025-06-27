@@ -1,0 +1,21 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Footer from "@components/Footer.astro";
+import Hero from "@components/all-on-4/Hero.astro";
+import About from "@components/all-on-4/About.astro";
+import Info from "@components/all-on-4/Info.astro";
+import Success from "@components/all-on-4/Success.astro";
+
+const URL = !Astro.url.pathname.startsWith("/es/");
+---
+
+<Layout
+  title="All on 4 | Reforma Dental"
+  description="Descubra el tratamiento All on 4 en Reforma Dental: la solución innovadora y permanente para sustituir todos sus dientes con sólo cuatro implantes dentales. Recupera tu sonrisa, funcionalidad y confianza con nuestros especialistas en implantología.."
+>
+  <Hero URL={URL} />
+  <About URL={URL} />
+  <Info URL={URL} />
+  <Success URL={URL} />
+  <Footer />
+</Layout>

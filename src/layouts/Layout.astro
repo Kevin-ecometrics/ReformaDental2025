@@ -4,6 +4,7 @@ import "@styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import { getLangFromUrl } from "@i18n/utils";
 import Navbar from "@components/Navbar.astro";
+import Dock from "@components/Dock.astro";
 interface Props {
   title: string;
   description: string;
@@ -118,6 +119,7 @@ const url = Astro.url.pathname;
     >
     <Navbar />
     <slot />
+    <Dock />
   </body><style is:global>
     html {
       scroll-behavior: smooth;

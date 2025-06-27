@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@theme {
+    --color-principal: #9dc216;
+    --color-fondo: #9dc216;
+}
+
+
 .logo {
     object-fit: cover;
     width: auto;

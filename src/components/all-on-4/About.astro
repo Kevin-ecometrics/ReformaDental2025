@@ -1,0 +1,206 @@
+---
+const { URL } = Astro.props;
+---
+
+<section id="about" class="container mx-auto py-20 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header Section -->
+    <div
+      class="text-center mb-12 opacity-0 translate-y-5 animate-[fadeIn_1s_ease-in-out_forwards]"
+      style="animation-delay: 0s;"
+    >
+      <h2
+        class="text-4xl md:text-5xl font-bold text-gray-800 mb-6 leading-tight"
+      >
+        {URL ? "What are " : "¿Qué son los implantes "}
+        <span class="text-principal">All on 4</span>
+        {URL ? " implants?" : "?"}
+      </h2>
+      <div class="flex justify-center mb-6">
+        <div class="border-b-4 border-principal w-24 rounded-full"></div>
+      </div>
+      <p
+        class="text-gray-700 leading-relaxed text-lg mb-6"
+        set:html={URL
+          ? `The <strong class="text-principal">All on 4 dental implants in Tijuana</strong> are an innovative solution at Reforma Dental for patients who have lost most or all teeth. With just four strategically placed implants, we restore your smile and chewing function with a fixed prosthesis.`
+          : `En <strong class="text-principal">Reforma Dental Tijuana</strong>, los <strong>implantes dentales All on 4</strong> son la solución moderna para quienes han perdido la mayoría o la totalidad de sus dientes. Con solo cuatro implantes estratégicamente colocados, recupera tu sonrisa y funcionalidad con una prótesis fija.`}
+      />
+    </div>
+
+    <!-- Main Content Card in 2 columns -->
+    <div
+      class="relative overflow-hidden rounded-2xl bg-white p-8 md:p-12 mb-12 shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),_0_10px_10px_-5px_rgba(0,0,0,0.04)] opacity-0 translate-y-5 animate-[fadeIn_1s_ease-in-out_forwards]"
+      style="animation-delay: 0.2s;"
+    >
+      <!-- Decorative Background Elements -->
+      <div
+        class="absolute top-0 right-0 w-32 h-32 rounded-full bg-gradient-to-br from-green-100 to-green-200 opacity-50 -translate-y-16 translate-x-16"
+      >
+      </div>
+      <div
+        class="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-gradient-to-tr from-green-100 to-green-200 opacity-50 translate-y-12 -translate-x-12"
+      >
+      </div>
+
+      <div class="relative z-10 flex flex-col md:flex-row gap-8">
+        <!-- Columna 1 -->
+        <div class="flex-1">
+          <h3 class="text-principal mb-2 font-bold">
+            {URL ? "How does it work?" : "¿Cómo funciona?"}
+          </h3>
+          <ul>
+            <li>
+              {
+                URL
+                  ? "4 implants are placed in the jaw."
+                  : "Se colocan 4 implantes en el maxilar o mandíbula."
+              }
+            </li>
+            <li>
+              {
+                URL
+                  ? "A temporary prosthesis is placed the same day."
+                  : "Se coloca una prótesis provisional el mismo día."
+              }
+            </li>
+            <li>
+              {
+                URL
+                  ? "After healing, the final prosthesis is installed."
+                  : "Tras la cicatrización, se instala la prótesis definitiva."
+              }
+            </li>
+          </ul>
+
+          <h3 class="text-principal mt-8 mb-2 font-bold">
+            {URL ? "Planning" : "Planificación"}
+          </h3>
+          <ul>
+            <li>
+              {
+                URL
+                  ? "Panoramic X-ray and CT scan"
+                  : "Radiografía panorámica y tomografía"
+              }
+            </li>
+            <li>{URL ? "Photographic study" : "Estudio fotográfico"}</li>
+            <li>
+              {
+                URL
+                  ? "Personalized treatment plan"
+                  : "Plan de tratamiento personalizado"
+              }
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna 2 -->
+        <div class="flex-1">
+          <h3 class="text-principal mt-0 mb-2 font-bold">
+            {URL ? "Advantages" : "Ventajas"}
+          </h3>
+          <ul>
+            <li>
+              {URL ? "Fixed, comfortable prosthesis" : "Prótesis fija y cómoda"}
+            </li>
+            <li>
+              {
+                URL
+                  ? "No palate in upper prosthesis"
+                  : "Sin paladar en la prótesis superior"
+              }
+            </li>
+            <li>
+              {
+                URL
+                  ? "Prevents bone loss and facial sagging"
+                  : "Evita reabsorción ósea y flacidez facial"
+              }
+            </li>
+            <li>
+              {
+                URL
+                  ? "Improves chewing and speech"
+                  : "Mejora la masticación y la fonación"
+              }
+            </li>
+            <li>
+              {
+                URL
+                  ? "Ideal for patients with bone loss"
+                  : "Ideal para pacientes con pérdida ósea"
+              }
+            </li>
+          </ul>
+
+          <h3 class="text-principal mt-8 mb-2 font-bold">
+            {URL ? "Who is it for?" : "¿Para quién es?"}
+          </h3>
+          <ul>
+            <li>
+              {
+                URL
+                  ? "People who lost most or all teeth"
+                  : "Personas que han perdido la mayoría o todos sus dientes"
+              }
+            </li>
+            <li>
+              {
+                URL
+                  ? "Patients with low bone density"
+                  : "Pacientes con poca densidad ósea"
+              }
+            </li>
+            <li>
+              {URL ? "Cases of maxillary atrophy" : "Casos de atrofia maxilar"}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <h3 class="text-principal mt-8 mb-2 font-bold">
+        {
+          URL
+            ? "Recovery and treatment time"
+            : "Recuperación y tiempo de tratamiento"
+        }
+      </h3>
+      <ul>
+        <li>
+          {
+            URL
+              ? "Recovery: About 2 weeks"
+              : "Recuperación: Aproximadamente 2 semanas"
+          }
+        </li>
+        <li>
+          {
+            URL
+              ? "Treatment: Evaluation, surgery with immediate prosthesis, follow-up, and final prosthesis after 4-6 months"
+              : "Tratamiento: Evaluación, cirugía con prótesis inmediata, seguimiento y prótesis definitiva a los 4-6 meses"
+          }
+        </li>
+      </ul>
+
+      <p class="mt-2 text-base">
+        {
+          URL
+            ? "At Reforma Dental Tijuana, our specialists will guide you through every step to ensure the best results with All on 4 dental implants."
+            : "En Reforma Dental Tijuana, nuestros especialistas te acompañan en cada paso para garantizar los mejores resultados con implantes dentales All on 4."
+        }
+      </p>
+    </div>
+  </div>
+
+  <style>
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</section>

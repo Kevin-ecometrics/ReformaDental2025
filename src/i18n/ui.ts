@@ -15,6 +15,7 @@ export const languages = {
       'nav.contacto': 'Contact',
       'nav.whatsapp': 'Send Message',
       'nav.language': 'Language',
+      'nav.all4': "All on 4",
   
       // Home
       'home.videoAlt': 'Hero Video',
@@ -266,6 +267,8 @@ export const languages = {
       'nav.contacto': 'Contacto',
       'nav.whatsapp': 'Enviar Mensaje',
       'nav.language': 'Idioma',
+      'nav.all4': "All on 4",
+
   
       // Home
       'home.videoAlt': 'Video Hero',
