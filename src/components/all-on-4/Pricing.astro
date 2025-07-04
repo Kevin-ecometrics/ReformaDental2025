@@ -1,0 +1,521 @@
+---
+const { URL } = Astro.props;
+---
+
+<section id="pricing" class="container mx-auto py-20 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header Section -->
+    <div
+      class="text-center mb-12 opacity-0 translate-y-5 animate-[fadeIn_1s_ease-in-out_forwards]"
+      style="animation-delay: 0s;"
+    >
+      <h2
+        class="text-4xl md:text-5xl font-bold text-gray-800 mb-6 leading-tight"
+      >
+        {URL ? "Pricing For The Treatment" : "Precios del Tratamiento"}
+      </h2>
+      <div class="flex justify-center mb-6">
+        <div class="border-b-4 border-principal w-24 rounded-full"></div>
+      </div>
+      <p class="text-gray-700 leading-relaxed text-lg mb-6">
+        {
+          URL
+            ? "Check out our affordable prices! Compare our savings vs U.S. prices"
+            : "¡Consulta nuestros precios accesibles! Compara nuestros ahorros vs precios de E.U.A."
+        }
+      </p>
+    </div>
+
+    <!-- All-on-4 Section -->
+    <div
+      class="relative overflow-hidden rounded-2xl bg-white p-8 md:p-12 mb-12 shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),_0_10px_10px_-5px_rgba(0,0,0,0.04)] opacity-0 translate-y-5 animate-[fadeIn_1s_ease-in-out_forwards]"
+      style="animation-delay: 0.2s;"
+    >
+      <!-- Decorative Background Elements -->
+      <div
+        class="absolute top-0 right-0 w-32 h-32 rounded-full bg-gradient-to-br from-green-100 to-green-200 opacity-50 -translate-y-16 translate-x-16"
+      >
+      </div>
+      <div
+        class="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-gradient-to-tr from-green-100 to-green-200 opacity-50 translate-y-12 -translate-x-12"
+      >
+      </div>
+
+      <div class="relative z-10">
+        <h3 class="text-3xl font-bold text-principal mb-2 text-center">
+          {URL ? "All-on-4 Treatment" : "Tratamiento All-on-4"}
+        </h3>
+        <p class="text-center text-gray-600 mb-8 font-semibold">
+          {URL ? "(PER ARCH - 4 IMPLANTS)" : "(POR ARCADA - 4 IMPLANTES)"}
+        </p>
+
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-gray-50">
+                <th
+                  class="border border-gray-200 p-4 text-left font-bold text-gray-800"
+                >
+                  {URL ? "Service" : "Servicio"}
+                </th>
+                <th
+                  class="border border-gray-200 p-4 text-center font-bold text-principal uppercase"
+                >
+                  {URL ? "Reforma Dental" : "Reforma Dental"}
+                </th>
+                <th
+                  class="border border-gray-200 p-4 text-center font-bold text-gray-600"
+                >
+                  {URL ? "U.S.A." : "E.U.A."}
+                </th>
+                <th
+                  class="border border-gray-200 p-4 text-center font-bold text-green-600"
+                >
+                  {URL ? "SAVINGS" : "AHORROS"}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="hover:bg-gray-50">
+                <td class="border border-gray-200 p-4">
+                  <strong
+                    >{
+                      URL ? "4 TITANIUM IMPLANTS" : "4 IMPLANTES DE TITANIO"
+                    }</strong
+                  >
+                </td>
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-principal"
+                  >$3,960 USD</td
+                >
+                <td class="border border-gray-200 p-4 text-center text-gray-600"
+                  >$9,000 USD</td
+                >
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-green-600"
+                  >56%</td
+                >
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="border border-gray-200 p-4">
+                  <strong
+                    >{URL ? "EXTRACTION & DSD" : "EXTRACCIÓN Y DSD"}</strong
+                  >
+                </td>
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-principal"
+                  >FREE</td
+                >
+                <td class="border border-gray-200 p-4 text-center text-gray-600"
+                  >$1,200 USD</td
+                >
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-green-600"
+                  >100%</td
+                >
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="border border-gray-200 p-4">
+                  <strong
+                    >{URL ? "SEDATION (5 HOURS)" : "SEDACIÓN (5 HORAS)"}</strong
+                  >
+                </td>
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-principal"
+                  >$1,000 USD</td
+                >
+                <td class="border border-gray-200 p-4 text-center text-gray-600"
+                  >$1,550 USD</td
+                >
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-green-600"
+                  >36%</td
+                >
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="border border-gray-200 p-4">
+                  <strong
+                    >{URL ? "ACRYLIC PROSTHESIS" : "PRÓTESIS ACRÍLICA"}</strong
+                  >
+                </td>
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-principal"
+                  >$1,200 USD</td
+                >
+                <td class="border border-gray-200 p-4 text-center text-gray-600"
+                  >$2,500 USD</td
+                >
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-green-600"
+                  >52%</td
+                >
+              </tr>
+              <tr class="bg-green-50">
+                <td class="border border-gray-200 p-4">
+                  <strong class="text-lg"
+                    >{URL ? "PACKAGE PRICE:" : "PRECIO DEL PAQUETE:"}</strong
+                  ><br />
+                  <span class="text-sm text-gray-600">
+                    {
+                      URL
+                        ? "(HOTEL NIGHT INCLUDED)"
+                        : "(NOCHE DE HOTEL INCLUIDA)"
+                    }
+                  </span>
+                </td>
+                <td class="border border-gray-200 p-4 text-center">
+                  <strong class="text-2xl text-principal">$6,160 USD</strong><br
+                  />
+                  <span class="text-sm text-gray-600"
+                    >{URL ? "(PER ARCH)" : "(POR ARCADA)"}</span
+                  >
+                </td>
+                <td class="border border-gray-200 p-4 text-center">
+                  <strong class="text-xl text-gray-600">$14,250 USD</strong>
+                </td>
+                <td class="border border-gray-200 p-4 text-center">
+                  <strong class="text-2xl text-green-600">57%</strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- All-on-6 Section -->
+    <div
+      class="relative overflow-hidden rounded-2xl bg-white p-8 md:p-12 mb-12 shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),_0_10px_10px_-5px_rgba(0,0,0,0.04)] opacity-0 translate-y-5 animate-[fadeIn_1s_ease-in-out_forwards]"
+      style="animation-delay: 0.4s;"
+    >
+      <div class="relative z-10">
+        <h3 class="text-3xl font-bold text-principal mb-2 text-center">
+          {URL ? "All-on-6 Treatment" : "Tratamiento All-on-6"}
+        </h3>
+        <p class="text-center text-gray-600 mb-8 font-semibold">
+          {URL ? "(PER ARCH - 6 IMPLANTS)" : "(POR ARCADA - 6 IMPLANTES)"}
+        </p>
+
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-gray-50">
+                <th
+                  class="border border-gray-200 p-4 text-left font-bold text-gray-800"
+                >
+                  {URL ? "Service" : "Servicio"}
+                </th>
+                <th
+                  class="border border-gray-200 p-4 text-center font-bold text-principal"
+                >
+                  {URL ? "Reforma Dental" : "Reforma Dental"}
+                </th>
+                <th
+                  class="border border-gray-200 p-4 text-center font-bold text-gray-600"
+                >
+                  {URL ? "U.S.A." : "E.U.A."}
+                </th>
+                <th
+                  class="border border-gray-200 p-4 text-center font-bold text-green-600"
+                >
+                  {URL ? "SAVINGS" : "AHORROS"}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="hover:bg-gray-50">
+                <td class="border border-gray-200 p-4">
+                  <strong
+                    >{
+                      URL ? "6 TITANIUM IMPLANTS" : "6 IMPLANTES DE TITANIO"
+                    }</strong
+                  >
+                </td>
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-principal"
+                  >$5,940 USD</td
+                >
+                <td class="border border-gray-200 p-4 text-center text-gray-600"
+                  >$13,500 USD</td
+                >
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-green-600"
+                  >56%</td
+                >
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="border border-gray-200 p-4">
+                  <strong
+                    >{URL ? "EXTRACTION & DSD" : "EXTRACCIÓN Y DSD"}</strong
+                  >
+                </td>
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-principal"
+                  >FREE</td
+                >
+                <td class="border border-gray-200 p-4 text-center text-gray-600"
+                  >$1,500 USD</td
+                >
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-green-600"
+                  >100%</td
+                >
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="border border-gray-200 p-4">
+                  <strong
+                    >{URL ? "SEDATION (5 HOURS)" : "SEDACIÓN (5 HORAS)"}</strong
+                  >
+                </td>
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-principal"
+                  >$1,000 USD</td
+                >
+                <td class="border border-gray-200 p-4 text-center text-gray-600"
+                  >$1,550 USD</td
+                >
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-green-600"
+                  >36%</td
+                >
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="border border-gray-200 p-4">
+                  <strong
+                    >{URL ? "HYBRID PROSTHESIS" : "PRÓTESIS HÍBRIDA"}</strong
+                  >
+                </td>
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-principal"
+                  >$6,000 USD</td
+                >
+                <td class="border border-gray-200 p-4 text-center text-gray-600"
+                  >$8,000 USD</td
+                >
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-green-600"
+                  >25%</td
+                >
+              </tr>
+              <tr class="bg-green-50">
+                <td class="border border-gray-200 p-4">
+                  <strong class="text-lg"
+                    >{URL ? "PACKAGE PRICE:" : "PRECIO DEL PAQUETE:"}</strong
+                  ><br />
+                  <span class="text-sm text-gray-600">
+                    {
+                      URL
+                        ? "(HOTEL NIGHT INCLUDED)"
+                        : "(NOCHE DE HOTEL INCLUIDA)"
+                    }
+                  </span>
+                </td>
+                <td class="border border-gray-200 p-4 text-center">
+                  <strong class="text-2xl text-principal">$12,940 USD</strong
+                  ><br />
+                  <span class="text-sm text-gray-600"
+                    >{URL ? "(PER ARCH)" : "(POR ARCADA)"}</span
+                  >
+                </td>
+                <td class="border border-gray-200 p-4 text-center">
+                  <strong class="text-xl text-gray-600">$24,550 USD</strong>
+                </td>
+                <td class="border border-gray-200 p-4 text-center">
+                  <strong class="text-2xl text-green-600">47%</strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- All-on-X  Section -->
+    <div
+      class="relative overflow-hidden rounded-2xl bg-white p-8 md:p-12 mb-12 shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),_0_10px_10px_-5px_rgba(0,0,0,0.04)] opacity-0 translate-y-5 animate-[fadeIn_1s_ease-in-out_forwards]"
+      style="animation-delay: 0.6s;"
+    >
+      <div class="relative z-10">
+        <h3 class="text-3xl font-bold text-principal mb-2 text-center">
+          {URL ? "All-on-X " : "All-on-X "}
+        </h3>
+        <p class="text-center text-gray-600 mb-8 font-semibold">
+          {
+            URL
+              ? "(PER ARCH - 6 IMPLANTS WITH ZIRCONIA)"
+              : "(POR ARCADA - 6 IMPLANTES CON ZIRCONIA)"
+          }
+        </p>
+
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-gray-50">
+                <th
+                  class="border border-gray-200 p-4 text-left font-bold text-gray-800"
+                >
+                  {URL ? "Service" : "Servicio"}
+                </th>
+                <th
+                  class="border border-gray-200 p-4 text-center font-bold text-principal"
+                >
+                  {URL ? "Reforma Dental" : "Reforma Dental"}
+                </th>
+                <th
+                  class="border border-gray-200 p-4 text-center font-bold text-gray-600"
+                >
+                  {URL ? "U.S.A." : "E.U.A."}
+                </th>
+                <th
+                  class="border border-gray-200 p-4 text-center font-bold text-green-600"
+                >
+                  {URL ? "SAVINGS" : "AHORROS"}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="hover:bg-gray-50">
+                <td class="border border-gray-200 p-4">
+                  <strong
+                    >{
+                      URL ? "6 TITANIUM IMPLANTS" : "6 IMPLANTES DE TITANIO"
+                    }</strong
+                  >
+                </td>
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-principal"
+                  >$5,940 USD</td
+                >
+                <td class="border border-gray-200 p-4 text-center text-gray-600"
+                  >$13,500 USD</td
+                >
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-green-600"
+                  >56%</td
+                >
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="border border-gray-200 p-4">
+                  <strong
+                    >{URL ? "EXTRACTION & DSD" : "EXTRACCIÓN Y DSD"}</strong
+                  >
+                </td>
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-principal"
+                  >FREE</td
+                >
+                <td class="border border-gray-200 p-4 text-center text-gray-600"
+                  >$1,500 USD</td
+                >
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-green-600"
+                  >100%</td
+                >
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="border border-gray-200 p-4">
+                  <strong
+                    >{URL ? "SEDATION (5 HOURS)" : "SEDACIÓN (5 HORAS)"}</strong
+                  >
+                </td>
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-principal"
+                  >$1,000 USD</td
+                >
+                <td class="border border-gray-200 p-4 text-center text-gray-600"
+                  >$1,550 USD</td
+                >
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-green-600"
+                  >36%</td
+                >
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="border border-gray-200 p-4">
+                  <strong
+                    >{
+                      URL
+                        ? "FULL ZIRCONIA BRIDGE"
+                        : "PUENTE COMPLETO DE ZIRCONIA"
+                    }</strong
+                  ><br />
+                  <span class="text-sm text-gray-600">
+                    {URL ? "( PERMANENT)" : "( PERMANENTE)"}
+                  </span>
+                </td>
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-principal"
+                  >$8,000 USD</td
+                >
+                <td class="border border-gray-200 p-4 text-center text-gray-600"
+                  >$12,000 USD</td
+                >
+                <td
+                  class="border border-gray-200 p-4 text-center font-bold text-green-600"
+                  >33%</td
+                >
+              </tr>
+              <tr class="bg-green-50">
+                <td class="border border-gray-200 p-4">
+                  <strong class="text-lg"
+                    >{URL ? "PACKAGE PRICE:" : "PRECIO DEL PAQUETE:"}</strong
+                  ><br />
+                  <span class="text-sm text-gray-600">
+                    {
+                      URL
+                        ? "(HOTEL NIGHT INCLUDED)"
+                        : "(NOCHE DE HOTEL INCLUIDA)"
+                    }
+                  </span>
+                </td>
+                <td class="border border-gray-200 p-4 text-center">
+                  <strong class="text-2xl text-principal">$14,940 USD</strong
+                  ><br />
+                  <span class="text-sm text-gray-600"
+                    >{URL ? "(PER ARCH)" : "(POR ARCADA)"}</span
+                  >
+                </td>
+                <td class="border border-gray-200 p-4 text-center">
+                  <strong class="text-xl text-gray-600">$28,550 USD</strong>
+                </td>
+                <td class="border border-gray-200 p-4 text-center">
+                  <strong class="text-2xl text-green-600">48%</strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div
+      class="text-center opacity-0 translate-y-5 animate-[fadeIn_1s_ease-in-out_forwards]"
+      style="animation-delay: 1s;"
+    >
+      <p class="text-gray-700 leading-relaxed text-lg mb-4">
+        {
+          URL
+            ? "At Reforma Dental Tijuana, we offer the most competitive prices without compromising quality. Contact us for a personalized quote."
+            : "En Reforma Dental Tijuana, ofrecemos los precios más competitivos sin comprometer la calidad. Contáctanos para una cotización personalizada."
+        }
+      </p>
+      <div class="flex justify-center">
+        <div class="border-b-2 border-principal w-16 rounded-full"></div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</section>

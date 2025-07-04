@@ -5,7 +5,7 @@ import Hero from "@components/all-on-4/Hero.astro";
 import About from "@components/all-on-4/About.astro";
 import Info from "@components/all-on-4/Info.astro";
 import Success from "@components/all-on-4/Success.astro";
-
+import Pricing from "@components/all-on-4/Pricing.astro";
 const URL = !Astro.url.pathname.startsWith("/es/");
 ---
 
@@ -17,5 +17,7 @@ const URL = !Astro.url.pathname.startsWith("/es/");
   <About URL={URL} />
   <Info URL={URL} />
   <Success URL={URL} />
+  <Pricing URL={URL} />
+
   <Footer />
 </Layout>

@@ -24,7 +24,9 @@ const { URL } = Astro.props;
     </div>
 
     <!-- Success Cases Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8 mb-16"
+    >
       <!-- Case 1 -->
       <div class="group fade-in">
         <div
@@ -339,6 +341,111 @@ const { URL } = Astro.props;
           </div>
         </div>
       </div>
+
+      <!-- Case 4 -->
+      <div class="group fade-in">
+        <div
+          class="bg-white rounded-2xl card-shadow p-8 h-full relative overflow-hidden hover:shadow-xl transition-all duration-300"
+        >
+          <!-- Decorative Background -->
+          <div
+            class="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tr from-orange-100 to-orange-200 rounded-full translate-y-10 translate-x-10 opacity-60"
+          >
+          </div>
+
+          <div class="relative z-10">
+            <!-- Patient Avatar -->
+            <div class="flex justify-center mb-6">
+              <div
+                class="w-20 h-20 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center text-white text-2xl font-bold"
+              >
+                R
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div class="text-center mb-6">
+              <h4
+                class="text-xl font-semibold text-gray-800 mb-2"
+                set:html={URL ? "Roberto Silva" : "Roberto Silva"}
+              />
+              <p
+                class="text-sm text-principal font-medium mb-4"
+                set:html={URL ? "Age: 52 years" : "Edad: 52 años"}
+              />
+
+              <!-- Stars Rating -->
+              <div class="flex justify-center mb-4">
+                <div class="flex space-x-1">
+                  <svg
+                    class="w-5 h-5 text-yellow-400 fill-current"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                    ></path>
+                  </svg>
+                  <svg
+                    class="w-5 h-5 text-yellow-400 fill-current"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                    ></path>
+                  </svg>
+                  <svg
+                    class="w-5 h-5 text-yellow-400 fill-current"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                    ></path>
+                  </svg>
+                  <svg
+                    class="w-5 h-5 text-yellow-400 fill-current"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                    ></path>
+                  </svg>
+                  <svg
+                    class="w-5 h-5 text-yellow-400 fill-current"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <blockquote
+              class="text-gray-600 italic text-center leading-relaxed mb-6"
+              set:html={URL
+                ? '"I had been postponing this decision for years due to cost concerns. However, the quality and results exceeded all my expectations. My family noticed the change immediately."'
+                : '"Llevaba años postergando esta decisión por el tema de costos. Sin embargo, la calidad y los resultados superaron todas mis expectativas. Mi familia notó el cambio inmediatamente."'}
+            />
+
+            <!-- Results Badge -->
+            <div class="bg-orange-50 border border-orange-200 rounded-xl p-4">
+              <div class="text-center">
+                <p
+                  class="text-sm font-semibold text-orange-800 mb-1"
+                  set:html={URL ? "Result:" : "Resultado:"}
+                />
+                <p
+                  class="text-xs text-orange-600"
+                  set:html={URL
+                    ? "Excellent value for money"
+                    : "Excelente relación calidad-precio"}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -361,6 +468,9 @@ const { URL } = Astro.props;
   }
   .fade-in:nth-child(4) {
     animation-delay: 0.7s;
+  }
+  .fade-in:nth-child(5) {
+    animation-delay: 0.9s;
   }
 
   @keyframes fadeInUp {
