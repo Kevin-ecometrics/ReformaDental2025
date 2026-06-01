@@ -31,10 +31,12 @@ const styles = StyleSheet.create({
 });
 
 function Booking() {
-  // Detect Spanish by checking if the path starts with /es
-  const isEnglish =
-    typeof window !== "undefined" &&
-    !window.location.pathname.startsWith("/es");
+  // Start with true (English) and correct on the client to avoid hydration mismatch #418
+  const [isEnglish, setIsEnglish] = useState(true);
+
+  useEffect(() => {
+    setIsEnglish(!window.location.pathname.startsWith("/es"));
+  }, []);
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [showAllDays, setShowAllDays] = useState(false);
@@ -61,20 +63,16 @@ function Booking() {
     axios
       .get(`${API_BASE}/api/citas/ocupadas`)
       .then((response) => {
-        // Backend returns { fecha: "YYYY-MM-DD", hora: "HH:MM:SS" }
-        const slots = response.data.map((item) => ({
+        const data = Array.isArray(response.data) ? response.data : [];
+        const slots = data.map((item) => ({
           fecha: item.fecha,
-          hora: item.hora.slice(0, 5), // trim seconds → "HH:MM"
+          hora: typeof item.hora === "string" ? item.hora.slice(0, 5) : item.hora,
         }));
         setBookedSlots(slots);
       })
       .catch((error) => {
         console.error("Error al cargar citas ocupadas:", error);
-        toast.error(
-          isEnglish
-            ? "Error loading booked appointments."
-            : "Error al cargar las citas ocupadas."
-        );
+        setBookedSlots([]);
       })
       .finally(() => setLoading(false));
   };
