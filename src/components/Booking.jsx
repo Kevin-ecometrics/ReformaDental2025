@@ -8,6 +8,9 @@ import {
   FaEnvelope,
   FaPhone,
   FaCheckCircle,
+  FaStethoscope,
+  FaShieldAlt,
+  FaStar,
 } from "react-icons/fa";
 import {
   PDFDownloadLink,
@@ -31,7 +34,6 @@ const styles = StyleSheet.create({
 });
 
 function Booking() {
-  // Start with true (English) and correct on the client to avoid hydration mismatch #418
   const [isEnglish, setIsEnglish] = useState(true);
 
   useEffect(() => {
@@ -46,6 +48,10 @@ function Booking() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [isFirstVisit, setIsFirstVisit] = useState(false);
+  const [service, setService] = useState("");
+  const [hasInsurance, setHasInsurance] = useState(false);
+  const [insurance, setInsurance] = useState("");
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
   const [ticket, setTicket] = useState(null);
   const [qrCodeDataURL, setQrCodeDataURL] = useState("");
@@ -57,7 +63,7 @@ function Booking() {
     return date;
   });
 
-  const hourSlots = Array.from({ length: 9 }, (_, i) => 9 + i); // 9 AM – 5 PM
+  const hourSlots = Array.from({ length: 9 }, (_, i) => 9 + i);
 
   const fetchBookedSlots = () => {
     setLoading(true);
@@ -120,7 +126,6 @@ function Booking() {
     setLoading(true);
 
     const fecha = format(selectedDate, "yyyy-MM-dd");
-    // Ensure zero-padded HH:MM (selectedTime may be "9:00")
     const [h, m] = selectedTime.split(":");
     const hora = `${h.padStart(2, "0")}:${m.padStart(2, "0")}`;
 
@@ -130,6 +135,10 @@ function Booking() {
       telefono: phone,
       fecha,
       hora,
+      primera_visita: isFirstVisit ? 1 : 0,
+      servicio: isFirstVisit ? service : "",
+      seguro: hasInsurance ? insurance : "Sin seguro",
+      origen: "web",
     };
 
     const endpoint = isEnglish
@@ -138,11 +147,15 @@ function Booking() {
 
     try {
       await axios.post(endpoint, payload);
-      setTicket({ name, email, phone, fecha, hora });
+      setTicket({ name, email, phone, fecha, hora, isFirstVisit, service, insurance: hasInsurance ? insurance : "Sin seguro" });
       setIsTicketModalOpen(true);
       setName("");
       setEmail("");
       setPhone("");
+      setIsFirstVisit(false);
+      setService("");
+      setHasInsurance(false);
+      setInsurance("");
       setSelectedDate(null);
       setSelectedTime(null);
       toast.success(
@@ -230,6 +243,18 @@ function Booking() {
             {isEnglish ? "Phone:" : "Teléfono:"} {ticket.phone}
           </Text>
         </Text>
+        {ticket.isFirstVisit && (
+          <Text style={styles.section}>
+            <Text style={styles.text}>
+              {isEnglish ? "Service:" : "Servicio:"} {ticket.service || (isEnglish ? "General consultation" : "Consulta general")}
+            </Text>
+          </Text>
+        )}
+        <Text style={styles.section}>
+          <Text style={styles.text}>
+            {isEnglish ? "Insurance:" : "Seguro:"} {ticket.insurance}
+          </Text>
+        </Text>
         <Text style={styles.section}>
           <Text style={styles.text}>
             {isEnglish ? "Location:" : "Ubicación:"} Avenida Paseo Reforma
@@ -248,17 +273,32 @@ function Booking() {
     </Document>
   );
 
+  const inputClass = "w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#BD155C]/30 focus:border-[#BD155C] transition-all text-sm";
+  const labelClass = "text-sm font-semibold text-gray-700 flex items-center gap-2";
+  const checkboxClass = "w-5 h-5 rounded border-gray-300 text-[#BD155C] focus:ring-[#BD155C] cursor-pointer";
+
   return (
-    <div className="flex flex-col items-start gap-6 p-6">
+    <div className="w-full max-w-2xl mx-auto px-4 py-8">
       <Toaster position="top-right" />
-      <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-        <FaCalendarAlt className="text-green-500" />
-        {isEnglish ? "Schedule Appointment" : "Agendar Cita"}
-      </h1>
+      <div className="text-center mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+          {isEnglish ? "Schedule Your Appointment" : "Agenda Tu Cita"}
+        </h1>
+        <p className="text-gray-500 text-sm">
+          {isEnglish
+            ? "Choose a date and time that works best for you"
+            : "Elige la fecha y hora que mejor te funcione"}
+        </p>
+      </div>
 
       {/* Date selection */}
-      <div className="grid grid-cols-7 gap-2">
-          {days.map((day) => {
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+        <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4">
+          <FaCalendarAlt className="text-[#BD155C]" />
+          {isEnglish ? "Select a Date" : "Selecciona una Fecha"}
+        </h2>
+        <div className="grid grid-cols-7 gap-2">
+            {days.map((day) => {
           const isSunday = day.getDay() === 0;
           const formattedDate = format(day, "yyyy-MM-dd");
           const isSelected =
@@ -270,45 +310,46 @@ function Booking() {
               key={formattedDate}
               onClick={() => !isSunday && setSelectedDate(day)}
               disabled={isSunday || isFullyBooked || loading}
-              className={`p-3 rounded-lg text-sm font-medium transition ${
+              className={`p-3 rounded-xl text-sm font-medium transition-all ${
                 isSunday || isFullyBooked
-                  ? "bg-red-500 text-white cursor-not-allowed"
+                  ? "bg-red-50 text-red-400 cursor-not-allowed line-through"
                   : taken && !isFullyBooked
-                  ? "bg-orange-400 text-white"
+                  ? "bg-orange-50 text-orange-600 border border-orange-200"
                   : isSelected
-                  ? "bg-green-500 text-white"
-                  : "bg-gray-100 hover:bg-gray-200 text-gray-800"
+                  ? "bg-[#BD155C] text-white shadow-md shadow-[#BD155C]/20"
+                  : "bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200"
               } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               {format(day, isEnglish ? "EEE, MMM d" : "EEE, d MMM")}
               {taken && !isFullyBooked && (
-                <span className="block text-[10px] opacity-75">
-                  {isEnglish ? "some taken" : "ocupado"}
+                <span className="block text-[10px] opacity-75 mt-0.5">
+                  {isEnglish ? "limited" : "ocupado"}
                 </span>
               )}
             </button>
           );
         })}
-      </div>
+        </div>
 
-      {!showAllDays && (
-        <button
-          onClick={() => setShowAllDays(true)}
-          className="mt-2 px-8 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-          disabled={loading}
-        >
-          {isEnglish ? "Show more dates" : "Mostrar más fechas"}
-        </button>
-      )}
+        {!showAllDays && (
+          <button
+            onClick={() => setShowAllDays(true)}
+            className="mt-4 w-full py-2.5 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 transition text-sm font-medium"
+            disabled={loading}
+          >
+            {isEnglish ? "Show more dates" : "Mostrar más fechas"}
+          </button>
+        )}
+      </div>
 
       {/* Time selection */}
       {selectedDate && (
-        <div className="flex flex-col items-start gap-6 w-full">
-          <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-            <FaClock className="text-green-500" />
-            {isEnglish ? "Select a Time" : "Selecciona una hora"}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+          <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4">
+            <FaClock className="text-[#BD155C]" />
+            {isEnglish ? "Select a Time" : "Selecciona una Hora"}
           </h2>
-          <div className="grid grid-cols-5 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
             {hourSlots.map((hour) => {
               const booked = isSlotTaken(selectedDate, hour);
               const now = new Date();
@@ -317,19 +358,19 @@ function Booking() {
               const isPast = isToday && hour <= now.getHours();
               const isDisabled = booked || isPast;
               const timeStr = `${hour}:00`;
-              const isSelected = selectedTime === timeStr;
+              const isSelectedTime = selectedTime === timeStr;
 
               return (
                 <button
                   key={hour}
                   onClick={() => !isDisabled && setSelectedTime(timeStr)}
                   disabled={isDisabled || loading}
-                  className={`p-2 rounded-lg text-sm font-medium transition ${
+                  className={`py-3 rounded-xl text-sm font-medium transition-all ${
                     isDisabled
-                      ? "bg-red-500 text-white cursor-not-allowed"
-                      : isSelected
-                      ? "bg-green-500 text-white"
-                      : "bg-gray-100 hover:bg-gray-200 text-gray-800"
+                      ? "bg-red-50 text-red-300 cursor-not-allowed line-through"
+                      : isSelectedTime
+                      ? "bg-[#BD155C] text-white shadow-md shadow-[#BD155C]/20"
+                      : "bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200"
                   } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   {formatHourLabel(hour)}
@@ -344,105 +385,230 @@ function Booking() {
       {selectedDate && selectedTime && (
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col items-start gap-4 w-full max-w-md"
+          className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-5"
         >
-          <div className="flex items-center gap-2 w-full">
-            <FaUser className="text-gray-500" />
+          <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-2">
+            <FaUser className="text-[#BD155C]" />
+            {isEnglish ? "Your Information" : "Tu Información"}
+          </h2>
+
+          <div>
+            <label className={labelClass}>
+              <FaUser className="text-gray-400" size={14} />
+              {isEnglish ? "Full Name" : "Nombre Completo"}
+            </label>
             <input
               type="text"
-              placeholder={isEnglish ? "Name" : "Nombre"}
+              placeholder={isEnglish ? "John Doe" : "Juan Pérez"}
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="border p-2 rounded-md w-full"
+              className={inputClass}
               disabled={loading}
             />
           </div>
-          <div className="flex items-center gap-2 w-full">
-            <FaEnvelope className="text-gray-500" />
+
+          <div>
+            <label className={labelClass}>
+              <FaEnvelope className="text-gray-400" size={14} />
+              Email
+            </label>
             <input
               type="email"
-              placeholder={isEnglish ? "Email" : "Correo"}
+              placeholder="email@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="border p-2 rounded-md w-full"
+              className={inputClass}
               disabled={loading}
             />
           </div>
-          <div className="flex items-center gap-2 w-full">
-            <FaPhone className="text-gray-500" />
+
+          <div>
+            <label className={labelClass}>
+              <FaPhone className="text-gray-400" size={14} />
+              {isEnglish ? "Phone Number" : "Número de Teléfono"}
+            </label>
             <input
               type="tel"
-              placeholder={isEnglish ? "Phone" : "Teléfono"}
+              placeholder="+52 664 123 4567"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               required
-              maxLength={10}
-              className="border p-2 rounded-md w-full"
+              maxLength={15}
+              className={inputClass}
               disabled={loading}
             />
           </div>
+
+          <div className="border-t border-gray-100 pt-4">
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={isFirstVisit}
+                onChange={(e) => {
+                  setIsFirstVisit(e.target.checked);
+                  if (!e.target.checked) setService("");
+                }}
+                className={checkboxClass}
+                disabled={loading}
+              />
+              <div>
+                <span className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+                  <FaStar className="text-yellow-500" size={14} />
+                  {isEnglish ? "First Visit" : "Primera Visita"}
+                </span>
+                <span className="text-xs text-gray-400">
+                  {isEnglish ? "Check if this is your first appointment" : "Marca si es tu primera cita"}
+                </span>
+              </div>
+            </label>
+
+            {isFirstVisit && (
+              <div className="mt-3 pl-8">
+                <label className={labelClass}>
+                  <FaStethoscope className="text-gray-400" size={14} />
+                  {isEnglish ? "Service Required" : "Servicio Requerido"}
+                </label>
+                <input
+                  type="text"
+                  placeholder={
+                    isEnglish
+                      ? "e.g. General checkup, Cleaning, etc."
+                      : "Ej. Consulta general, Limpieza, etc."
+                  }
+                  value={service}
+                  onChange={(e) => setService(e.target.value)}
+                  className={inputClass}
+                  disabled={loading}
+                />
+              </div>
+            )}
+          </div>
+
+          <div>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={hasInsurance}
+                onChange={(e) => {
+                  setHasInsurance(e.target.checked);
+                  if (!e.target.checked) setInsurance("");
+                }}
+                className={checkboxClass}
+                disabled={loading}
+              />
+              <div>
+                <span className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+                  <FaShieldAlt className="text-blue-500" size={14} />
+                  {isEnglish ? "Medical Insurance" : "Seguro Médico"}
+                </span>
+                <span className="text-xs text-gray-400">
+                  {isEnglish ? "Check if you have dental insurance" : "Marca si cuentas con seguro dental"}
+                </span>
+              </div>
+            </label>
+
+            {hasInsurance && (
+              <div className="mt-3 pl-8">
+                <label className={labelClass}>
+                  <FaShieldAlt className="text-gray-400" size={14} />
+                  {isEnglish ? "Insurance Name" : "Nombre del Seguro"}
+                </label>
+                <input
+                  type="text"
+                  placeholder={
+                    isEnglish
+                      ? "e.g. MetLife, Delta Dental, etc."
+                      : "Ej. MetLife, Delta Dental, etc."
+                  }
+                  value={insurance}
+                  onChange={(e) => setInsurance(e.target.value)}
+                  className={inputClass}
+                  disabled={loading}
+                />
+              </div>
+            )}
+          </div>
+
           <button
             type="submit"
-            className="bg-green-500 text-white p-2 rounded-md w-full hover:bg-green-600 transition flex items-center justify-center"
+            className="w-full py-3.5 bg-[#BD155C] text-white rounded-xl font-semibold hover:bg-[#a0124e] transition-all shadow-lg shadow-[#BD155C]/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             disabled={loading}
           >
             {loading && (
-              <span className="animate-spin mr-2 w-5 h-5 border-2 border-white border-t-transparent rounded-full" />
+              <span className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full" />
             )}
-            {isEnglish ? "Schedule" : "Agendar"}
+            {isEnglish ? "Confirm Appointment" : "Confirmar Cita"}
           </button>
         </form>
       )}
 
       {/* Confirmation modal */}
       {isTicketModalOpen && ticket && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-10 rounded-lg shadow-2xl max-w-2xl w-full">
-            <div className="flex flex-col items-center gap-6">
-              <FaCheckCircle className="text-green-500 text-6xl" />
-              <h2 className="text-3xl font-bold text-gray-800">
-                {isEnglish ? "Appointment Confirmed" : "Cita Confirmada"}
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50 p-4">
+          <div className="bg-white p-8 md:p-10 rounded-2xl shadow-2xl max-w-lg w-full">
+            <div className="flex flex-col items-center gap-4 mb-6">
+              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+                <FaCheckCircle className="text-green-500 text-3xl" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800">
+                {isEnglish ? "Appointment Confirmed!" : "¡Cita Confirmada!"}
               </h2>
-              <p className="text-lg text-gray-600 text-center">
+              <p className="text-gray-500 text-center text-sm">
                 {isEnglish
-                  ? "Your appointment has been successfully scheduled."
-                  : "Tu cita ha sido agendada exitosamente."}
+                  ? "Your appointment has been successfully scheduled. We'll send you a reminder."
+                  : "Tu cita ha sido agendada exitosamente. Te enviaremos un recordatorio."}
               </p>
             </div>
-            <div className="mt-6 border-t pt-6 space-y-2">
-              <p className="text-lg">
-                <strong>{isEnglish ? "Date:" : "Fecha:"}</strong> {ticket.fecha}
-              </p>
-              <p className="text-lg">
-                <strong>{isEnglish ? "Time:" : "Hora:"}</strong> {ticket.hora}
-              </p>
-              <p className="text-lg">
-                <strong>{isEnglish ? "Name:" : "Nombre:"}</strong> {ticket.name}
-              </p>
-              <p className="text-lg">
-                <strong>{isEnglish ? "Email:" : "Correo:"}</strong> {ticket.email}
-              </p>
-              <p className="text-lg">
-                <strong>{isEnglish ? "Phone:" : "Teléfono:"}</strong> {ticket.phone}
-              </p>
-              <p className="text-lg">
-                <strong>{isEnglish ? "Location:" : "Ubicación:"}</strong>{" "}
-                Avenida Paseo Reforma 5304, Tijuana, Baja California, México
-              </p>
+            <div className="bg-gray-50 rounded-xl p-5 space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-500">{isEnglish ? "Date" : "Fecha"}</span>
+                <span className="font-semibold text-gray-800">{ticket.fecha}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">{isEnglish ? "Time" : "Hora"}</span>
+                <span className="font-semibold text-gray-800">{ticket.hora}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">{isEnglish ? "Patient" : "Paciente"}</span>
+                <span className="font-semibold text-gray-800">{ticket.name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">Email</span>
+                <span className="font-semibold text-gray-800">{ticket.email}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">{isEnglish ? "Phone" : "Teléfono"}</span>
+                <span className="font-semibold text-gray-800">{ticket.phone}</span>
+              </div>
+              {ticket.isFirstVisit && (
+                <div className="flex justify-between">
+                  <span className="text-gray-500">{isEnglish ? "Service" : "Servicio"}</span>
+                  <span className="font-semibold text-gray-800">{ticket.service || (isEnglish ? "General consultation" : "Consulta general")}</span>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <span className="text-gray-500">{isEnglish ? "Insurance" : "Seguro"}</span>
+                <span className="font-semibold text-gray-800">{ticket.insurance}</span>
+              </div>
+              <div className="pt-2 border-t border-gray-200">
+                <span className="text-gray-400 text-xs block text-center">
+                  Av. Paseo Reforma 5304, Tijuana, B.C.
+                </span>
+              </div>
             </div>
-            <div className="mt-8 flex justify-center gap-4">
+            <div className="mt-6 flex flex-col sm:flex-row gap-3">
               <button
                 onClick={handleCloseModal}
-                className="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                className="flex-1 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition font-medium"
               >
                 {isEnglish ? "Close" : "Cerrar"}
               </button>
               <PDFDownloadLink
                 document={<AppointmentPDF ticket={ticket} />}
                 fileName="appointment.pdf"
-                className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                className="flex-1 py-3 bg-[#BD155C] text-white rounded-xl hover:bg-[#a0124e] transition font-medium text-center"
               >
                 {isEnglish ? "Download PDF" : "Descargar PDF"}
               </PDFDownloadLink>
