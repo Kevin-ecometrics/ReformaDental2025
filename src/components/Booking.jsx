@@ -42,6 +42,7 @@ function Booking() {
   const [showAllDays, setShowAllDays] = useState(false);
   const [selectedTime, setSelectedTime] = useState(null);
   const [bookedSlots, setBookedSlots] = useState([]);
+  const [blockedSlots, setBlockedSlots] = useState([]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -77,8 +78,25 @@ function Booking() {
       .finally(() => setLoading(false));
   };
 
+  const fetchBlockedDates = () => {
+    axios
+      .get(`${API_BASE}/fechas-bloqueadas`)
+      .then((response) => {
+        const data = Array.isArray(response.data) ? response.data : [];
+        setBlockedSlots(data.map((item) => ({
+          fecha: item.date,
+          hora: item.hour,
+        })));
+      })
+      .catch((error) => {
+        console.error("Error al cargar fechas bloqueadas:", error);
+        setBlockedSlots([]);
+      });
+  };
+
   useEffect(() => {
     fetchBookedSlots();
+    fetchBlockedDates();
   }, []);
 
   useEffect(() => {
@@ -158,18 +176,27 @@ function Booking() {
     fetchBookedSlots();
   };
 
+  const hasTakenSlots = (day) => {
+    const dayStr = format(day, "yyyy-MM-dd");
+    return bookedSlots.some((s) => s.fecha === dayStr) || blockedSlots.some((s) => s.fecha === dayStr);
+  };
+
   const formatHourLabel = (hour) => {
     if (hour === 12) return "12:00 PM";
     if (hour === 0) return "12:00 AM";
     return hour < 12 ? `${hour}:00 AM` : `${hour - 12}:00 PM`;
   };
 
-  const isSlotBooked = (day, hour) => {
+  const isSlotTaken = (day, hour) => {
     const paddedHour = `${String(hour).padStart(2, "0")}:00`;
     const dayStr = format(day, "yyyy-MM-dd");
-    return bookedSlots.some(
+    const isBooked = bookedSlots.some(
       (s) => s.fecha === dayStr && s.hora === paddedHour
     );
+    const isBlocked = blockedSlots.some(
+      (s) => s.fecha === dayStr && s.hora === paddedHour
+    );
+    return isBooked || isBlocked;
   };
 
   const AppointmentPDF = ({ ticket }) => (
@@ -231,25 +258,34 @@ function Booking() {
 
       {/* Date selection */}
       <div className="grid grid-cols-7 gap-2">
-        {days.map((day) => {
+          {days.map((day) => {
           const isSunday = day.getDay() === 0;
           const formattedDate = format(day, "yyyy-MM-dd");
           const isSelected =
             selectedDate && format(selectedDate, "yyyy-MM-dd") === formattedDate;
+          const taken = hasTakenSlots(day);
+          const isFullyBooked = taken && hourSlots.every((hour) => isSlotTaken(day, hour));
           return (
             <button
               key={formattedDate}
               onClick={() => !isSunday && setSelectedDate(day)}
-              disabled={isSunday || loading}
+              disabled={isSunday || isFullyBooked || loading}
               className={`p-3 rounded-lg text-sm font-medium transition ${
-                isSunday
+                isSunday || isFullyBooked
                   ? "bg-red-500 text-white cursor-not-allowed"
+                  : taken && !isFullyBooked
+                  ? "bg-orange-400 text-white"
                   : isSelected
                   ? "bg-green-500 text-white"
                   : "bg-gray-100 hover:bg-gray-200 text-gray-800"
               } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               {format(day, isEnglish ? "EEE, MMM d" : "EEE, d MMM")}
+              {taken && !isFullyBooked && (
+                <span className="block text-[10px] opacity-75">
+                  {isEnglish ? "some taken" : "ocupado"}
+                </span>
+              )}
             </button>
           );
         })}
@@ -274,7 +310,7 @@ function Booking() {
           </h2>
           <div className="grid grid-cols-5 gap-2">
             {hourSlots.map((hour) => {
-              const booked = isSlotBooked(selectedDate, hour);
+              const booked = isSlotTaken(selectedDate, hour);
               const now = new Date();
               const isToday =
                 format(selectedDate, "yyyy-MM-dd") === format(now, "yyyy-MM-dd");
