@@ -11,7 +11,9 @@ const getNavLink = (anchor: string) => {
 };
 const withLang = (path: string) => {
   if (path.startsWith("#")) return path;
-  return lang === "es" ? `/es/${path}` : `${path}`;
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  const result = lang === "es" ? `/es${normalized}` : normalized;
+  return result.endsWith("/") ? result : `${result}/`;
 };
 const getOppositeLangPath = () => {
   const basePath = lang === "es" ? "/es/" : "/";
