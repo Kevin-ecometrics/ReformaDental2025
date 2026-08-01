@@ -26,5 +26,14 @@ export default defineConfig({
     },
   },
   site: "https://reformadental.com/",
-  integrations: [react(), sitemap(), robotsTxt(), partytown()],
+  integrations: [
+    react(),
+    sitemap(),
+    robotsTxt(),
+    partytown({
+      config: {
+        forward: ["dataLayer.push", "gtag", "fbq"],
+      },
+    }),
+  ],
 });

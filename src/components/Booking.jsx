@@ -23,7 +23,7 @@ import {
 import QRCode from "qrcode";
 import { toast, Toaster } from "react-hot-toast";
 
-const API_BASE = "https://www.reformadental.com";
+const API_BASE = "https://reformadental.com";
 
 const styles = StyleSheet.create({
   page: { padding: 30 },
@@ -147,6 +147,12 @@ function Booking() {
 
     try {
       await axios.post(endpoint, payload);
+      if (window.fbq) {
+        window.fbq("track", "Schedule", {
+          content_name: "Appointment Booking",
+          status: isFirstVisit ? service || "General consultation" : "Returning patient",
+        });
+      }
       setTicket({ name, email, phone, fecha, hora, isFirstVisit, service, insurance: hasInsurance ? insurance : "Sin seguro" });
       setIsTicketModalOpen(true);
       setName("");

@@ -20,4 +20,10 @@ const URL = !Astro.url.pathname.startsWith("/es/");
   <Success URL={URL} />
   <Pricing URL={URL} />
   <Footer />
+
+  <script is:inline>
+    document.addEventListener("astro:page-load", function () {
+      if (window.fbq) fbq("track", "ViewContent", { content_name: "All-on-4" });
+    });
+  </script>
 </Layout>
