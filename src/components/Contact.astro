@@ -70,7 +70,10 @@ const t = useTranslations(lang);
 
         showMapButton.addEventListener("click", function () {
           if (mapContainer.classList.contains("h-0")) {
-            if (window.fbq) fbq("track", "FindLocation");
+            if (window.fbq) {
+              fbq("track", "FindLocation");
+              console.log("[Meta Pixel] FindLocation");
+            }
             mapContainer.classList.remove("h-0");
             mapContainer.classList.add("h-[500px]");
             if (buttonText) {

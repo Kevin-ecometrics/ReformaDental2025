@@ -32,7 +32,9 @@ export default defineConfig({
     robotsTxt(),
     partytown({
       config: {
-        forward: ["dataLayer.push", "gtag", "fbq"],
+        // Antes incluía "fbq" porque el pixel de Meta corría dentro de Partytown (type="text/partytown" en Layout.astro).
+        // Ahora el pixel corre en el hilo principal, así que ya no necesita forward. Si se vuelve a envolver en Partytown, agregar "fbq" de nuevo aquí.
+        forward: ["dataLayer.push", "gtag"],
       },
     }),
   ],

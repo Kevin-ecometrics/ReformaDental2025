@@ -152,6 +152,7 @@ function Booking() {
           content_name: "Appointment Booking",
           status: isFirstVisit ? service || "General consultation" : "Returning patient",
         });
+        console.log("[Meta Pixel] Schedule", { isFirstVisit, service });
       }
       setTicket({ name, email, phone, fecha, hora, isFirstVisit, service, insurance: hasInsurance ? insurance : "Sin seguro" });
       setIsTicketModalOpen(true);

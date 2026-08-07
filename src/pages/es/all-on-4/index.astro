@@ -23,7 +23,10 @@ const URL = !Astro.url.pathname.startsWith("/es/");
 
   <script is:inline>
     document.addEventListener("astro:page-load", function () {
-      if (window.fbq) fbq("track", "ViewContent", { content_name: "All-on-4" });
+      if (window.fbq) {
+        fbq("track", "ViewContent", { content_name: "All-on-4" });
+        console.log("[Meta Pixel] ViewContent - All-on-4");
+      }
     });
   </script>
 </Layout>

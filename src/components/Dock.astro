@@ -13,7 +13,7 @@ const { URL } = Astro.props;
         target="_blank"
         rel="noopener noreferrer"
         class="dock-item group relative"
-        onclick="if(window.fbq) fbq('track', 'Contact', { content_name: 'WhatsApp' });"
+        onclick="if(window.fbq){fbq('track', 'Contact', { content_name: 'WhatsApp' });console.log('[Meta Pixel] Contact - WhatsApp');}"
       >
         <div
           class="dock-icon w-14 h-14 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center shadow-lg"
@@ -37,7 +37,7 @@ const { URL } = Astro.props;
       <a
         href="tel:+16195861436"
         class="dock-item group relative"
-        onclick="if(window.fbq) fbq('track', 'Contact', { content_name: 'Phone' });"
+        onclick="if(window.fbq){fbq('track', 'Contact', { content_name: 'Phone' });console.log('[Meta Pixel] Contact - Phone');}"
       >
         <div
           class="dock-icon w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg"
@@ -67,7 +67,7 @@ const { URL } = Astro.props;
       <a
         href="mailto:mydentist@reformadental.com"
         class="dock-item group relative"
-        onclick="if(window.fbq) fbq('track', 'Contact', { content_name: 'Email' });"
+        onclick="if(window.fbq){fbq('track', 'Contact', { content_name: 'Email' });console.log('[Meta Pixel] Contact - Email');}"
       >
         <div
           class="dock-icon w-14 h-14 bg-gradient-to-br from-red-400 to-red-600 rounded-2xl flex items-center justify-center shadow-lg"
@@ -98,7 +98,7 @@ const { URL } = Astro.props;
         target="_blank"
         rel="noopener noreferrer"
         class="dock-item group relative"
-        onclick="if(window.fbq) fbq('trackCustom', 'SocialClick', { platform: 'Facebook' });"
+        onclick="if(window.fbq){fbq('trackCustom', 'SocialClick', { platform: 'Facebook' });console.log('[Meta Pixel] SocialClick - Facebook');}"
       >
         <div
           class="dock-icon w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg"
@@ -124,7 +124,7 @@ const { URL } = Astro.props;
         target="_blank"
         rel="noopener noreferrer"
         class="dock-item group relative"
-        onclick="if(window.fbq) fbq('trackCustom', 'SocialClick', { platform: 'Instagram' });"
+        onclick="if(window.fbq){fbq('trackCustom', 'SocialClick', { platform: 'Instagram' });console.log('[Meta Pixel] SocialClick - Instagram');}"
       >
         <div
           class="dock-icon w-14 h-14 bg-gradient-to-br from-pink-400 via-red-500 to-yellow-500 rounded-2xl flex items-center justify-center shadow-lg"

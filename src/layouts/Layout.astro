@@ -72,7 +72,8 @@ const url = Astro.url.pathname;
     </title>
     <ClientRouter />
 
-    <script type="text/partytown">
+    <!-- Antes era <script type="text/partytown">; se quitó porque Events Manager no detectaba el pixel con el script corriendo en el worker de Partytown. Si se vuelve a poner type="text/partytown" aquí, hay que volver a agregar "fbq" al forward en astro.config.mjs. -->
+    <script>
       !(function (f, b, e, v, n, t, s) {
         if (f.fbq) return;
         n = f.fbq = function () {
@@ -98,6 +99,7 @@ const url = Astro.url.pathname;
       );
       fbq("init", "606403608113212");
       fbq("track", "PageView");
+      console.log("[Meta Pixel] init + PageView", "606403608113212");
     </script>
     <noscript
       ><img
