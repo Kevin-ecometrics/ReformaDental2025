@@ -273,11 +273,11 @@ function Booking() {
     try {
       await axios.post(endpoint, payload);
       if (window.fbq) {
-        window.fbq("track", "Schedule", {
+        window.fbq("trackCustom", "AppointmentScheduled", {
           content_name: "Appointment Booking",
           status: isFirstVisit ? service || "General consultation" : "Returning patient",
         });
-        console.log("[Meta Pixel] Schedule", { isFirstVisit, service });
+        console.log("[Meta Pixel] AppointmentScheduled", { isFirstVisit, service });
       }
       setTicket({ name, email, phone, fecha, hora, isFirstVisit, service, insurance: hasInsurance ? insurance : "Sin seguro" });
       setIsTicketModalOpen(true);
@@ -317,15 +317,6 @@ function Booking() {
   };
 
   const handleCloseModal = () => {
-    // TEMPORAL — disparo de prueba para diagnosticar por qué "Schedule" no
-    // llega a Meta. Quitar junto con el de handleSubmit una vez resuelto.
-    if (window.fbq && ticket) {
-      window.fbq("track", "Schedule", {
-        content_name: "Appointment Booking (close button)",
-        status: ticket.isFirstVisit ? ticket.service || "General consultation" : "Returning patient",
-      });
-      console.log("[Meta Pixel] Schedule (close button)", ticket);
-    }
     setIsTicketModalOpen(false);
     fetchBookedSlots();
   };
