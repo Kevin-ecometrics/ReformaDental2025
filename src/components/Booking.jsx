@@ -16,6 +16,7 @@ import {
   PDFDownloadLink,
   Document,
   Page,
+  View,
   Text,
   StyleSheet,
   Image,
@@ -25,12 +26,115 @@ import { toast, Toaster } from "react-hot-toast";
 
 const API_BASE = "https://reformadental.com";
 
+const CLINIC_ADDRESS = "8169-206 Ignacio Zaragoza, Zona Centro, Tijuana, Baja California, México";
+const CLINIC_PHONE_DISPLAY = "+1 619-586-1436";
+const CLINIC_LOGO_URL = "https://reformadental.com/images/logo.webp";
+
+const PDF = {
+  primary: "#BD155C",
+  primaryDark: "#8f1046",
+  accent: "#9DC216",
+  accentBg: "#eef7d9",
+  accentText: "#5c7a0f",
+  textDark: "#374151",
+  textMuted: "#6b7280",
+  cardBg: "#fdf1f6",
+  border: "#e8e2e4",
+  white: "#ffffff",
+};
+
 const styles = StyleSheet.create({
-  page: { padding: 30 },
-  section: { marginBottom: 10 },
-  title: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
-  text: { fontSize: 12 },
-  qrCode: { marginTop: 40, alignSelf: "center", width: 300, height: 300 },
+  page: {
+    paddingBottom: 46,
+    fontFamily: "Helvetica",
+    backgroundColor: PDF.white,
+  },
+  topBar: { height: 8, backgroundColor: PDF.primary },
+
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 40,
+    paddingTop: 26,
+    paddingBottom: 18,
+    borderBottomWidth: 1,
+    borderBottomColor: PDF.border,
+  },
+  brandRow: { flexDirection: "row", alignItems: "center", gap: 10 },
+  logo: { width: 40, height: 38 },
+  brandName: { fontSize: 15, fontWeight: "bold", color: PDF.textDark, letterSpacing: 1 },
+  brandTagline: { fontSize: 8, color: PDF.accent, letterSpacing: 1.5, marginTop: 3 },
+  statusBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    backgroundColor: PDF.accentBg,
+    borderRadius: 12,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+  },
+  statusDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: PDF.accent },
+  statusText: { fontSize: 8, fontWeight: "bold", color: PDF.accentText, letterSpacing: 0.5 },
+
+  titleBlock: { paddingHorizontal: 40, paddingTop: 28, paddingBottom: 4 },
+  title: { fontSize: 21, fontWeight: "bold", color: PDF.textDark },
+  subtitle: { fontSize: 10, color: PDF.textMuted, marginTop: 5, lineHeight: 1.4 },
+
+  section: { paddingHorizontal: 40, marginTop: 22 },
+  sectionLabel: {
+    fontSize: 9,
+    fontWeight: "bold",
+    color: PDF.primary,
+    letterSpacing: 1.2,
+    marginBottom: 10,
+    textTransform: "uppercase",
+  },
+
+  detailCard: {
+    flexDirection: "row",
+    backgroundColor: PDF.cardBg,
+    borderRadius: 10,
+    padding: 18,
+  },
+  detailCol: { flex: 1, paddingRight: 8 },
+  detailLabel: { fontSize: 8, color: PDF.textMuted, letterSpacing: 0.8, textTransform: "uppercase", marginBottom: 4 },
+  detailValue: { fontSize: 12, fontWeight: "bold", color: PDF.textDark },
+
+  infoTable: { borderWidth: 1, borderColor: PDF.border, borderRadius: 10 },
+  infoRow: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: PDF.border,
+    paddingVertical: 11,
+    paddingHorizontal: 16,
+  },
+  infoRowLast: { borderBottomWidth: 0 },
+  infoLabel: { width: 110, fontSize: 9, color: PDF.textMuted },
+  infoValue: { flex: 1, fontSize: 10, color: PDF.textDark, fontWeight: "bold" },
+
+  locationRow: { flexDirection: "row", gap: 24, alignItems: "flex-start" },
+  locationText: { flex: 1 },
+  locationName: { fontSize: 11, fontWeight: "bold", color: PDF.textDark, marginBottom: 4 },
+  locationAddr: { fontSize: 9.5, color: PDF.textMuted, lineHeight: 1.5 },
+  locationPhone: { fontSize: 9.5, color: PDF.primary, marginTop: 6, fontWeight: "bold" },
+  qrCode: { width: 88, height: 88 },
+  qrCaption: { fontSize: 7, color: PDF.textMuted, textAlign: "center", marginTop: 4, width: 88 },
+
+  footer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: PDF.primaryDark,
+    paddingVertical: 14,
+    paddingHorizontal: 40,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  footerText: { fontSize: 8, color: "#f6dde8" },
+  footerTagline: { fontSize: 8, color: "#f6dde8", fontStyle: "italic" },
 });
 
 function Booking() {
@@ -55,6 +159,7 @@ function Booking() {
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
   const [ticket, setTicket] = useState(null);
   const [qrCodeDataURL, setQrCodeDataURL] = useState("");
+  const [logoDataURL, setLogoDataURL] = useState("");
   const [loading, setLoading] = useState(false);
 
   const days = Array.from({ length: showAllDays ? 30 : 14 }, (_, i) => {
@@ -109,6 +214,26 @@ function Booking() {
     QRCode.toDataURL("https://maps.app.goo.gl/ChJasXTaFvvXdn6W8")
       .then(setQrCodeDataURL)
       .catch((err) => console.error("Error al generar QR:", err));
+  }, []);
+
+  // @react-pdf/renderer solo soporta PNG/JPG, así que el logo (.webp) se
+  // convierte a PNG en un canvas antes de usarlo en el PDF.
+  useEffect(() => {
+    const img = new window.Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        canvas.getContext("2d").drawImage(img, 0, 0);
+        setLogoDataURL(canvas.toDataURL("image/png"));
+      } catch (err) {
+        console.error("Error al convertir el logo para el PDF:", err);
+      }
+    };
+    img.onerror = (err) => console.error("Error al cargar el logo:", err);
+    img.src = CLINIC_LOGO_URL;
   }, []);
 
   const handleSubmit = async (event) => {
@@ -222,60 +347,110 @@ function Booking() {
   const AppointmentPDF = ({ ticket }) => (
     <Document>
       <Page size="A4" style={styles.page}>
-        <Text style={styles.title}>
-          {isEnglish ? "Appointment Details" : "Detalles de la Cita"}
-        </Text>
-        <Text style={styles.section}>
-          <Text style={styles.text}>
-            {isEnglish ? "Date:" : "Fecha:"} {ticket.fecha}
-          </Text>
-        </Text>
-        <Text style={styles.section}>
-          <Text style={styles.text}>
-            {isEnglish ? "Time:" : "Hora:"} {ticket.hora}
-          </Text>
-        </Text>
-        <Text style={styles.section}>
-          <Text style={styles.text}>
-            {isEnglish ? "Name:" : "Nombre:"} {ticket.name}
-          </Text>
-        </Text>
-        <Text style={styles.section}>
-          <Text style={styles.text}>
-            {isEnglish ? "Email:" : "Correo:"} {ticket.email}
-          </Text>
-        </Text>
-        <Text style={styles.section}>
-          <Text style={styles.text}>
-            {isEnglish ? "Phone:" : "Teléfono:"} {ticket.phone}
-          </Text>
-        </Text>
-        {ticket.isFirstVisit && (
-          <Text style={styles.section}>
-            <Text style={styles.text}>
-              {isEnglish ? "Service:" : "Servicio:"} {ticket.service || (isEnglish ? "General consultation" : "Consulta general")}
+        <View style={styles.topBar} fixed />
+
+        <View style={styles.header}>
+          <View style={styles.brandRow}>
+            {logoDataURL && <Image src={logoDataURL} style={styles.logo} />}
+            <View>
+              <Text style={styles.brandName}>DENTAL REFORMA</Text>
+              <Text style={styles.brandTagline}>TIJUANA · B.C.</Text>
+            </View>
+          </View>
+          <View style={styles.statusBadge}>
+            <View style={styles.statusDot} />
+            <Text style={styles.statusText}>
+              {isEnglish ? "CONFIRMED" : "CONFIRMADA"}
             </Text>
+          </View>
+        </View>
+
+        <View style={styles.titleBlock}>
+          <Text style={styles.title}>
+            {isEnglish ? "Appointment Voucher" : "Comprobante de Cita"}
           </Text>
-        )}
-        <Text style={styles.section}>
-          <Text style={styles.text}>
-            {isEnglish ? "Insurance:" : "Seguro:"} {ticket.insurance}
+          <Text style={styles.subtitle}>
+            {isEnglish
+              ? `Thank you, ${ticket.name}. Please keep this voucher and bring it to your visit.`
+              : `Gracias, ${ticket.name}. Conserva este comprobante y preséntalo en tu visita.`}
           </Text>
-        </Text>
-        <Text style={styles.section}>
-          <Text style={styles.text}>
-            {isEnglish ? "Location:" : "Ubicación:"} Avenida Paseo Reforma
-            5304, Tijuana, Baja California, México
+        </View>
+
+        {/* Fecha / hora / paciente */}
+        <View style={styles.section}>
+          <View style={styles.detailCard}>
+            <View style={styles.detailCol}>
+              <Text style={styles.detailLabel}>{isEnglish ? "Date" : "Fecha"}</Text>
+              <Text style={styles.detailValue}>{ticket.fecha}</Text>
+            </View>
+            <View style={styles.detailCol}>
+              <Text style={styles.detailLabel}>{isEnglish ? "Time" : "Hora"}</Text>
+              <Text style={styles.detailValue}>{ticket.hora}</Text>
+            </View>
+            <View style={styles.detailCol}>
+              <Text style={styles.detailLabel}>{isEnglish ? "Patient" : "Paciente"}</Text>
+              <Text style={styles.detailValue}>{ticket.name}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Información del paciente */}
+        <View style={styles.section}>
+          <Text style={styles.sectionLabel}>
+            {isEnglish ? "Patient Information" : "Información del Paciente"}
           </Text>
-        </Text>
-        <Text style={styles.section}>
-          {isEnglish
-            ? "Scan the QR code for directions:"
-            : "Escanea el código QR para obtener direcciones:"}
-        </Text>
-        {qrCodeDataURL && (
-          <Image src={qrCodeDataURL} style={styles.qrCode} />
-        )}
+          <View style={styles.infoTable}>
+            <View style={styles.infoRow}>
+              <Text style={styles.infoLabel}>Email</Text>
+              <Text style={styles.infoValue}>{ticket.email}</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.infoLabel}>{isEnglish ? "Phone" : "Teléfono"}</Text>
+              <Text style={styles.infoValue}>{ticket.phone}</Text>
+            </View>
+            {ticket.isFirstVisit && (
+              <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>{isEnglish ? "Service" : "Servicio"}</Text>
+                <Text style={styles.infoValue}>
+                  {ticket.service || (isEnglish ? "General consultation" : "Consulta general")}
+                </Text>
+              </View>
+            )}
+            <View style={[styles.infoRow, styles.infoRowLast]}>
+              <Text style={styles.infoLabel}>{isEnglish ? "Insurance" : "Seguro"}</Text>
+              <Text style={styles.infoValue}>{ticket.insurance}</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Ubicación + QR */}
+        <View style={styles.section}>
+          <Text style={styles.sectionLabel}>{isEnglish ? "Location" : "Ubicación"}</Text>
+          <View style={styles.locationRow}>
+            <View style={styles.locationText}>
+              <Text style={styles.locationName}>Dental Reforma</Text>
+              <Text style={styles.locationAddr}>{CLINIC_ADDRESS}</Text>
+              <Text style={styles.locationPhone}>{CLINIC_PHONE_DISPLAY}</Text>
+            </View>
+            {qrCodeDataURL && (
+              <View>
+                <Image src={qrCodeDataURL} style={styles.qrCode} />
+                <Text style={styles.qrCaption}>
+                  {isEnglish ? "Scan for directions" : "Escanea para direcciones"}
+                </Text>
+              </View>
+            )}
+          </View>
+        </View>
+
+        <View style={styles.footer} fixed>
+          <Text style={styles.footerText}>
+            reformadental.com &middot; {CLINIC_PHONE_DISPLAY}
+          </Text>
+          <Text style={styles.footerTagline}>
+            {isEnglish ? "Smile, it's the best choice" : "Sonríe, es la mejor decisión"}
+          </Text>
+        </View>
       </Page>
     </Document>
   );
@@ -601,7 +776,7 @@ function Booking() {
               </div>
               <div className="pt-2 border-t border-gray-200">
                 <span className="text-gray-400 text-xs block text-center">
-                  Av. Paseo Reforma 5304, Tijuana, B.C.
+                  {CLINIC_ADDRESS}
                 </span>
               </div>
             </div>
