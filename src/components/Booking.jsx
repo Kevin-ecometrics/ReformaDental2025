@@ -317,6 +317,15 @@ function Booking() {
   };
 
   const handleCloseModal = () => {
+    // TEMPORAL — disparo de prueba para diagnosticar por qué "Schedule" no
+    // llega a Meta. Quitar junto con el de handleSubmit una vez resuelto.
+    if (window.fbq && ticket) {
+      window.fbq("track", "Schedule", {
+        content_name: "Appointment Booking (close button)",
+        status: ticket.isFirstVisit ? ticket.service || "General consultation" : "Returning patient",
+      });
+      console.log("[Meta Pixel] Schedule (close button)", ticket);
+    }
     setIsTicketModalOpen(false);
     fetchBookedSlots();
   };
