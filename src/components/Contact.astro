@@ -15,6 +15,7 @@ const t = useTranslations(lang);
     <div class="flex justify-center mb-8">
       <button
         id="showMapButton"
+        type="button"
         class="location-button flex items-center gap-2 px-6 py-3 border border-black rounded-lg font-bold uppercase text-sm hover:opacity-75 transition-all"
         data-show-text={t("contact.locationButton")}
         data-hide-text={t("contact.hidemap")}
@@ -55,24 +56,20 @@ const t = useTranslations(lang);
   <script is:inline>
     document.addEventListener("DOMContentLoaded", setupMapToggle);
     document.addEventListener("astro:page-load", setupMapToggle);
-    document.addEventListener("astro:after-swap", setupMapToggle);
 
     function setupMapToggle() {
-      const oldButton = document.getElementById("showMapButton");
-      if (oldButton) {
-        oldButton.replaceWith(oldButton.cloneNode(true));
-      }
       const showMapButton = document.getElementById("showMapButton");
       const mapContainer = document.getElementById("mapContainer");
 
-      if (showMapButton && mapContainer) {
+      if (showMapButton && mapContainer && !showMapButton.dataset.bound) {
+        showMapButton.dataset.bound = "true";
         const buttonText = showMapButton.querySelector("span");
 
         showMapButton.addEventListener("click", function () {
           if (mapContainer.classList.contains("h-0")) {
             if (window.fbq) {
-              fbq("trackCustom", "LocationReforma");
-              console.log("[Meta Pixel] LocationReforma");
+              fbq("trackCustom", "ReformaLocation", { content_name: "Map Location" });
+              console.log("[Meta Pixel] ReformaLocation");
             }
             mapContainer.classList.remove("h-0");
             mapContainer.classList.add("h-[500px]");
