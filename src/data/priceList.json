@@ -1,0 +1,266 @@
+{
+  "fuente": "precios.jpeg (Downloads, 2026-09-04)",
+  "moneda_sitio": {
+    "en": "USD",
+    "es": "MXN"
+  },
+  "procedimientos": [
+    {
+      "id": 1,
+      "procedimiento": "Consulta General",
+      "precio_mxn": "500",
+      "precio_usd": "35",
+      "usado_en_sitio": false,
+      "categoria_sitio": null
+    },
+    {
+      "id": 2,
+      "procedimiento": "Consulta Especialista",
+      "precio_mxn": "900",
+      "precio_usd": "55",
+      "usado_en_sitio": false,
+      "categoria_sitio": null
+    },
+    {
+      "id": 3,
+      "procedimiento": "Limpieza",
+      "precio_mxn": "1000-1500",
+      "precio_usd": "60-95",
+      "usado_en_sitio": true,
+      "categoria_sitio": { "en": "General Treatments", "es": "Tratamientos Generales" }
+    },
+    {
+      "id": 4,
+      "procedimiento": "Limpieza por cuadrante con anestesia",
+      "precio_mxn": "1500",
+      "precio_usd": "95",
+      "usado_en_sitio": false,
+      "categoria_sitio": null
+    },
+    {
+      "id": 5,
+      "procedimiento": "Resina 1 superficie",
+      "precio_mxn": "1000",
+      "precio_usd": "65",
+      "usado_en_sitio": true,
+      "categoria_sitio": { "en": "Fillings", "es": "Resinas / Rellenos" }
+    },
+    {
+      "id": 6,
+      "procedimiento": "Resina 2 superficies",
+      "precio_mxn": "1200",
+      "precio_usd": "75",
+      "usado_en_sitio": true,
+      "categoria_sitio": { "en": "Fillings", "es": "Resinas / Rellenos" }
+    },
+    {
+      "id": 7,
+      "procedimiento": "Resina 3 superficies",
+      "precio_mxn": "1400",
+      "precio_usd": "90",
+      "usado_en_sitio": true,
+      "categoria_sitio": { "en": "Fillings", "es": "Resinas / Rellenos" }
+    },
+    {
+      "id": 8,
+      "procedimiento": "Recubrimiento pulpar con resina",
+      "precio_mxn": "1400",
+      "precio_usd": "90",
+      "usado_en_sitio": false,
+      "categoria_sitio": null
+    },
+    {
+      "id": 9,
+      "procedimiento": "Corona Metal-Porcelana",
+      "precio_mxn": "7600",
+      "precio_usd": "465",
+      "usado_en_sitio": true,
+      "categoria_sitio": { "en": "Crowns", "es": "Coronas" }
+    },
+    {
+      "id": 10,
+      "procedimiento": "Corona Estética Zirconia",
+      "precio_mxn": "9600",
+      "precio_usd": "590",
+      "usado_en_sitio": true,
+      "categoria_sitio": { "en": "Crowns", "es": "Coronas" }
+    },
+    {
+      "id": 11,
+      "procedimiento": "Provisional acrílico rápido",
+      "precio_mxn": "1200",
+      "precio_usd": "75",
+      "usado_en_sitio": false,
+      "categoria_sitio": null
+    },
+    {
+      "id": 12,
+      "procedimiento": "Provisional acrílico cocido",
+      "precio_mxn": "3000",
+      "precio_usd": "185",
+      "usado_en_sitio": false,
+      "categoria_sitio": null
+    },
+    {
+      "id": 13,
+      "procedimiento": "Recementación por unidad (corona - puente)",
+      "precio_mxn": "900",
+      "precio_usd": "55",
+      "usado_en_sitio": false,
+      "categoria_sitio": null
+    },
+    {
+      "id": 14,
+      "procedimiento": "Blanqueamiento",
+      "precio_mxn": "3600",
+      "precio_usd": "220",
+      "usado_en_sitio": false,
+      "categoria_sitio": null
+    },
+    {
+      "id": 15,
+      "procedimiento": "Extracción simple",
+      "precio_mxn": "1600-3000",
+      "precio_usd": "100-185",
+      "usado_en_sitio": true,
+      "categoria_sitio": { "en": "Extraction", "es": "Extracción" }
+    },
+    {
+      "id": 16,
+      "procedimiento": "Extracción diente temporal con movilidad",
+      "precio_mxn": "700",
+      "precio_usd": "45",
+      "usado_en_sitio": false,
+      "categoria_sitio": null
+    },
+    {
+      "id": 17,
+      "procedimiento": "Extracción con endodoncia",
+      "precio_mxn": "2500-3200",
+      "precio_usd": "155-200",
+      "usado_en_sitio": false,
+      "categoria_sitio": null
+    },
+    {
+      "id": 18,
+      "procedimiento": "Cirugía 3ros molares o extracción quirúrgica",
+      "precio_mxn": "4000",
+      "precio_usd": "245",
+      "usado_en_sitio": true,
+      "categoria_sitio": { "en": "Extraction", "es": "Extracción" }
+    },
+    {
+      "id": 19,
+      "procedimiento": "Extracción supernumerarios (valorar con especialista)",
+      "precio_mxn": "3200",
+      "precio_usd": "200",
+      "usado_en_sitio": false,
+      "categoria_sitio": null
+    },
+    {
+      "id": 20,
+      "procedimiento": "Guarda oclusal acetato",
+      "precio_mxn": "2500",
+      "precio_usd": "155",
+      "usado_en_sitio": false,
+      "categoria_sitio": null
+    },
+    {
+      "id": 21,
+      "procedimiento": "Guarda oclusal con guía o pistas planas",
+      "precio_mxn": "5000",
+      "precio_usd": "305",
+      "usado_en_sitio": false,
+      "categoria_sitio": null
+    },
+    {
+      "id": 22,
+      "procedimiento": "Juego de prótesis total acrílico",
+      "precio_mxn": "14000",
+      "precio_usd": "855",
+      "usado_en_sitio": true,
+      "categoria_sitio": { "en": "Dentures / Prosthodontics", "es": "Prótesis / Dentaduras" }
+    },
+    {
+      "id": 23,
+      "procedimiento": "Prótesis total acrílico",
+      "precio_mxn": "7000",
+      "precio_usd": "430",
+      "usado_en_sitio": true,
+      "categoria_sitio": { "en": "Dentures / Prosthodontics", "es": "Prótesis / Dentaduras" }
+    },
+    {
+      "id": 24,
+      "procedimiento": "Flexible bilateral",
+      "precio_mxn": "10000",
+      "precio_usd": "610",
+      "usado_en_sitio": true,
+      "categoria_sitio": { "en": "Dentures / Prosthodontics", "es": "Prótesis / Dentaduras" }
+    },
+    {
+      "id": 25,
+      "procedimiento": "Flexible unilateral",
+      "precio_mxn": "7000",
+      "precio_usd": "370",
+      "usado_en_sitio": true,
+      "categoria_sitio": { "en": "Dentures / Prosthodontics", "es": "Prótesis / Dentaduras" }
+    },
+    {
+      "id": 26,
+      "procedimiento": "Removible bilateral combinado (valorar con lab)",
+      "precio_mxn": "8000",
+      "precio_usd": "490",
+      "usado_en_sitio": true,
+      "categoria_sitio": { "en": "Dentures / Prosthodontics", "es": "Prótesis / Dentaduras" }
+    },
+    {
+      "id": 27,
+      "procedimiento": "Removible unilateral combinado",
+      "precio_mxn": "6000",
+      "precio_usd": "370",
+      "usado_en_sitio": true,
+      "categoria_sitio": { "en": "Dentures / Prosthodontics", "es": "Prótesis / Dentaduras" }
+    },
+    {
+      "id": 28,
+      "procedimiento": "Rebase de acrílico en consultorio (para lab revisar costo)",
+      "precio_mxn": "1700",
+      "precio_usd": "100",
+      "usado_en_sitio": false,
+      "categoria_sitio": null
+    },
+    {
+      "id": 29,
+      "procedimiento": "Consulta Endodoncia",
+      "precio_mxn": "850",
+      "precio_usd": "55",
+      "usado_en_sitio": false,
+      "categoria_sitio": null
+    },
+    {
+      "id": 30,
+      "procedimiento": "Endodoncia",
+      "precio_mxn": "5000",
+      "precio_usd": "305",
+      "usado_en_sitio": true,
+      "categoria_sitio": { "en": "Root Canal", "es": "Endodoncia" }
+    },
+    {
+      "id": 31,
+      "procedimiento": "Retratamiento",
+      "precio_mxn": "6000",
+      "precio_usd": "370",
+      "usado_en_sitio": true,
+      "categoria_sitio": { "en": "Root Canal", "es": "Endodoncia" },
+      "notas": "Mostrado como beneficio adicional, no como precio principal de la tarjeta"
+    },
+    {
+      "id": 32,
+      "procedimiento": "Poste fibra de vidrio",
+      "precio_mxn": "1800",
+      "precio_usd": "125",
+      "usado_en_sitio": false,
+      "categoria_sitio": null
+    }
+  ]
+}

@@ -18,10 +18,14 @@ function Treatments() {
         {
           name: "Root Canal",
           image: "/images/endodoncia.webp",
-          price: "$250 - $300",
+          price: "$305",
           description:
             "Clean and seal infected root canals to preserve your natural teeth.",
-          benefits: ["Pain relief", "Tooth preservation", "Quick recovery"],
+          benefits: [
+            "Pain relief",
+            "Tooth preservation",
+            "Retreatment available: $370",
+          ],
         },
         {
           name: "Braces / Orthodontics",
@@ -46,7 +50,7 @@ function Treatments() {
         {
           name: "Extraction",
           image: "/images/extracion.webp",
-          price: "$150 (simple) - $200 (surgical)",
+          price: "$100 - $185 (simple) - $245 (surgical)",
           description:
             "Safe and efficient removal of problematic or decayed teeth. Surgical options available.",
           benefits: ["Relieves pain", "Prevents infection", "Quick procedure"],
@@ -54,15 +58,15 @@ function Treatments() {
         {
           name: "Crowns",
           image: "/images/corona.webp",
-          price: "$380 - $480",
+          price: "$465 - $590",
           description:
-            "Options available: Metal-porcelain ($380) or Zirconia ($480). Both restore damaged teeth.",
+            "Options available: Metal-porcelain ($465) or Zirconia ($590). Both restore damaged teeth.",
           benefits: ["Strong", "Natural look", "Tooth preservation"],
         },
         {
           name: "Fillings",
           image: "/images/recina.webp",
-          price: "$50 - $80",
+          price: "$65 - $90",
           description:
             "Restore the function and integrity of teeth with high-quality resin fillings.",
           benefits: ["Fast treatment", "Affordable", "Tooth-saving"],
@@ -77,7 +81,7 @@ function Treatments() {
         {
           name: "Dentures / Prosthodontics",
           image: "/images/dentadura.webp",
-          price: "$700",
+          price: "$370 - $855",
           description:
             "Custom-fit dentures for a complete and functional smile.",
           benefits: ["Removable", "Comfortable", "Affordable"],
@@ -85,7 +89,7 @@ function Treatments() {
         {
           name: "General Treatments",
           image: "/images/tratamiento.webp",
-          price: "$50",
+          price: "$35 - $95",
           description:
             "Routine treatments like cleanings and checkups to keep you healthy.",
           benefits: ["Preventive", "Essential", "Affordable"],
@@ -106,13 +110,13 @@ function Treatments() {
         {
           name: "Endodoncia",
           image: "/images/endodoncia.webp",
-          price: "$250 - $300",
+          price: "$5,000 MXN",
           description:
             "Limpia y sella los conductos infectados para preservar tus dientes naturales.",
           benefits: [
             "Alivio del dolor",
             "Preservación dental",
-            "Recuperación rápida",
+            "Retratamiento disponible: $6,000 MXN",
           ],
         },
         {
@@ -137,7 +141,7 @@ function Treatments() {
         {
           name: "Extracción",
           image: "/images/extracion.webp",
-          price: "$150 (simple) - $200 (quirúrgica)",
+          price: "$1,600 - $3,000 MXN (simple) - $4,000 MXN (quirúrgica)",
           description:
             "Extracción segura y eficiente de dientes problemáticos. Opción quirúrgica disponible.",
           benefits: ["Alivio del dolor", "Prevención de infecciones", "Rápido"],
@@ -145,15 +149,15 @@ function Treatments() {
         {
           name: "Coronas",
           image: "/images/corona.webp",
-          price: "$380 - $480",
+          price: "$7,600 - $9,600 MXN",
           description:
-            "Opciones: Metal-porcelana ($380) o Zirconia ($480). Ambas restauran los dientes dañados.",
+            "Opciones: Metal-porcelana ($7,600 MXN) o Zirconia ($9,600 MXN). Ambas restauran los dientes dañados.",
           benefits: ["Resistentes", "Apariencia natural", "Preservan dientes"],
         },
         {
           name: "Resinas / Rellenos",
           image: "/images/recina.webp",
-          price: "$50 - $80",
+          price: "$1,000 - $1,400 MXN",
           description: "Restaura dientes con materiales de resina duraderos.",
           benefits: ["Rápido", "Accesible", "Salvaguarda dental"],
         },
@@ -167,7 +171,7 @@ function Treatments() {
         {
           name: "Prótesis / Dentaduras",
           image: "/images/dentadura.webp",
-          price: "$700",
+          price: "$6,000 - $14,000 MXN",
           description:
             "Dentaduras a medida para una sonrisa funcional y completa.",
           benefits: ["Removibles", "Cómodas", "Accesibles"],
@@ -175,7 +179,7 @@ function Treatments() {
         {
           name: "Tratamientos Generales",
           image: "/images/tratamiento.webp",
-          price: "$50",
+          price: "$500 - $1,500 MXN",
           description:
             "Limpiezas y chequeos de rutina para mantener tu salud bucal.",
           benefits: ["Preventivos", "Esenciales", "Accesibles"],
