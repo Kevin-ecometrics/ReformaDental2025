@@ -1,0 +1,193 @@
+// Acceso a crm_leads.
+//
+// Cada funcion acepta un `tx` opcional: si se pasa (el de withTransaction) usa
+// esa conexion, si no usa el pool directo. Asi un cambio de etapa y su
+// actividad pueden ir en la misma transaccion sin que este modulo sepa nada
+// de transacciones.
+
+const crypto = require("node:crypto");
+const { q, one, run, now, toIso, parseJson, stringifyJson } = require("../../db/connection");
+
+/** Columnas de crm_leads en el orden del SELECT base. */
+const COLUMNS = "id, fb_leadgen_id, name, email, phone, source, campaign_name, ad_name, form_name, field_data_raw, stage, notes, created_at, updated_at";
+
+/**
+ * Normaliza una fila de la base al shape de la API: JSON parseado y DATETIME
+ * en ISO.
+ * @param {object|null} row
+ * @returns {import("../../types").Lead|null}
+ */
+function toLead(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    fbLeadgenId: row.fbLeadgenId ?? null,
+    name: row.name,
+    email: row.email ?? null,
+    phone: row.phone ?? null,
+    source: row.source,
+    campaignName: row.campaignName ?? null,
+    adName: row.adName ?? null,
+    formName: row.formName ?? null,
+    fieldDataRaw: parseJson(row.fieldDataRaw),
+    stage: row.stage,
+    notes: row.notes ?? "",
+    createdAt: toIso(row.createdAt),
+    updatedAt: toIso(row.updatedAt),
+  };
+}
+
+/**
+ * @typedef {object} Tx
+ * @property {typeof q} q
+ * @property {typeof one} one
+ * @property {typeof run} run
+ */
+
+/**
+ * Todos los leads, del mas nuevo al mas viejo.
+ * @param {Tx} [tx]
+ * @returns {Promise<import("../../types").Lead[]>}
+ */
+async function listLeads(tx) {
+  const db = tx || { q, one, run };
+  const rows = await db.q(`SELECT ${COLUMNS} FROM crm_leads ORDER BY created_at DESC`);
+  return rows.map(toLead);
+}
+
+/**
+ * @param {string} id
+ * @param {Tx} [tx]
+ * @returns {Promise<import("../../types").Lead|null>}
+ */
+async function getLead(id, tx) {
+  const db = tx || { q, one, run };
+  const row = await db.one(`SELECT ${COLUMNS} FROM crm_leads WHERE id = ?`, [id]);
+  return toLead(row);
+}
+
+/**
+ * Busca un lead por su id de Facebook Lead Ads. Es la unica deduplicacion que
+ * existe hoy: la automatica por email/telefono sigue pendiente en el backlog,
+ * por eso los indices de email y phone en el schema no son UNIQUE.
+ * @param {string} fbLeadgenId
+ * @param {Tx} [tx]
+ * @returns {Promise<import("../../types").Lead|null>}
+ */
+async function getLeadByFbLeadgenId(fbLeadgenId, tx) {
+  const db = tx || { q, one, run };
+  const row = await db.one(`SELECT ${COLUMNS} FROM crm_leads WHERE fb_leadgen_id = ?`, [fbLeadgenId]);
+  return toLead(row);
+}
+
+/**
+ * Inserta un lead. NO dispara efectos: eso lo hace el llamador, para que la
+ * escritura y los side effects (CAPI, reglas) puedan separarse.
+ * @param {import("../../types").CreateLeadInput} input
+ * @param {Tx} [tx]
+ * @returns {Promise<import("../../types").Lead>}
+ */
+async function insertLead(input, tx) {
+  const db = tx || { q, one, run };
+  const id = crypto.randomUUID();
+  const ts = now();
+
+  await db.run(
+    `INSERT INTO crm_leads
+       (id, fb_leadgen_id, name, email, phone, source, campaign_name, ad_name, form_name,
+        field_data_raw, stage, notes, created_at, updated_at)
+     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+    [
+      id,
+      input.fbLeadgenId ?? null,
+      input.name,
+      input.email ?? null,
+      input.phone ?? null,
+      input.source,
+      input.campaignName ?? null,
+      input.adName ?? null,
+      input.formName ?? null,
+      stringifyJson(input.fieldDataRaw),
+      "new",
+      input.notes ?? "",
+      ts,
+      ts,
+    ]
+  );
+
+  return {
+    id,
+    fbLeadgenId: input.fbLeadgenId ?? null,
+    name: input.name,
+    email: input.email ?? null,
+    phone: input.phone ?? null,
+    source: input.source,
+    campaignName: input.campaignName ?? null,
+    adName: input.adName ?? null,
+    formName: input.formName ?? null,
+    fieldDataRaw: input.fieldDataRaw ?? null,
+    stage: "new",
+    notes: input.notes ?? "",
+    createdAt: toIso(ts),
+    updatedAt: toIso(ts),
+  };
+}
+
+/**
+ * Cambia la etapa. Valida que la etapa exista y que sea un cambio real: si el
+ * destino no existe o ya era la actual, no escribe nada y devuelve el lead
+ * intacto. Igual que la version lowdb.
+ * @param {string} id
+ * @param {string} newStage
+ * @param {Tx} [tx]
+ * @returns {Promise<{lead: import("../../types").Lead, changed: boolean, oldStage: string|null}>}
+ */
+async function updateLeadStage(id, newStage, tx) {
+  const db = tx || { q, one, run };
+  const lead = await getLead(id, db);
+  if (!lead) return { lead: null, changed: false, oldStage: null };
+
+  const stageExists = await db.one("SELECT id FROM crm_stages WHERE id = ?", [newStage]);
+  if (!stageExists) return { lead, changed: false, oldStage: null };
+  if (lead.stage === newStage) return { lead, changed: false, oldStage: null };
+
+  await db.run("UPDATE crm_leads SET stage = ?, updated_at = ? WHERE id = ?", [
+    newStage,
+    now(),
+    id,
+  ]);
+
+  return {
+    lead: { ...lead, stage: newStage, updatedAt: toIso(now()) },
+    changed: true,
+    oldStage: lead.stage,
+  };
+}
+
+/**
+ * Reemplaza las notas.
+ * @param {string} id
+ * @param {string} notes
+ * @param {Tx} [tx]
+ * @returns {Promise<import("../../types").Lead|null>}
+ */
+async function updateLeadNotes(id, notes, tx) {
+  const db = tx || { q, one, run };
+  const lead = await getLead(id, db);
+  if (!lead) return null;
+
+  const ts = now();
+  await db.run("UPDATE crm_leads SET notes = ?, updated_at = ? WHERE id = ?", [notes, ts, id]);
+  return { ...lead, notes, updatedAt: toIso(ts) };
+}
+
+module.exports = {
+  COLUMNS,
+  toLead,
+  listLeads,
+  getLead,
+  getLeadByFbLeadgenId,
+  insertLead,
+  updateLeadStage,
+  updateLeadNotes,
+};
