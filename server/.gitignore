@@ -1,0 +1,11 @@
+# dependencies
+node_modules/
+
+# real credentials live only on the server; never commit them
+.env
+.env.production
+.env.*.local
+
+# logs
+*.log
+npm-debug.log*
