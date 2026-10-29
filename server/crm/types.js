@@ -29,6 +29,7 @@
  * @property {string} notes
  * @property {string} createdAt
  * @property {string} updatedAt
+ * @property {string|null} archivedAt null = activo
  */
 
 /**
@@ -94,6 +95,7 @@
  * @property {boolean|null} tokenValid
  * @property {string|null} tokenCheckedAt
  * @property {string|null} tokenCheckError
+ * @property {string|null} notifyEmails
  */
 
 /**

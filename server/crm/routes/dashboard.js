@@ -3,15 +3,43 @@
 
 const express = require("express");
 const { asyncHandler } = require("./util");
-const { listTasks, completeTask } = require("../services/repo/tasks");
-const { listLeads } = require("../services/repo/leads");
-const { listActivities } = require("../services/repo/activities");
+const { listTasks, completeTask, createTask } = require("../services/repo/tasks");
+const { listLeads, getLead, touchLead } = require("../services/repo/leads");
+const { listActivities, addActivity } = require("../services/repo/activities");
 const { listStages } = require("../services/repo/stages");
 
 const router = express.Router();
 
-// No hay POST /tasks a proposito: las tareas las crean las reglas de
-// automatizacion. El endpoint de creacion manual esta en el backlog.
+const MAX_TASK_LENGTH = 500;
+
+// Tarea manual desde la ficha del lead. Las de las reglas se siguen creando en
+// automation.js; las dos van a la misma tabla y al mismo panel.
+router.post(
+  "/tasks",
+  asyncHandler(async (req, res) => {
+    const body = req.body || {};
+    const description = typeof body.description === "string" ? body.description.trim() : "";
+    const dueAtMs = typeof body.dueAt === "string" ? Date.parse(body.dueAt) : NaN;
+
+    if (typeof body.leadId !== "string" || !body.leadId) {
+      return res.status(400).json({ error: "leadId is required" });
+    }
+    if (!description) return res.status(400).json({ error: "description is required" });
+    if (description.length > MAX_TASK_LENGTH) {
+      return res.status(400).json({ error: `description must be at most ${MAX_TASK_LENGTH} characters` });
+    }
+    if (Number.isNaN(dueAtMs)) return res.status(400).json({ error: "dueAt must be a valid date" });
+
+    const lead = await getLead(body.leadId);
+    if (!lead) return res.status(404).json({ error: "Lead not found" });
+
+    const task = await createTask(lead.id, description, new Date(dueAtMs).toISOString());
+    await addActivity(lead.id, "system", `Task added: ${description}`);
+    // Agendar un pendiente tambien es trabajar el lead, igual que completar una tarea.
+    await touchLead(lead.id);
+    return res.status(201).json({ task });
+  })
+);
 
 router.get(
   "/tasks",

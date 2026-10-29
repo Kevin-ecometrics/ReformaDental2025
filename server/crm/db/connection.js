@@ -10,7 +10,7 @@
 //
 // OJO: esto comparte la base con el calendario. Nada de DDL ni TRUNCATE en
 // tiempo de ejecucion -- el unico punto donde se crea schema es aplicando
-// crm/db/schema.sql a mano, una vez.
+// schema.sql (raiz de server/) a mano, una vez.
 
 /** @typedef {import('mysql').Pool} Pool */
 
@@ -31,8 +31,8 @@ function getPool() {
 }
 
 /**
- * Crea un pool propio para los scripts de linea de comandos (crm/seed.js,
- * crm/scripts/*), que corren sin server.js y por tanto sin pool inyectado.
+ * Crea un pool propio para los scripts de linea de comandos (--crm-seed,
+ * --crm-create-user, --crm-migrate), que corren sin levantar el servidor y por tanto sin pool inyectado.
  *
  * Replica exactamente la configuracion de server.js para que el script
  * escriba en la misma base con los mismos parametros. Los scripts cierran el
@@ -197,6 +197,8 @@ const COLUMN_MAP = {
   token_valid: "tokenValid",
   token_checked_at: "tokenCheckedAt",
   token_check_error: "tokenCheckError",
+  notify_emails: "notifyEmails",
+  archived_at: "archivedAt",
   password_hash: "passwordHash",
   last_login_at: "lastLoginAt",
   whatsapp_template_name: "whatsappTemplateName",

@@ -526,19 +526,6 @@ app.post("/guardar-datos-es", function(req, res) {
   });
 });
 
-// ─── CRM ──────────────────────────────────────────────────────────────────────
-//
-// Montado al final, DESPUES de las rutas del calendario, para que cualquier ruta
-// /crm::* nueva no pise una del calendario. Recibe el pool `db` y el
-// transporte `mail` que ya estan definidos arriba: el CRM no abre conexiones
-// propias ni duplica credenciales.
-//
-// allowedOrigins es la MISMA lista que usa el CORS de este archivo. Se pasa
-// porque la cookie de sesion del CRM es SameSite=None (el dashboard vive en
-// otro dominio) y eso obliga a comprobar el Origin a mano en cada escritura.
-
-app.use("/crm", require("./crm").mount({ db: db, mail: mail, allowedOrigins: allowedOrigins }));
-
 // ─── Start ────────────────────────────────────────────────────────────────────
 
 app.listen(PORT, function() {

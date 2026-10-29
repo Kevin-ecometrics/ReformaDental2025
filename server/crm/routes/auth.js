@@ -17,7 +17,10 @@ router.post(
   asyncHandler(async (req, res) => {
     const result = await login(req, res);
     if (!result.ok) return res.status(401).json({ error: result.error });
-    return res.json({ user: result.user });
+    // `token` viaja en el cuerpo ademas de en la cookie: el dashboard esta en
+    // otro dominio y depende del header Authorization para no depender de una
+    // cookie de terceros. Ver el comentario en auth.js login().
+    return res.json({ user: result.user, token: result.token });
   })
 );
 

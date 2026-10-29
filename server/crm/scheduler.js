@@ -10,8 +10,8 @@
 // hot reload de Next.js que lo ejecute dos veces.
 
 const cron = require("node-cron");
-const { checkFacebookTokenValidity, syncFacebookLeads } = require("./services/facebook/sync");
-const { runAutomationTick } = require("./services/automation");
+const { checkFacebookTokenValidity } = require("./services/facebook/sync");
+const { runTick } = require("./services/tick");
 
 let started = false;
 
@@ -40,9 +40,10 @@ function startScheduler() {
 
   // Cada 5 minutos: traer leads nuevos de Facebook y luego evaluar las reglas
   // basadas en tiempo (p.ej. leads "Contacted" parados).
+  // Pasa por runTick() y no llama al sync directo: asi comparte candado con
+  // POST /crm/cron/tick (el Cron Jobs de cPanel) y no corren a la vez.
   cron.schedule("*/5 * * * *", safely("sync+automatizaciones", async () => {
-    await syncFacebookLeads();
-    await runAutomationTick();
+    await runTick("cron interno");
   }));
 
   // Una vez al dia: comprobar que el Page Access Token sigue vivo, para que
@@ -57,4 +58,9 @@ function startScheduler() {
   return true;
 }
 
-module.exports = { startScheduler };
+/** @returns {boolean} true si los crons ya estan arrancados (lo usa /health) */
+function isStarted() {
+  return started;
+}
+
+module.exports = { startScheduler, isStarted };

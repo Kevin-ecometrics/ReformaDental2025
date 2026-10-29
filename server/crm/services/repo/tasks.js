@@ -7,6 +7,7 @@
 
 const crypto = require("node:crypto");
 const { q, one, run, now, fromIso, toIso } = require("../../db/connection");
+const { touchLead } = require("./leads");
 
 /**
  * @param {object} row
@@ -27,6 +28,8 @@ function toTask(row) {
 /** @typedef {import("./leads").Tx} Tx */
 
 /**
+ * Con `leadId`, todas las tareas de ese lead. Sin el, la lista general, que
+ * omite las de leads archivados (panel de tareas y dashboard).
  * @param {string} [leadId]
  * @param {Tx} [tx]
  * @returns {Promise<import("../../types").Task[]>}
@@ -39,7 +42,8 @@ async function listTasks(leadId, tx) {
         [leadId]
       )
     : await db.q(
-        "SELECT id, lead_id, description, due_at, done, created_at FROM crm_tasks ORDER BY due_at ASC"
+        `SELECT t.id, t.lead_id, t.description, t.due_at, t.done, t.created_at FROM crm_tasks t
+         JOIN crm_leads l ON l.id = t.lead_id WHERE l.archived_at IS NULL ORDER BY t.due_at ASC`
       );
   return rows.map(toTask);
 }
@@ -88,6 +92,11 @@ async function completeTask(taskId, tx) {
   const db = tx || { q, one, run };
   const task = await getTask(taskId, db);
   if (!task) return null;
+
+  // Completar una tarea es trabajar el lead: cuenta como actividad para la regla
+  // "sin actividad" (si no, "Follow up again" se recrea en el siguiente tick). Va
+  // antes del UPDATE y solo la primera vez, para que repetir la llamada no cuente.
+  if (!task.done) await touchLead(task.leadId, db);
 
   await db.run("UPDATE crm_tasks SET done = TRUE WHERE id = ?", [taskId]);
   return { ...task, done: true };

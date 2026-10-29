@@ -12,7 +12,7 @@ const { q, one, run, toIso } = require("../../db/connection");
 async function getSyncState(tx) {
   const db = tx || { q, one, run };
   const row = await db.one(
-    "SELECT last_sync_at, last_error, last_capi_at, last_capi_error, token_valid, token_checked_at, token_check_error FROM crm_sync_state WHERE id = 1"
+    "SELECT last_sync_at, last_error, last_capi_at, last_capi_error, token_valid, token_checked_at, token_check_error, notify_emails FROM crm_sync_state WHERE id = 1"
   );
 
   if (!row) {
@@ -26,6 +26,7 @@ async function getSyncState(tx) {
       tokenValid: null,
       tokenCheckedAt: null,
       tokenCheckError: null,
+      notifyEmails: null,
     };
   }
 
@@ -37,6 +38,7 @@ async function getSyncState(tx) {
     tokenValid: row.tokenValid === null ? null : row.tokenValid === 1 || row.tokenValid === true,
     tokenCheckedAt: toIso(row.tokenCheckedAt),
     tokenCheckError: row.tokenCheckError ?? null,
+    notifyEmails: row.notifyEmails ?? null,
   };
 }
 
@@ -56,6 +58,7 @@ async function updateSyncState(patch, tx) {
     tokenValid: "token_valid",
     tokenCheckedAt: "token_checked_at",
     tokenCheckError: "token_check_error",
+    notifyEmails: "notify_emails",
   };
 
   const sets = [];

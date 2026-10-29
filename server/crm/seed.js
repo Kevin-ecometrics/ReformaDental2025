@@ -10,7 +10,7 @@
 // primer arranque por credenciales incompletas. Se corre a mano una vez, desde
 // la terminal de cPanel:
 //
-//     node crm/seed.js
+//     node server.js --crm-seed
 //
 // Crea lo que falte y actualiza lo que exista; no borra nada que este en la
 // base pero no en esta lista (salvo las filas stale de crm_sync_state, que se
@@ -162,17 +162,17 @@ async function seed() {
   console.log(`[seed] ${TEMPLATES.length} plantillas`);
 }
 
-// Solo se ejecuta si se llama directamente, no al importar el modulo.
-if (require.main === module) {
-  // El servidor carga .env en server.js; este script corre solo, asi que lo
-  // carga aqui para tener MYSQL_* disponibles.
-  require("dotenv").config();
-
+/**
+ * Entrada de `node server.js --crm-seed`: abre su propio pool (el servidor no
+ * esta arrancado), siembra y sale.
+ * @returns {Promise<void>}
+ */
+function cliSeed() {
   const { q, databaseName, useStandalonePool } = require("./db/connection");
 
   const pool = useStandalonePool();
 
-  q("SELECT 1")
+  return q("SELECT 1")
     .then(() => {
       console.log(`[seed] conectado a ${databaseName()}`);
       return seed();
@@ -187,4 +187,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = { seed, STAGES, RULES, TEMPLATES };
+module.exports = { seed, cliSeed, STAGES, RULES, TEMPLATES };

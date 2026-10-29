@@ -6,6 +6,16 @@ node_modules/
 .env.production
 .env.*.local
 
+# Backend de e-commetrics.com y sus copias: llevan secretos escritos en el codigo (SMTP, JWT).
+# Se usan solo para preparar despliegues; nunca se versionan.
+dashboard.js
+backend-actual.js
+*.bak-*
+_privado/
+
 # logs
 *.log
 npm-debug.log*
+
+# bundle generado por `bun run build`
+out/

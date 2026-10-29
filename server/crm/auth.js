@@ -275,7 +275,7 @@ function requireSameOrigin(allowedOrigins) {
 /**
  * @param {import('express').Request} req
  * @param {import('express').Response} res
- * @returns {Promise<{ok: boolean, error?: string, user?: import('./types').CrmUser}>}
+ * @returns {Promise<{ok: boolean, error?: string, token?: string, user?: import('./types').CrmUser}>}
  */
 async function login(req, res) {
   const key = req.ip || "desconocido";
@@ -305,11 +305,20 @@ async function login(req, res) {
   }
 
   clearAttempts(key);
-  setAuthCookie(res, signToken(user));
+  const token = signToken(user);
+  setAuthCookie(res, token);
   // Bookkeeping: que un login valido no se convierta en 500 por un UPDATE.
   void touchLastLogin(user.id);
 
-  return { ok: true, user: { id: user.id, email: user.email, name: user.name, role: user.role } };
+  // El token vuelve tambien en el cuerpo, no solo en la cookie. El dashboard
+  // corre en otro dominio (e-commetrics.com) y la cookie seria de terceros, que
+  // Safari y Chrome van bloqueando: el frontend la usa como respaldo y manda
+  // Authorization: Bearer en su lugar.
+  return {
+    ok: true,
+    token,
+    user: { id: user.id, email: user.email, name: user.name, role: user.role },
+  };
 }
 
 module.exports = {

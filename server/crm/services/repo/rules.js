@@ -14,7 +14,8 @@ function toRule(row) {
   return {
     key: row.key,
     label: row.label,
-    trigger: row.triggerType,
+    // COLUMN_MAP (db/connection.js) ya convierte trigger_type en `trigger`.
+    trigger: row.trigger,
     action: row.action,
     enabled: row.enabled === 1 || row.enabled === true,
     config: parseJson(row.config) || {},

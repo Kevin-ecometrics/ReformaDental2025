@@ -6,7 +6,7 @@
 //
 // Uso, desde la terminal de cPanel:
 //
-//     node crm/scripts/create-crm-user.js ana@reformadental.com "Ana Lopez" "contrasena-larga"
+//     node server.js --crm-create-user ana@reformadental.com "Ana Lopez" "contrasena-larga"
 //
 // Si se omite el tercer argumento, la contrasena se pide por la terminal sin
 // eco, que es la forma menos mala: la que se pasa como argumento queda en el
@@ -69,11 +69,11 @@ function askHidden(question) {
   });
 }
 
-async function main() {
-  const [emailArg, nameArg, passwordArg] = process.argv.slice(2);
+async function main(args) {
+  const [emailArg, nameArg, passwordArg] = args;
 
   if (!emailArg) {
-    console.error("Uso: node crm/scripts/create-crm-user.js <email> [nombre] [contrasena]");
+    console.error("Uso: node server.js --crm-create-user <email> [nombre] [contrasena]");
     process.exit(1);
   }
 
@@ -112,7 +112,4 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error("Fallo:", err.message);
-  process.exit(1);
-});
+module.exports = { main };

@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node out/server.js",
+    "build": "bun build server.src.js --target=node --format=cjs --packages=external --outfile=out/server.js",
+    "dev": "nodemon server.src.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

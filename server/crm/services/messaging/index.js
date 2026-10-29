@@ -9,6 +9,7 @@
 
 const { getTemplate } = require("../repo/templates");
 const { addActivity } = require("../repo/activities");
+const { touchLead } = require("../repo/leads");
 const { sendEmail } = require("./email");
 const { sendSms } = require("./sms");
 const { sendWhatsapp, sendWhatsappTemplate } = require("./whatsapp");
@@ -92,6 +93,16 @@ async function sendMessageToLead(lead, channel, templateKey) {
       ? `Sent "${templateKey}" via ${channel}`
       : `Failed to send "${templateKey}" via ${channel}: ${result.error}`
   );
+
+  if (result.ok) {
+    // Un mensaje enviado cuenta como actividad (ver touchLead). Si esto falla el
+    // mensaje ya salio: se avisa en el log y no se convierte en error de envio.
+    try {
+      await touchLead(lead.id);
+    } catch (err) {
+      console.warn("[crm] no se pudo registrar la actividad del lead:", err.message);
+    }
+  }
 
   return result;
 }

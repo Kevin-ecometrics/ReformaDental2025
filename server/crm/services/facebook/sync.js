@@ -15,6 +15,37 @@ const { now } = require("../../db/connection");
 const FB_API_VERSION = "v26.0";
 const GRAPH_URL = `https://graph.facebook.com/${FB_API_VERSION}`;
 
+// Graph devuelve ~25 filas por pagina si no se pide mas. Se pide el maximo y se sigue `paging.next`,
+// con tope de paginas y de tiempo por peticion para que un formulario enorme o una respuesta colgada
+// no dejen el tick (y su candado) ocupado.
+const PAGE_LIMIT = 100;
+const MAX_PAGES = 30;
+const FETCH_TIMEOUT_MS = 30 * 1000;
+
+/**
+ * Baja todas las paginas de un endpoint de lista de Graph.
+ * @param {string} firstUrl
+ * @param {string} label para el mensaje de error
+ * @returns {Promise<any[]>}
+ */
+async function fetchAllPages(firstUrl, label) {
+  const rows = [];
+  let url = firstUrl;
+  for (let page = 0; url && page < MAX_PAGES; page += 1) {
+    const res = await fetch(url, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
+    const json = await res.json();
+    if (!res.ok) {
+      throw new Error(`${label} failed: HTTP ${res.status}: ${JSON.stringify(json)}`);
+    }
+    rows.push(...(json.data || []));
+    url = json.paging && json.paging.next ? json.paging.next : null;
+  }
+  if (url) {
+    console.warn(`[crm/sync] ${label}: se alcanzo el tope de ${MAX_PAGES} paginas; el resto se leera en otro ciclo si es mas reciente`);
+  }
+  return rows;
+}
+
 /**
  * @typedef {object} SyncResult
  * @property {boolean} ok
@@ -54,29 +85,19 @@ async function syncFacebookLeads() {
   }
 
   try {
-    const formsRes = await fetch(
-      `${GRAPH_URL}/${pageId}/leadgen_forms?fields=id,name&access_token=${accessToken}`
+    const forms = await fetchAllPages(
+      `${GRAPH_URL}/${pageId}/leadgen_forms?fields=id,name&limit=${PAGE_LIMIT}&access_token=${accessToken}`,
+      "leadgen_forms"
     );
-    const formsJson = await formsRes.json();
-    if (!formsRes.ok) {
-      throw new Error(`leadgen_forms failed: HTTP ${formsRes.status}: ${JSON.stringify(formsJson)}`);
-    }
-    const forms = formsJson.data || [];
 
     let fetched = 0;
     let created = 0;
 
     for (const form of forms) {
-      const leadsRes = await fetch(
-        `${GRAPH_URL}/${form.id}/leads?fields=field_data,created_time,ad_name,campaign_name&access_token=${accessToken}`
+      const leads = await fetchAllPages(
+        `${GRAPH_URL}/${form.id}/leads?fields=field_data,created_time,ad_name,campaign_name&limit=${PAGE_LIMIT}&access_token=${accessToken}`,
+        `leads fetch for form ${form.id}`
       );
-      const leadsJson = await leadsRes.json();
-      if (!leadsRes.ok) {
-        throw new Error(
-          `leads fetch failed for form ${form.id}: HTTP ${leadsRes.status}: ${JSON.stringify(leadsJson)}`
-        );
-      }
-      const leads = leadsJson.data || [];
       fetched += leads.length;
 
       for (const raw of leads) {

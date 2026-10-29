@@ -17,6 +17,40 @@ const { listLeads } = require("./repo/leads");
 const { getStage } = require("./repo/stages");
 const { sendCapiEvent } = require("./facebook/capi");
 const { sendMessageToLead } = require("./messaging");
+const { sendEmail } = require("./messaging/email");
+const { getSyncState } = require("./repo/syncState");
+
+/**
+ * Aviso al equipo de un lead nuevo de Facebook, para cumplir "Call within 1
+ * hour". Los manuales y de CSV no avisan: quien los da de alta ya sabe, y un
+ * CSV de 100 filas serian 100 correos. Un fallo solo queda en el log.
+ *
+ * @param {import("../types").Lead} lead
+ * @returns {Promise<void>}
+ */
+async function notifyNewLead(lead) {
+  if (lead.source !== "facebook") return;
+  try {
+    const { notifyEmails } = await getSyncState();
+    if (!notifyEmails) return;
+
+    const lines = [
+      `Name: ${lead.name}`,
+      `Phone: ${lead.phone || "-"}`,
+      `Email: ${lead.email || "-"}`,
+      `Campaign: ${lead.campaignName || "-"}`,
+      `Form: ${lead.formName || "-"}`,
+    ];
+    const result = await sendEmail({
+      to: notifyEmails,
+      subject: `New lead: ${lead.name}`,
+      text: `${lines.join("\n")}\n\nCall within 1 hour.`,
+    });
+    if (!result.ok) console.error(`[crm/automation] aviso de lead ${lead.id} fallo:`, result.error);
+  } catch (err) {
+    console.error(`[crm/automation] aviso de lead ${lead.id} fallo:`, err instanceof Error ? err.message : err);
+  }
+}
 
 /**
  * @param {string} stageId
@@ -55,7 +89,9 @@ async function applyRule(rule, lead) {
 
 /**
  * Evalua las reglas que corresponde a un evento: creacion (oldStage === null) o
- * cambio de etapa. Ademas dispara el evento de CAPI de la etapa destino.
+ * cambio de etapa. Ademas dispara el evento de CAPI de la etapa destino, solo
+ * para leads de Facebook: los manuales, de CSV o de una cita del sitio no
+ * vinieron de un anuncio y le ensucian a Meta la optimizacion de campanas.
  *
  * @param {import("../types").Lead} lead
  * @param {string|null} oldStage
@@ -63,12 +99,14 @@ async function applyRule(rule, lead) {
  * @returns {Promise<void>}
  */
 async function fireStageChangeSideEffects(lead, oldStage, newStage) {
-  const stageName = await getStageName(newStage);
-  await sendCapiEvent(lead, stageName);
+  if (lead.source === "facebook") {
+    await sendCapiEvent(lead, await getStageName(newStage));
+  }
 
   const rules = await listEnabledRules();
 
   if (oldStage === null) {
+    await notifyNewLead(lead);
     for (const rule of rules.filter((r) => r.trigger === "new_lead")) {
       await applyRule(rule, lead);
     }

@@ -7,8 +7,8 @@
 
 const express = require("express");
 const { asyncHandler } = require("./util");
-const { listLeads, getLead } = require("../services/repo/leads");
-const { listActivities } = require("../services/repo/activities");
+const { listLeads, getLead, setLeadArchived } = require("../services/repo/leads");
+const { listActivities, addActivity } = require("../services/repo/activities");
 const { listTasks } = require("../services/repo/tasks");
 const { createLead, changeLeadStage, updateLeadNotes } = require("../services/leads");
 const { sendMessageToLead } = require("../services/messaging");
@@ -44,7 +44,7 @@ function csvEscape(value) {
 router.get(
   "/leads",
   asyncHandler(async (req, res) => {
-    res.json({ leads: await listLeads() });
+    res.json({ leads: await listLeads({ includeArchived: req.query.includeArchived === "1" }) });
   })
 );
 
@@ -121,6 +121,23 @@ router.patch(
     return res.json({ lead });
   })
 );
+
+// Archivar y restaurar. No disparan CAPI ni reglas: solo ocultan o muestran el
+// lead. Repetir la misma accion no escribe ni duplica la actividad.
+for (const [action, archived] of [["archive", true], ["restore", false]]) {
+  router.post(
+    `/leads/:id/${action}`,
+    asyncHandler(async (req, res) => {
+      const lead = await getLead(req.params.id);
+      if (!lead) return res.status(404).json({ error: "Lead not found" });
+      if (Boolean(lead.archivedAt) === archived) return res.json({ lead });
+
+      const updated = await setLeadArchived(lead.id, archived);
+      await addActivity(lead.id, "system", archived ? "Lead archived" : "Lead restored");
+      return res.json({ lead: updated });
+    })
+  );
+}
 
 router.post(
   "/leads/:id/send",

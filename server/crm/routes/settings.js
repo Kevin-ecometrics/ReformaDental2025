@@ -11,7 +11,7 @@ const express = require("express");
 const { asyncHandler } = require("./util");
 const { listRules, upsertRule, getRule } = require("../services/repo/rules");
 const { listTemplates, getTemplate, upsertTemplate } = require("../services/repo/templates");
-const { getSyncState } = require("../services/repo/syncState");
+const { getSyncState, updateSyncState } = require("../services/repo/syncState");
 const { listStages } = require("../services/repo/stages");
 const { getMailTransport } = require("../services/messaging/transport");
 
@@ -105,6 +105,32 @@ router.patch(
     });
 
     return res.json({ template: updated });
+  })
+);
+
+const EMAIL_RE = /^[^\s@,]+@[^\s@,]+\.[^\s@,]+$/;
+
+// Correos que reciben el aviso de lead nuevo. Vacio = sin aviso.
+router.patch(
+  "/settings/notify",
+  asyncHandler(async (req, res) => {
+    const raw = (req.body || {}).notifyEmails;
+    if (typeof raw !== "string") {
+      return res.status(400).json({ error: "notifyEmails must be a string" });
+    }
+
+    const emails = raw.split(",").map((e) => e.trim()).filter(Boolean);
+    const invalid = emails.filter((e) => !EMAIL_RE.test(e));
+    if (invalid.length > 0) {
+      return res.status(400).json({ error: `Invalid email: ${invalid.join(", ")}` });
+    }
+    if (emails.length > 10) {
+      return res.status(400).json({ error: "At most 10 emails" });
+    }
+
+    const notifyEmails = emails.length > 0 ? emails.join(", ") : null;
+    await updateSyncState({ notifyEmails });
+    return res.json({ notifyEmails });
   })
 );
 

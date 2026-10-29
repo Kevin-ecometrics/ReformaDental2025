@@ -2,9 +2,9 @@
 //
 // Es el unico script que necesita leer el repo del CRM Next.js, y se ejecuta UNA
 // vez, en local o en el servidor, cuando la tabla crm_* ya existe (schema.sql
-// aplicado y crm/seed.js corrido).
+// aplicado y el seed corrido).
 //
-//   node crm/scripts/migrate-db-json.js "C:\ruta\a\CRM\src\data\db.json"
+//   node server.js --crm-migrate "C:\ruta\a\CRM\src\data\db.json"
 //
 // Por defecto busca el archivo en la ruta que se le pase; si no se le pasa nada,
 // mira en una ruta por defecto que solo funcionara si el CRM esta clonado en el
@@ -14,7 +14,7 @@
 //
 //   - leads, activities, tasks: SI, con sus ids originales, para no perder el
 //     historial ni las referencias entre ellos.
-//   - stages, automationRules, templates: NO. Van en crm/seed.js, que esta
+//   - stages, automationRules, templates: NO. Van en el seed (crm/seed.js), que esta
 //     versionado en el codigo. Migrarlos ademas crearia reglas duplicadas con
 //     ids viejos que el frontend nuevo ya no usa.
 //   - syncState: NO. Son marcas de tiempo de una instancia anterior; copiarlas
@@ -112,12 +112,12 @@ async function migrate(data) {
   return { leads, activities, tasks };
 }
 
-async function main() {
-  const file = process.argv[2] || DEFAULT_PATH;
+async function main(args) {
+  const file = args[0] || DEFAULT_PATH;
 
   if (!fs.existsSync(file)) {
     console.error(`No existe el archivo: ${file}`);
-    console.error("Uso: node crm/scripts/migrate-db-json.js <ruta/a/db.json>");
+    console.error("Uso: node server.js --crm-migrate <ruta/a/db.json>");
     process.exit(1);
   }
 
@@ -132,7 +132,7 @@ async function main() {
     // Las etapas tienen que existir ya, porque los leads apuntan a ellas por id.
     const stages = await q("SELECT COUNT(*) AS n FROM crm_stages");
     if (Number(stages[0].n) === 0) {
-      throw new Error("crm_stages esta vacia. Corre primero: node crm/seed.js");
+      throw new Error("crm_stages esta vacia. Corre primero: node server.js --crm-seed");
     }
 
     const counts = await migrate(data);
@@ -145,4 +145,4 @@ async function main() {
   }
 }
 
-main();
+module.exports = { main, migrate };

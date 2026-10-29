@@ -27,6 +27,8 @@ const leadRoutes = require("./routes/leads");
 const dashboardRoutes = require("./routes/dashboard");
 const settingsRoutes = require("./routes/settings");
 const toolRoutes = require("./routes/tools");
+const cronRoutes = require("./routes/cron");
+const appointmentRoutes = require("./routes/appointments");
 
 /**
  * @typedef {object} MountDeps
@@ -57,6 +59,11 @@ function mount(deps) {
 
   const router = express.Router();
 
+  // /crm/cron/tick va FUERA de requireAuth a proposito: lo llama el Cron Jobs de
+  // cPanel, sin sesion. Se protege con su propio token (CRM_CRON_TOKEN) y queda
+  // apagado si la variable falta. No lleva sameOrigin: curl no manda Origin.
+  router.use(cronRoutes);
+
   // /crm/login va SIN requireAuth a proposito: es la puerta de entrada y
   // obviously no puede exigir una sesion que todavia no existe. /crm/logout y
   // /crm/me tampoco la exigen: logout solo borra la cookie y /crm/me responde
@@ -71,6 +78,7 @@ function mount(deps) {
   router.use(sameOrigin, requireAuth, dashboardRoutes);
   router.use(sameOrigin, requireAuth, settingsRoutes);
   router.use(sameOrigin, requireAuth, toolRoutes);
+  router.use(sameOrigin, requireAuth, appointmentRoutes);
 
   // El cron se arranca aqui, no en server.js: el calendario no depende de el.
   // Si el CRM se desmonta, el calendario sigue con sus citas.

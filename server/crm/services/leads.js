@@ -13,6 +13,11 @@
 // a SMTP, y mantener abierta una transaccion de MySQL mientras se espera a una
 // API externa es como se bloquea la tabla. Si el proceso muere entre 2 y 4 se
 // pierde el CAPI, que es el trade-off correcto: el lead escrito es la verdad.
+//
+// Para no perder tambien el correo de confirmacion y la tarea de llamada, al
+// terminar el paso 4 se marca crm_leads.effects_fired_at; el tick reprocesa los
+// leads sin marca (recoverPendingLeadEffects). Solo cubre los efectos de
+// CREACION: los de un cambio de etapa no se recuperan.
 
 const { withTransaction } = require("../db/connection");
 const {
@@ -20,6 +25,8 @@ const {
   insertLead,
   updateLeadStage,
   updateLeadNotes: repoUpdateLeadNotes,
+  markEffectsFired,
+  listLeadsPendingEffects,
 } = require("./repo/leads");
 const { addActivity } = require("./repo/activities");
 const { fireStageChangeSideEffects } = require("./automation");
@@ -49,6 +56,7 @@ async function createLead(input) {
 
   await addActivity(lead.id, "system", `Lead created via ${input.source}`);
   await fireStageChangeSideEffects(lead, null, "new");
+  await markEffectsFired(lead.id);
 
   return { lead, created: true };
 }
@@ -90,4 +98,32 @@ async function updateLeadNotes(id, notes) {
   });
 }
 
-module.exports = { createLead, changeLeadStage, updateLeadNotes };
+// Un createLead normal tarda segundos; con esta edad se descarta que siga en curso.
+const PENDING_MIN_AGE_MS = 2 * 60 * 1000;
+const PENDING_BATCH = 20;
+
+/**
+ * Segunda oportunidad para los efectos de creacion de leads que quedaron sin
+ * marca (el proceso murio, o un efecto lanzo, entre insertar el lead y
+ * terminar). Cada lead se intenta UNA vez: se marca aunque falle, para que un
+ * fallo persistente no repita CAPI y correo en cada tick.
+ *
+ * @returns {Promise<number>} cuantos leads se reprocesaron
+ */
+async function recoverPendingLeadEffects() {
+  const pending = await listLeadsPendingEffects(PENDING_MIN_AGE_MS, PENDING_BATCH);
+  for (const lead of pending) {
+    console.warn(`[crm/leads] reprocesando efectos de creacion del lead ${lead.id}`);
+    try {
+      await addActivity(lead.id, "system", "Creation effects re-run after an interrupted run");
+      await fireStageChangeSideEffects(lead, null, "new");
+    } catch (err) {
+      console.error(`[crm/leads] efectos del lead ${lead.id} fallaron:`, err instanceof Error ? err.message : err);
+    } finally {
+      await markEffectsFired(lead.id);
+    }
+  }
+  return pending.length;
+}
+
+module.exports = { createLead, changeLeadStage, updateLeadNotes, recoverPendingLeadEffects };
