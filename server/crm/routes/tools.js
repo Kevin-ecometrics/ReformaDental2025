@@ -7,8 +7,9 @@ const { asyncHandler } = require("./util");
 const { syncFacebookLeads, checkFacebookTokenValidity } = require("../services/facebook/sync");
 const { sendCapiEvent } = require("../services/facebook/capi");
 const { getSyncState } = require("../services/repo/syncState");
-const { getLead } = require("../services/repo/leads");
+const { getLead, listLeads } = require("../services/repo/leads");
 const { createLead } = require("../services/leads");
+const { planCsvImport } = require("../services/csvImport");
 const { sendEmail } = require("../services/messaging/email");
 const { sendSms } = require("../services/messaging/sms");
 const { sendWhatsapp } = require("../services/messaging/whatsapp");
@@ -45,7 +46,8 @@ router.post(
     const lead = await getLead(body.leadId);
     if (!lead) return res.status(404).json({ error: "Lead not found" });
 
-    const result = await sendCapiEvent(lead, body.stageName || lead.stage);
+    // Id unico: con el normal, Meta descartaria la segunda prueba por repetida.
+    const result = await sendCapiEvent(lead, body.stageName || lead.stage, { eventId: `test-${Date.now()}` });
     res.status(result.ok ? 200 : 502).json(result);
   })
 );
@@ -95,39 +97,16 @@ router.post(
       return res.status(400).json({ error: "csv (string) is required" });
     }
 
-    const lines = csvText
-      .split(/\r?\n/)
-      .map((l) => l.trim())
-      .filter(Boolean);
-    if (lines.length < 2) {
-      return res.status(400).json({ error: "CSV must have a header row and at least one data row" });
-    }
-
-    const headers = lines[0].split(",").map((h) => h.trim().toLowerCase());
-    const nameIdx = headers.indexOf("name");
-    const emailIdx = headers.indexOf("email");
-    const phoneIdx = headers.indexOf("phone");
-
-    if (nameIdx === -1) {
-      return res.status(400).json({ error: 'CSV header must include a "name" column' });
-    }
+    const plan = planCsvImport(csvText, await listLeads({ includeArchived: true }));
+    if (plan.error) return res.status(400).json({ error: plan.error });
 
     let created = 0;
-    for (const line of lines.slice(1)) {
-      const cols = line.split(",").map((c) => c.trim());
-      const name = cols[nameIdx];
-      if (!name) continue;
-
-      await createLead({
-        name,
-        email: emailIdx !== -1 ? cols[emailIdx] || null : null,
-        phone: phoneIdx !== -1 ? cols[phoneIdx] || null : null,
-        source: "csv",
-      });
+    for (const row of plan.rows) {
+      await createLead({ ...row, source: "csv" });
       created += 1;
     }
 
-    res.json({ created });
+    res.json({ created, duplicates: plan.duplicates, invalid: plan.invalid });
   })
 );
 

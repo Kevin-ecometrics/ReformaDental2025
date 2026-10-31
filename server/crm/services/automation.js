@@ -65,14 +65,15 @@ async function getStageName(stageId) {
 /**
  * @param {import("../types").AutomationRule} rule
  * @param {import("../types").Lead} lead
+ * @param {{taskDueAt?: string}} [options] taskDueAt: vencimiento en vez del de la regla
  * @returns {Promise<void>}
  */
-async function applyRule(rule, lead) {
+async function applyRule(rule, lead, options = {}) {
   if (!rule.enabled) return;
 
   if (rule.action === "create_task") {
     const delayHours = rule.config.delayHours ?? 0;
-    const dueAt = new Date(Date.now() + delayHours * 60 * 60 * 1000).toISOString();
+    const dueAt = options.taskDueAt || new Date(Date.now() + delayHours * 60 * 60 * 1000).toISOString();
     const description = rule.config.taskDescription || rule.label;
 
     // No duplicar tareas abiertas identicas para la misma regla y lead: el tick
@@ -96,9 +97,10 @@ async function applyRule(rule, lead) {
  * @param {import("../types").Lead} lead
  * @param {string|null} oldStage
  * @param {string} newStage
+ * @param {{taskDueAt?: string}} [options]
  * @returns {Promise<void>}
  */
-async function fireStageChangeSideEffects(lead, oldStage, newStage) {
+async function fireStageChangeSideEffects(lead, oldStage, newStage, options) {
   if (lead.source === "facebook") {
     await sendCapiEvent(lead, await getStageName(newStage));
   }
@@ -115,7 +117,7 @@ async function fireStageChangeSideEffects(lead, oldStage, newStage) {
 
   for (const rule of rules.filter((r) => r.trigger === "stage_change")) {
     if (rule.config.stage && rule.config.stage !== newStage) continue;
-    await applyRule(rule, lead);
+    await applyRule(rule, lead, options);
   }
 }
 

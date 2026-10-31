@@ -16,17 +16,21 @@
 //
 // Para no perder tambien el correo de confirmacion y la tarea de llamada, al
 // terminar el paso 4 se marca crm_leads.effects_fired_at; el tick reprocesa los
-// leads sin marca (recoverPendingLeadEffects). Solo cubre los efectos de
-// CREACION: los de un cambio de etapa no se recuperan.
+// leads sin marca (recoverPendingLeadEffects). Los de un cambio de etapa tienen su
+// propia marca, pending_stage_at (recoverPendingStageEffects).
 
 const { withTransaction } = require("../db/connection");
 const {
+  getLead,
   getLeadByFbLeadgenId,
   insertLead,
   updateLeadStage,
   updateLeadNotes: repoUpdateLeadNotes,
+  updateLeadContact: repoUpdateLeadContact,
   markEffectsFired,
   listLeadsPendingEffects,
+  clearPendingStageEffects,
+  listLeadsPendingStageEffects,
 } = require("./repo/leads");
 const { addActivity } = require("./repo/activities");
 const { fireStageChangeSideEffects } = require("./automation");
@@ -67,9 +71,10 @@ async function createLead(input) {
  *
  * @param {string} id
  * @param {string} newStage
+ * @param {{taskDueAt?: string}} [options] vencimiento de las tareas que creen las reglas
  * @returns {Promise<import("../types").Lead|null>} null si el lead no existe
  */
-async function changeLeadStage(id, newStage) {
+async function changeLeadStage(id, newStage, options) {
   const { lead, changed, oldStage } = await withTransaction(async (tx) => {
     const result = await updateLeadStage(id, newStage, tx);
     if (result.changed) {
@@ -81,7 +86,13 @@ async function changeLeadStage(id, newStage) {
   if (!lead) return null;
   if (!changed) return lead;
 
-  await fireStageChangeSideEffects(lead, oldStage, newStage);
+  await fireStageChangeSideEffects(lead, oldStage, newStage, options);
+  // Si esto falla, el tick repite los efectos: CAPI lo descarta por event_id y la tarea no se duplica.
+  try {
+    await clearPendingStageEffects(id, newStage);
+  } catch (err) {
+    console.warn(`[crm/leads] no se pudo limpiar la marca de etapa de ${id}:`, err.message);
+  }
   return lead;
 }
 
@@ -94,6 +105,30 @@ async function updateLeadNotes(id, notes) {
   return withTransaction(async (tx) => {
     const updated = await repoUpdateLeadNotes(id, notes, tx);
     if (updated) await addActivity(id, "note", notes, tx);
+    return updated;
+  });
+}
+
+/**
+ * Edita los datos de contacto. No dispara CAPI ni reglas. La actividad guarda el
+ * valor anterior, porque el UPDATE lo pierde.
+ *
+ * @param {string} id
+ * @param {{name?: string, email?: string|null, phone?: string|null}} patch
+ * @returns {Promise<import("../types").Lead|null>}
+ */
+async function updateLeadContact(id, patch) {
+  return withTransaction(async (tx) => {
+    const lead = await getLead(id, tx);
+    if (!lead) return null;
+
+    const changes = Object.keys(patch)
+      .filter((field) => patch[field] !== lead[field])
+      .map((field) => `${field}: ${lead[field] || "-"} → ${patch[field] || "-"}`);
+    if (changes.length === 0) return lead;
+
+    const updated = await repoUpdateLeadContact(id, patch, tx);
+    await addActivity(id, "system", `Lead edited (${changes.join(", ")})`, tx);
     return updated;
   });
 }
@@ -126,4 +161,37 @@ async function recoverPendingLeadEffects() {
   return pending.length;
 }
 
-module.exports = { createLead, changeLeadStage, updateLeadNotes, recoverPendingLeadEffects };
+/**
+ * Segunda oportunidad para los efectos de un cambio de etapa, con la misma regla
+ * que los de creacion: cada uno se intenta una vez, aunque falle. Si el lead cambio
+ * varias veces antes del reinicio, solo se recupera el ultimo cambio.
+ *
+ * @param {(lead: import("../types").Lead) => Promise<{taskDueAt?: string}|undefined>} [optionsFor]
+ *   vencimiento de las tareas; lo pasa quien llama porque depende de las citas
+ * @returns {Promise<number>} cuantos se reprocesaron
+ */
+async function recoverPendingStageEffects(optionsFor) {
+  const pending = await listLeadsPendingStageEffects(PENDING_MIN_AGE_MS, PENDING_BATCH);
+  for (const { lead, oldStage } of pending) {
+    console.warn(`[crm/leads] reprocesando efectos de etapa del lead ${lead.id}`);
+    try {
+      await addActivity(lead.id, "system", `Stage effects re-run after an interrupted run (${lead.stage})`);
+      const options = optionsFor && lead.stage === "scheduled" ? await optionsFor(lead) : undefined;
+      await fireStageChangeSideEffects(lead, oldStage, lead.stage, options);
+    } catch (err) {
+      console.error(`[crm/leads] efectos de etapa de ${lead.id} fallaron:`, err instanceof Error ? err.message : err);
+    } finally {
+      await clearPendingStageEffects(lead.id, lead.stage);
+    }
+  }
+  return pending.length;
+}
+
+module.exports = {
+  createLead,
+  changeLeadStage,
+  updateLeadNotes,
+  updateLeadContact,
+  recoverPendingLeadEffects,
+  recoverPendingStageEffects,
+};

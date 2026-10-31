@@ -73,6 +73,11 @@ CREATE TABLE IF NOT EXISTS crm_leads (
   -- Archivado (no borrado: el sync de Facebook recrearia la fila). NULL = activo.
   -- En una base existente: ALTER TABLE crm_leads ADD COLUMN archived_at DATETIME(3) NULL AFTER effects_fired_at;
   archived_at     DATETIME(3) NULL,
+  -- Cambio de etapa cuyos efectos (CAPI + reglas) no han terminado. El tick lo reprocesa.
+  -- En una base existente: ALTER TABLE crm_leads ADD COLUMN pending_stage_from VARCHAR(64) NULL,
+  -- ADD COLUMN pending_stage_at DATETIME(3) NULL;
+  pending_stage_from VARCHAR(64) NULL,
+  pending_stage_at   DATETIME(3) NULL,
   CONSTRAINT fk_crm_leads_stage FOREIGN KEY (stage) REFERENCES crm_stages(id),
   UNIQUE KEY uq_crm_leads_fb_leadgen_id (fb_leadgen_id),
   INDEX idx_crm_leads_stage (stage),
@@ -89,11 +94,23 @@ CREATE TABLE IF NOT EXISTS crm_activities (
   lead_id    VARCHAR(64) NOT NULL,
   type       VARCHAR(50) NOT NULL,   -- system | note | stage_change | capi_sent | capi_failed | message_sent | message_failed
   content    TEXT NULL,
+  -- Quien lo hizo. NULL: el sistema (cron). En una base existente:
+  -- ALTER TABLE crm_activities ADD COLUMN actor VARCHAR(255) NULL AFTER content;
+  actor      VARCHAR(255) NULL,
   created_at DATETIME(3) NOT NULL,
   CONSTRAINT fk_crm_activities_lead FOREIGN KEY (lead_id) REFERENCES crm_leads(id) ON DELETE CASCADE,
   INDEX idx_crm_activities_lead_id (lead_id),
   INDEX idx_crm_activities_type (type),
   INDEX idx_crm_activities_created_at (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ─── Constancia de leads borrados: quien y cuando, sin nombre ni contacto ────
+CREATE TABLE IF NOT EXISTS crm_lead_deletions (
+  id          VARCHAR(64) PRIMARY KEY,
+  lead_id     VARCHAR(64) NOT NULL,
+  lead_source VARCHAR(50) NOT NULL,
+  deleted_by  VARCHAR(255) NOT NULL,
+  deleted_at  DATETIME(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ─── Tareas asociadas a un lead (manuales o por reglas de automatizacion) ────
@@ -151,6 +168,9 @@ CREATE TABLE IF NOT EXISTS crm_sync_state (
   -- Correos (separados por coma) que reciben el aviso de lead nuevo de Facebook.
   -- En una base existente: ALTER TABLE crm_sync_state ADD COLUMN notify_emails TEXT NULL
   notify_emails      TEXT NULL,
+  -- Ultima cita que el tick ya cruzo con los leads. NULL: el primer tick solo la inicializa.
+  -- En una base existente: ALTER TABLE crm_sync_state ADD COLUMN last_cita_id INT NULL;
+  last_cita_id       INT NULL,
   CONSTRAINT chk_crm_sync_state_singleton CHECK (id = 1)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

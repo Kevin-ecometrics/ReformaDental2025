@@ -1,6 +1,6 @@
 # CRM — guía de usuarios y accesos
 
-Última actualización: **2026-09-29**.
+Última actualización: **2026-09-29**. **Desde el 2026-10-30 los usuarios se crean y administran en Settings › Team del CRM; lo de SQL queda como respaldo** (ver `CRM_STATUS.md` §16).
 
 El CRM tiene **login propio**, independiente del login del dashboard (decisión de
 2026-09-29, ver "Por qué doble login"). Los usuarios viven en la tabla `crm_users` de la

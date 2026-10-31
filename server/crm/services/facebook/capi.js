@@ -34,15 +34,28 @@ function hashEmail(email) {
 }
 
 /**
- * Solo digitos: Meta exige el E.164 sin signos.
+ * Solo digitos y con lada: Meta exige el E.164 sin signos.
+ *
+ * shortcut: 10 digitos sin lada se toman como Mexico (52); un numero de EE. UU.
+ * sin el 1 queda mal y Meta no lo reconoce, igual que antes. Guardar el pais del
+ * lead si llegan muchos pacientes de EE. UU. sin lada.
+ * @param {string} phone
+ * @returns {string} "" si no hay digitos
+ */
+function normalizePhone(phone) {
+  const digits = phone.replace(/[^\d]/g, "");
+  return digits.length === 10 ? `52${digits}` : digits;
+}
+
+/**
  * @param {string|null} phone
  * @returns {string[]|undefined}
  */
 function hashPhone(phone) {
   if (!phone) return undefined;
-  const digitsOnly = phone.replace(/[^\d]/g, "");
-  if (!digitsOnly) return undefined;
-  return [sha256(digitsOnly)];
+  const normalized = normalizePhone(phone);
+  if (!normalized) return undefined;
+  return [sha256(normalized)];
 }
 
 /**
@@ -100,15 +113,18 @@ function buildUserData(lead) {
  *
  * @param {import("../../types").Lead} lead
  * @param {string} stageName
+ * @param {{eventId?: string}} [options]
  * @returns {Promise<CapiSendResult>}
  */
-async function sendCapiEvent(lead, stageName) {
+async function sendCapiEvent(lead, stageName, options = {}) {
   const accessToken = process.env.CRM_FB_CAPI_ACCESS_TOKEN;
   const testEventCode = process.env.CRM_FB_CAPI_TEST_EVENT_CODE;
 
   const payload = {
     event_name: stageName,
     event_time: Math.floor(Date.now() / 1000),
+    // Estable por lead y etapa: si un reinicio repite el envio, Meta lo descarta.
+    event_id: options.eventId || `${lead.id}:${stageName}`,
     action_source: "system_generated",
     custom_data: {
       event_source: "crm",
@@ -165,4 +181,4 @@ async function sendCapiEvent(lead, stageName) {
   }
 }
 
-module.exports = { sendCapiEvent, buildUserData, sha256 };
+module.exports = { sendCapiEvent, buildUserData, normalizePhone, sha256 };

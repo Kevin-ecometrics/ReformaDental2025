@@ -102,4 +102,26 @@ async function completeTask(taskId, tx) {
   return { ...task, done: true };
 }
 
-module.exports = { toTask, listTasks, getTask, createTask, completeTask };
+/**
+ * @param {string} taskId
+ * @param {{description: string, dueAtIso: string}} changes
+ * @returns {Promise<import("../../types").Task|null>}
+ */
+async function updateTask(taskId, changes) {
+  await run("UPDATE crm_tasks SET description = ?, due_at = ? WHERE id = ?", [
+    changes.description,
+    fromIso(changes.dueAtIso),
+    taskId,
+  ]);
+  return getTask(taskId);
+}
+
+/**
+ * @param {string} taskId
+ * @returns {Promise<void>}
+ */
+async function deleteTask(taskId) {
+  await run("DELETE FROM crm_tasks WHERE id = ?", [taskId]);
+}
+
+module.exports = { toTask, listTasks, getTask, createTask, completeTask, updateTask, deleteTask };

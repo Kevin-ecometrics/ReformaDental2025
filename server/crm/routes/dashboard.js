@@ -3,7 +3,7 @@
 
 const express = require("express");
 const { asyncHandler } = require("./util");
-const { listTasks, completeTask, createTask } = require("../services/repo/tasks");
+const { listTasks, getTask, completeTask, createTask, updateTask, deleteTask } = require("../services/repo/tasks");
 const { listLeads, getLead, touchLead } = require("../services/repo/leads");
 const { listActivities, addActivity } = require("../services/repo/activities");
 const { listStages } = require("../services/repo/stages");
@@ -48,12 +48,51 @@ router.get(
   })
 );
 
+/** @returns {{description?: string, dueAtIso?: string, error?: string}} */
+function parseTaskInput(body) {
+  const description = typeof body.description === "string" ? body.description.trim() : "";
+  const dueAtMs = typeof body.dueAt === "string" ? Date.parse(body.dueAt) : NaN;
+  if (!description) return { error: "description is required" };
+  if (description.length > MAX_TASK_LENGTH) return { error: `description must be at most ${MAX_TASK_LENGTH} characters` };
+  if (Number.isNaN(dueAtMs)) return { error: "dueAt must be a valid date" };
+  return { description, dueAtIso: new Date(dueAtMs).toISOString() };
+}
+
+// Con descripcion o fecha edita la tarea; sin cuerpo la completa, como siempre.
 router.patch(
   "/tasks/:id",
   asyncHandler(async (req, res) => {
-    const task = await completeTask(req.params.id);
-    if (!task) return res.status(404).json({ error: "Task not found" });
+    const body = req.body || {};
+    const existing = await getTask(req.params.id);
+    if (!existing) return res.status(404).json({ error: "Task not found" });
+
+    if ("description" in body || "dueAt" in body) {
+      const { error, description, dueAtIso } = parseTaskInput(body);
+      if (error) return res.status(400).json({ error });
+      const task = await updateTask(existing.id, { description, dueAtIso });
+      await addActivity(existing.leadId, "system", `Task edited: ${description}`);
+      await touchLead(existing.leadId);
+      return res.json({ task });
+    }
+
+    const wasDone = existing.done;
+    const task = await completeTask(existing.id);
+    if (!wasDone) await addActivity(existing.leadId, "system", `Task completed: ${existing.description}`);
     return res.json({ task });
+  })
+);
+
+router.delete(
+  "/tasks/:id",
+  asyncHandler(async (req, res) => {
+    const task = await getTask(req.params.id);
+    if (!task) return res.status(404).json({ error: "Task not found" });
+
+    await deleteTask(task.id);
+    await addActivity(task.leadId, "system", `Task deleted: ${task.description}`);
+    // Si no, "Follow up again" volveria a crearse en el siguiente tick.
+    await touchLead(task.leadId);
+    return res.json({ ok: true });
   })
 );
 

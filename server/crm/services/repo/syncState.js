@@ -75,4 +75,21 @@ async function updateSyncState(patch, tx) {
   await db.run(`UPDATE crm_sync_state SET ${sets.join(", ")} WHERE id = ?`, params);
 }
 
-module.exports = { getSyncState, updateSyncState };
+// El cursor de citas va aparte de getSyncState a proposito: si falta la columna,
+// falla solo este paso del tick y no Settings ni el aviso de lead nuevo.
+
+/** @returns {Promise<number|null>} */
+async function getLastCitaId() {
+  const row = await one("SELECT last_cita_id FROM crm_sync_state WHERE id = 1");
+  return row?.lastCitaId ?? null;
+}
+
+/**
+ * @param {number} id
+ * @returns {Promise<void>}
+ */
+async function setLastCitaId(id) {
+  await run("UPDATE crm_sync_state SET last_cita_id = ? WHERE id = 1", [id]);
+}
+
+module.exports = { getSyncState, updateSyncState, getLastCitaId, setLastCitaId };

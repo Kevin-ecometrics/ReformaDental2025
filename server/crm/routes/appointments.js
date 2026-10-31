@@ -21,7 +21,7 @@ router.post(
     const id = Number(req.params.id);
     if (!Number.isInteger(id) || id <= 0) return res.status(400).json({ error: "Invalid appointment id" });
 
-    const result = await addAppointmentToCrm(id);
+    const result = await addAppointmentToCrm(id, { asNew: req.body?.asNew === true });
     if (!result) return res.status(404).json({ error: "Appointment not found" });
 
     return res.status(result.created ? 201 : 200).json(result);

@@ -198,6 +198,8 @@ const COLUMN_MAP = {
   token_checked_at: "tokenCheckedAt",
   token_check_error: "tokenCheckError",
   notify_emails: "notifyEmails",
+  last_cita_id: "lastCitaId",
+  pending_stage_from: "pendingStageFrom",
   archived_at: "archivedAt",
   password_hash: "passwordHash",
   last_login_at: "lastLoginAt",

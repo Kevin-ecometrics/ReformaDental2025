@@ -10,6 +10,7 @@
 
 const nodemailer = require("nodemailer");
 const { getMailTransport } = require("./transport");
+const { emailHtml } = require("./emailLayout");
 
 /**
  * @typedef {object} SendResult
@@ -72,6 +73,7 @@ async function sendEmail(input) {
       to: input.to,
       subject: input.subject,
       text: input.text,
+      html: emailHtml(input.subject, input.text),
     });
     return { ok: true };
   } catch (err) {

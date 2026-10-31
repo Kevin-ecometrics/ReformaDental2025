@@ -14,7 +14,8 @@
 
 const { syncFacebookLeads } = require("./facebook/sync");
 const { runAutomationTick } = require("./automation");
-const { recoverPendingLeadEffects } = require("./leads");
+const { recoverPendingLeadEffects, recoverPendingStageEffects } = require("./leads");
+const { processNewAppointments, processRecentLeads, scheduledTaskOptions } = require("./appointments");
 
 // Un ciclo normal dura segundos. Si el candado lleva tanto tiempo cerrado es que
 // algo se colgo (el fetch a Facebook no tiene timeout propio), y no puede dejar
@@ -86,6 +87,19 @@ async function runTick(source) {
       await recoverPendingLeadEffects();
     } catch (err) {
       automationError = automationError || err;
+    }
+    // Cada paso aparte: que falle uno no debe impedir los demas.
+    for (const step of [
+      () => recoverPendingStageEffects(scheduledTaskOptions),
+      // Despues del sync, para cruzar las citas con los leads que acaban de llegar.
+      processNewAppointments,
+      processRecentLeads,
+    ]) {
+      try {
+        await step();
+      } catch (err) {
+        automationError = automationError || err;
+      }
     }
     automation = automationError ? { ok: false, error: errorMessage(automationError) } : { ok: true };
   } finally {

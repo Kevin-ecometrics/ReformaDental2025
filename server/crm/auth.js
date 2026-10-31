@@ -23,7 +23,8 @@
 
 const crypto = require("node:crypto");
 const jwt = require("jsonwebtoken");
-const { getUserByEmail, touchLastLogin } = require("./services/repo/users");
+const { getUserByEmail, getUserById, touchLastLogin } = require("./services/repo/users");
+const { runAsUser } = require("./requestUser");
 
 const COOKIE_NAME = "crm_token";
 const TOKEN_TTL_SECONDS = 7 * 24 * 60 * 60; // 7 dias
@@ -223,9 +224,17 @@ function clearAttempts(key) {
  * Middleware: exige sesion valida. Responde 401 con un cuerpo que el frontend
  * pueda distinguir, para que redirija al login en vez de mostrar un error.
  *
+ * El usuario se relee de la base: el token dura 7 dias, y con solo sus datos un
+ * usuario borrado o sin rol de admin seguiria entrando como antes.
+ * shortcut: cambiar la contrasena no invalida los tokens ya emitidos; agregar una
+ * version de token al usuario si hace falta cerrar sesiones al instante.
+ *
  * @type {import('express').RequestHandler}
  */
-function requireAuth(req, res, next) {
+async function requireAuth(req, res, next) {
+  // Las rutas se montan en varios routers con este middleware: basta validar una vez.
+  if (req.user) return next();
+
   const token = readToken(req);
   if (!token) {
     return res.status(401).json({ error: "No autenticado" });
@@ -237,8 +246,31 @@ function requireAuth(req, res, next) {
     return res.status(401).json({ error: "Sesion caducada o invalida" });
   }
 
-  req.user = payload;
-  return next();
+  let user;
+  try {
+    user = await getUserById(payload.sub);
+  } catch (err) {
+    console.error("[crm/auth] no se pudo leer el usuario:", err.message);
+    return res.status(503).json({ error: "Could not verify the session. Try again." });
+  }
+  if (!user) {
+    clearAuthCookie(res);
+    return res.status(401).json({ error: "Sesion caducada o invalida" });
+  }
+
+  req.user = { sub: user.id, email: user.email, name: user.name, role: user.role };
+  return runAsUser(user.name, next);
+}
+
+/**
+ * Va despues de requireAuth y ruta por ruta: como router.use() cortaria tambien a
+ * los routers siguientes, que comparten el mismo prefijo.
+ *
+ * @type {import('express').RequestHandler}
+ */
+function requireAdmin(req, res, next) {
+  if (req.user?.role === "admin") return next();
+  return res.status(403).json({ error: "Only an admin can do this." });
 }
 
 // ─── CSRF ────────────────────────────────────────────────────────────────────
@@ -332,6 +364,7 @@ module.exports = {
   readToken,
   readCookie,
   requireAuth,
+  requireAdmin,
   requireSameOrigin,
   login,
 };

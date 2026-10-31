@@ -9,6 +9,7 @@
 const express = require("express");
 const { asyncHandler } = require("./util");
 const { login, clearAuthCookie, readToken, verifyToken } = require("../auth");
+const { getUserById } = require("../services/repo/users");
 
 const router = express.Router();
 
@@ -33,14 +34,25 @@ router.post("/logout", (req, res) => {
  * El frontend lo llama al cargar para saber si ya hay sesion. Devuelve 200 con
  * user:null en vez de 401, para que no haya que tratar el caso como error.
  */
-router.get("/me", (req, res) => {
-  const token = readToken(req);
-  const payload = token ? verifyToken(token) : null;
-  if (!payload) return res.json({ user: null });
+router.get(
+  "/me",
+  asyncHandler(async (req, res) => {
+    const token = readToken(req);
+    const payload = token ? verifyToken(token) : null;
+    if (!payload) return res.json({ user: null });
 
-  return res.json({
-    user: { id: payload.sub, email: payload.email, name: payload.name, role: payload.role },
-  });
-});
+    // De la base y no del token, para que un cambio de rol se vea al recargar. Si la
+    // base falla no se cierra la sesion: las demas rutas ya responderan su error.
+    let user = { id: payload.sub, email: payload.email, name: payload.name, role: payload.role };
+    try {
+      const stored = await getUserById(payload.sub);
+      if (!stored) return res.json({ user: null });
+      user = { id: stored.id, email: stored.email, name: stored.name, role: stored.role };
+    } catch (err) {
+      console.error("[crm/auth] /me no pudo leer el usuario:", err.message);
+    }
+    return res.json({ user });
+  })
+);
 
 module.exports = router;

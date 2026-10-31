@@ -3,6 +3,9 @@
 
 const crypto = require("node:crypto");
 const { q, one, run, now, toIso } = require("../../db/connection");
+const { currentUserName } = require("../../requestUser");
+
+const COLUMNS = "id, lead_id, type, content, actor, created_at";
 
 /**
  * @param {object} row
@@ -14,6 +17,7 @@ function toActivity(row) {
     leadId: row.leadId,
     type: row.type,
     content: row.content ?? "",
+    actor: row.actor ?? null,
     createdAt: toIso(row.createdAt),
   };
 }
@@ -35,13 +39,14 @@ async function addActivity(leadId, type, content, tx) {
   const db = tx || { q, one, run };
   const id = crypto.randomUUID();
   const createdAt = now();
+  const actor = currentUserName();
 
   await db.run(
-    "INSERT INTO crm_activities (id, lead_id, type, content, created_at) VALUES (?,?,?,?,?)",
-    [id, leadId, type, content, createdAt]
+    "INSERT INTO crm_activities (id, lead_id, type, content, actor, created_at) VALUES (?,?,?,?,?,?)",
+    [id, leadId, type, content, actor, createdAt]
   );
 
-  return { id, leadId, type, content, createdAt: toIso(createdAt) };
+  return { id, leadId, type, content, actor, createdAt: toIso(createdAt) };
 }
 
 /**
@@ -52,13 +57,8 @@ async function addActivity(leadId, type, content, tx) {
 async function listActivities(leadId, tx) {
   const db = tx || { q, one, run };
   const rows = leadId
-    ? await db.q(
-        "SELECT id, lead_id, type, content, created_at FROM crm_activities WHERE lead_id = ? ORDER BY created_at DESC",
-        [leadId]
-      )
-    : await db.q(
-        "SELECT id, lead_id, type, content, created_at FROM crm_activities ORDER BY created_at DESC"
-      );
+    ? await db.q(`SELECT ${COLUMNS} FROM crm_activities WHERE lead_id = ? ORDER BY created_at DESC`, [leadId])
+    : await db.q(`SELECT ${COLUMNS} FROM crm_activities ORDER BY created_at DESC`);
   return rows.map(toActivity);
 }
 

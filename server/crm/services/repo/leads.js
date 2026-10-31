@@ -6,7 +6,7 @@
 // de transacciones.
 
 const crypto = require("node:crypto");
-const { q, one, run, now, fromIso, toIso, parseJson, stringifyJson } = require("../../db/connection");
+const { q, one, run, now, fromIso, toIso, parseJson, stringifyJson, withTransaction } = require("../../db/connection");
 
 /** Columnas de crm_leads en el orden del SELECT base. */
 const COLUMNS = "id, fb_leadgen_id, name, email, phone, source, campaign_name, ad_name, form_name, field_data_raw, stage, notes, created_at, updated_at, archived_at";
@@ -156,11 +156,13 @@ async function updateLeadStage(id, newStage, tx) {
   if (!stageExists) return { lead, changed: false, oldStage: null };
   if (lead.stage === newStage) return { lead, changed: false, oldStage: null };
 
-  await db.run("UPDATE crm_leads SET stage = ?, updated_at = ? WHERE id = ?", [
-    newStage,
-    now(),
-    id,
-  ]);
+  // En la misma escritura que la etapa: si el proceso muere antes de los efectos,
+  // la marca queda y el tick los reprocesa (ver recoverPendingStageEffects).
+  const ts = now();
+  await db.run(
+    "UPDATE crm_leads SET stage = ?, updated_at = ?, pending_stage_from = ?, pending_stage_at = ? WHERE id = ?",
+    [newStage, ts, lead.stage, ts, id]
+  );
 
   return {
     lead: { ...lead, stage: newStage, updatedAt: toIso(now()) },
@@ -187,6 +189,30 @@ async function updateLeadNotes(id, notes, tx) {
 }
 
 /**
+ * Reemplaza los datos de contacto indicados en `patch`; los demas no cambian.
+ * @param {string} id
+ * @param {{name?: string, email?: string|null, phone?: string|null}} patch
+ * @param {Tx} [tx]
+ * @returns {Promise<import("../../types").Lead|null>}
+ */
+async function updateLeadContact(id, patch, tx) {
+  const db = tx || { q, one, run };
+  const lead = await getLead(id, db);
+  if (!lead) return null;
+
+  const ts = now();
+  const next = { ...lead, ...patch };
+  await db.run("UPDATE crm_leads SET name = ?, email = ?, phone = ?, updated_at = ? WHERE id = ?", [
+    next.name,
+    next.email,
+    next.phone,
+    ts,
+    id,
+  ]);
+  return { ...next, updatedAt: toIso(ts) };
+}
+
+/**
  * Archiva (fecha) o restaura (null). No toca etapa, notas ni tareas.
  * @param {string} id
  * @param {boolean} archived
@@ -202,6 +228,51 @@ async function setLeadArchived(id, archived, tx) {
   const archivedAt = archived ? ts : null;
   await db.run("UPDATE crm_leads SET archived_at = ?, updated_at = ? WHERE id = ?", [archivedAt, ts, id]);
   return { ...lead, archivedAt: toIso(archivedAt), updatedAt: toIso(ts) };
+}
+
+/**
+ * Borra el lead; sus actividades y tareas se van con el por ON DELETE CASCADE.
+ * Queda constancia de quien lo borro y cuando, sin nombre ni contacto: si se borra
+ * a peticion de la persona, sus datos no deben quedarse en otra tabla.
+ * @param {import("../../types").Lead} lead
+ * @param {string} deletedBy
+ * @returns {Promise<void>}
+ */
+async function deleteLead(lead, deletedBy) {
+  await withTransaction(async (tx) => {
+    await tx.run(
+      "INSERT INTO crm_lead_deletions (id, lead_id, lead_source, deleted_by, deleted_at) VALUES (?,?,?,?,?)",
+      [crypto.randomUUID(), lead.id, lead.source, deletedBy, now()]
+    );
+    await tx.run("DELETE FROM crm_leads WHERE id = ?", [lead.id]);
+  });
+}
+
+/**
+ * Da por hechos los efectos del cambio a `stage`. Si el lead ya paso a otra etapa,
+ * la marca es de ese cambio mas nuevo y se respeta.
+ * @param {string} id
+ * @param {string} stage
+ * @returns {Promise<void>}
+ */
+async function clearPendingStageEffects(id, stage) {
+  await run("UPDATE crm_leads SET pending_stage_from = NULL, pending_stage_at = NULL WHERE id = ? AND stage = ?", [id, stage]);
+}
+
+/**
+ * Cambios de etapa cuyos efectos no terminaron. `minAgeMs` evita agarrar uno que
+ * sigue en curso.
+ * @param {number} minAgeMs
+ * @param {number} limit
+ * @returns {Promise<{lead: import("../../types").Lead, oldStage: string|null}[]>}
+ */
+async function listLeadsPendingStageEffects(minAgeMs, limit) {
+  const cutoff = fromIso(new Date(Date.now() - minAgeMs).toISOString());
+  const rows = await q(
+    `SELECT ${COLUMNS}, pending_stage_from FROM crm_leads WHERE pending_stage_at IS NOT NULL AND pending_stage_at < ? ORDER BY pending_stage_at ASC LIMIT ?`,
+    [cutoff, limit]
+  );
+  return rows.map((row) => ({ lead: toLead(row), oldStage: row.pendingStageFrom ?? null }));
 }
 
 /**
@@ -258,7 +329,11 @@ module.exports = {
   insertLead,
   updateLeadStage,
   updateLeadNotes,
+  updateLeadContact,
   setLeadArchived,
+  deleteLead,
+  clearPendingStageEffects,
+  listLeadsPendingStageEffects,
   touchLead,
   markEffectsFired,
   listLeadsPendingEffects,

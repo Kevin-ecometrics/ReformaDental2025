@@ -29,6 +29,7 @@ const settingsRoutes = require("./routes/settings");
 const toolRoutes = require("./routes/tools");
 const cronRoutes = require("./routes/cron");
 const appointmentRoutes = require("./routes/appointments");
+const userRoutes = require("./routes/users");
 
 /**
  * @typedef {object} MountDeps
@@ -79,6 +80,7 @@ function mount(deps) {
   router.use(sameOrigin, requireAuth, settingsRoutes);
   router.use(sameOrigin, requireAuth, toolRoutes);
   router.use(sameOrigin, requireAuth, appointmentRoutes);
+  router.use(sameOrigin, requireAuth, userRoutes);
 
   // El cron se arranca aqui, no en server.js: el calendario no depende de el.
   // Si el CRM se desmonta, el calendario sigue con sus citas.

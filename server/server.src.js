@@ -111,11 +111,9 @@ function hora12(h) {
   return (n % 12 || 12) + ":00 " + (n >= 12 ? "PM" : "AM");
 }
 
-var CLINIC_ADDRESS     = "8169-206 Ignacio Zaragoza, Zona Centro, Tijuana, Baja California, México";
+var emailLayout        = require("./crm/services/messaging/emailLayout");
+var CLINIC_ADDRESS     = emailLayout.CLINIC_ADDRESS;
 var CLINIC_ADDRESS_ICS = CLINIC_ADDRESS.replace(/,/g, "\\,");
-var CLINIC_PHONE_TEXT  = "+1 619-586-1436";
-var CLINIC_PHONE_TEL   = "+16195861436";
-var CLINIC_LOGO_URL    = "https://reformadental.com/logo-emailTemplate.png";
 
 function ics(nombre, fecha, hora, lang) {
   var p = fecha.split("-"), hp = hora.split(":");
@@ -159,44 +157,11 @@ function confirmationHtml(lang, nombre, fecha, hora, telefono) {
     : "A calendar invite is attached &mdash; add it so you don't miss your visit.";
   var button = isES ? "Visita reformadental.com" : "Visit reformadental.com";
 
-  return "<!DOCTYPE html>\n" +
-'<html lang="' + (isES ? "es" : "en") + '">\n' +
-'<head>\n' +
-'<meta charset="utf-8">\n' +
-'<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
-'<meta name="color-scheme" content="light dark">\n' +
-'<meta name="supported-color-schemes" content="light dark">\n' +
-'<title>' + headline + ' — Dental Reforma</title>\n' +
-'<!--[if mso]>\n' +
-'<style>table,td{font-family:Verdana,Arial,sans-serif !important;}</style>\n' +
-'<![endif]-->\n' +
-'</head>\n' +
-'<body style="margin:0;padding:0;background-color:#f2f3ec;">\n' +
-'  <span style="display:none;font-size:1px;color:#f2f3ec;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;">' + preheader + '</span>\n' +
-'  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f2f3ec;">\n' +
-'    <tr>\n' +
-'      <td align="center" style="padding:32px 12px;">\n' +
-'        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px;max-width:600px;">\n' +
-'\n' +
-'          <!-- header band -->\n' +
-'          <tr>\n' +
-'            <td align="center" style="background-color:#4d5c66;border-radius:14px 14px 0 0;padding:32px 40px 28px 40px;">\n' +
-'              <img src="' + CLINIC_LOGO_URL + '" width="130" height="130" alt="Reforma Dental" style="display:block;width:130px;height:130px;border:0;margin:0 auto;">\n' +
-'              <div style="font-family:Verdana,Arial,sans-serif;font-size:20px;letter-spacing:4px;font-weight:bold;color:#fdfdfa;padding-top:10px;">REFORMA&nbsp;DENTAL</div>\n' +
-'              <div style="font-family:Verdana,Arial,sans-serif;font-size:11px;letter-spacing:2px;color:#aeca12;padding-top:6px;">TIJUANA &middot; B.C.</div>\n' +
-'            </td>\n' +
-'          </tr>\n' +
-'\n' +
-'          <!-- green accent line -->\n' +
-'          <tr>\n' +
-'            <td style="height:5px;background-color:#aeca12;font-size:0;line-height:0;" height="5">&nbsp;</td>\n' +
-'          </tr>\n' +
-'\n' +
-'          <!-- card body -->\n' +
-'          <tr>\n' +
-'            <td style="background-color:#fdfdfa;">\n' +
-'              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">\n' +
-'\n' +
+  return emailLayout.emailShell({
+    lang: isES ? "es" : "en",
+    title: headline + ' — Dental Reforma',
+    preheader: preheader,
+    rows:
 '                <!-- confirmed badge + headline -->\n' +
 '                <tr>\n' +
 '                  <td align="center" style="padding:40px 48px 0 48px;">\n' +
@@ -255,43 +220,8 @@ function confirmationHtml(lang, nombre, fecha, hora, telefono) {
 '                  </td>\n' +
 '                </tr>\n' +
 '\n' +
-'                <!-- button -->\n' +
-'                <tr>\n' +
-'                  <td align="center" style="padding:28px 48px 44px 48px;">\n' +
-'                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">\n' +
-'                      <tr>\n' +
-'                        <td align="center" bgcolor="#8fd2ef" style="border-radius:28px;">\n' +
-'                          <a href="https://reformadental.com" style="display:block;padding:15px 46px;font-family:Verdana,Arial,sans-serif;font-size:15px;font-weight:bold;color:#2c4a58;text-decoration:none;border-radius:28px;">' + button + '</a>\n' +
-'                        </td>\n' +
-'                      </tr>\n' +
-'                    </table>\n' +
-'                  </td>\n' +
-'                </tr>\n' +
-'              </table>\n' +
-'            </td>\n' +
-'          </tr>\n' +
-'\n' +
-'          <!-- footer -->\n' +
-'          <tr>\n' +
-'            <td align="center" style="background-color:#4d5c66;border-radius:0 0 14px 14px;padding:28px 40px;">\n' +
-'              <div style="font-family:Verdana,Arial,sans-serif;font-size:13px;color:#f2f3ec;mso-line-height-rule:exactly;line-height:21px;">\n' +
-'                <strong>Reforma Dental</strong> &nbsp;&middot;&nbsp; ' + CLINIC_ADDRESS + '\n' +
-'              </div>\n' +
-'              <div style="font-family:Verdana,Arial,sans-serif;font-size:13px;color:#f2f3ec;mso-line-height-rule:exactly;line-height:21px;padding-top:4px;">\n' +
-'                <a href="tel:' + CLINIC_PHONE_TEL + '" style="color:#f2f3ec;text-decoration:underline;">' + CLINIC_PHONE_TEXT + '</a> &nbsp;&middot;&nbsp; <a href="https://reformadental.com" style="color:#f2f3ec;text-decoration:underline;">reformadental.com</a>\n' +
-'              </div>\n' +
-'              <div style="font-family:Georgia,\'Times New Roman\',serif;font-style:italic;font-size:12px;color:#aebcc4;padding-top:14px;">\n' +
-'                Sonr&iacute;e, es la mejor decisi&oacute;n &middot; Smile, it\'s the best choice\n' +
-'              </div>\n' +
-'            </td>\n' +
-'          </tr>\n' +
-'\n' +
-'        </table>\n' +
-'      </td>\n' +
-'    </tr>\n' +
-'  </table>\n' +
-'</body>\n' +
-'</html>\n';
+emailLayout.emailButton(button),
+  });
 }
 
 function htmlES(nombre, fecha, hora, telefono) {

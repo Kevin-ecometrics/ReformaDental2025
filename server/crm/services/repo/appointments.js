@@ -59,4 +59,20 @@ async function getAppointment(id) {
   return row ? toAppointment(row) : null;
 }
 
-module.exports = { listAppointments, getAppointment };
+/**
+ * @param {number} id
+ * @param {number} limit
+ * @returns {Promise<Appointment[]>} las citas posteriores a `id`, en orden de creacion
+ */
+async function listAppointmentsAfter(id, limit) {
+  const rows = await q(`${SELECT} WHERE id > ? ORDER BY id ASC LIMIT ?`, [id, limit]);
+  return rows.map(toAppointment);
+}
+
+/** @returns {Promise<number>} 0 si no hay citas */
+async function getMaxAppointmentId() {
+  const row = await one("SELECT COALESCE(MAX(id), 0) AS maxId FROM citas");
+  return Number(row.maxId);
+}
+
+module.exports = { listAppointments, getAppointment, listAppointmentsAfter, getMaxAppointmentId };

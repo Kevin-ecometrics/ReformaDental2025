@@ -42,6 +42,42 @@ async function getUserByEmail(email, tx) {
 }
 
 /**
+ * @param {string} id
+ * @returns {Promise<import("../../types").CrmUser|null>}
+ */
+async function getUserById(id) {
+  const row = await one(
+    "SELECT id, email, name, password_hash, role, created_at, last_login_at FROM crm_users WHERE id = ?",
+    [id]
+  );
+  return row ? toUser(row) : null;
+}
+
+/**
+ * Cambia solo los campos indicados.
+ * @param {string} id
+ * @param {{name?: string, role?: string, passwordHash?: string}} patch
+ * @returns {Promise<void>}
+ */
+async function updateUser(id, patch) {
+  const columns = { name: "name", role: "role", passwordHash: "password_hash" };
+  const fields = Object.keys(patch).filter((field) => columns[field]);
+  if (fields.length === 0) return;
+  await run(
+    `UPDATE crm_users SET ${fields.map((field) => `${columns[field]} = ?`).join(", ")} WHERE id = ?`,
+    [...fields.map((field) => patch[field]), id]
+  );
+}
+
+/**
+ * @param {string} id
+ * @returns {Promise<void>}
+ */
+async function deleteUser(id) {
+  await run("DELETE FROM crm_users WHERE id = ?", [id]);
+}
+
+/**
  * @param {Tx} [tx]
  * @returns {Promise<import("../../types").CrmUser[]>}
  */
@@ -94,4 +130,4 @@ async function touchLastLogin(id, tx) {
   }
 }
 
-module.exports = { toUser, getUserByEmail, listUsers, createUser, touchLastLogin };
+module.exports = { toUser, getUserByEmail, getUserById, listUsers, createUser, updateUser, deleteUser, touchLastLogin };

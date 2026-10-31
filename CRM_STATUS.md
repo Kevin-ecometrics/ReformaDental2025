@@ -643,3 +643,36 @@ las automáticas.
 ### Cómo comprobarlo
 En la ficha de un lead, "Add task" debe agregarla a la lista con la hora elegida, al panel de tareas y a la
 actividad ("Task added: …"); al vencer, se marca en rojo como Overdue.
+
+## 16. Cambios del 2026-10-30
+
+Resumen funcional en `e-commetrics-dashboard/crm_progreso_2026-10-26.md` §14. Backend, SQL y frontend desplegados;
+el cron responde `ok: true`. Sin commit al cerrar el día.
+
+### Base de datos (ya aplicado en producción)
+```sql
+ALTER TABLE crm_sync_state ADD COLUMN last_cita_id INT NULL;
+ALTER TABLE crm_activities ADD COLUMN actor VARCHAR(255) NULL AFTER content;
+ALTER TABLE crm_leads ADD COLUMN pending_stage_from VARCHAR(64) NULL, ADD COLUMN pending_stage_at DATETIME(3) NULL;
+-- crm_lead_deletions: ver schema.sql
+```
+Sin `actor` falla el historial y sin `pending_stage_*` fallan los cambios de etapa y el cron. Tras cualquier ALTER,
+comprobar con `SHOW COLUMNS` antes de subir `server.js`.
+
+### Archivos nuevos en `server/crm/`
+`requestUser.js`, `routes/users.js`, `services/matching.js`, `services/csvImport.js`, `services/leadContact.js` y
+`services/messaging/emailLayout.js`, más sus `*.test.js` (`bun test crm/services`; no van a cPanel).
+
+### Cómo saber por qué falla el cron
+`/health` solo dice `lastTick.ok`. El detalle sale de la ruta, sin buscar `stderr.log`:
+```
+curl -s -X POST https://reformadental.com/crm/cron/tick -H "X-Cron-Token: <token de Cron Jobs>"
+```
+Mirar `sync.error` y `automation.error`. Corre un ciclo normal; `skipped` significa que hubo uno hace menos de un minuto.
+
+### Reversión
+Subir el `server.js` anterior. Las columnas y la tabla nuevas no le estorban.
+
+### Usuarios
+Se administran en Settings › Team. El rol se lee de la base en cada petición; cambiar la contraseña no cierra las
+sesiones abiertas (hasta 7 días). Quién borró cada lead se consulta en `crm_lead_deletions`.

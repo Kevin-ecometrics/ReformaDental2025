@@ -1,4 +1,4 @@
-// Endpoints de leads: listar, crear, ver detalle, editar etapa/notas, exportar
+// Endpoints de leads: listar, crear, ver detalle, editar contacto/etapa/notas, exportar
 // CSV y mandar un mensaje. Traduccion de src/app/api/leads/**.
 //
 // Nota sobre el orden: /export se declara ANTES que /:id. En Express las rutas
@@ -7,10 +7,14 @@
 
 const express = require("express");
 const { asyncHandler } = require("./util");
-const { listLeads, getLead, setLeadArchived } = require("../services/repo/leads");
+const { requireAdmin } = require("../auth");
+const { listLeads, getLead, setLeadArchived, deleteLead } = require("../services/repo/leads");
 const { listActivities, addActivity } = require("../services/repo/activities");
 const { listTasks } = require("../services/repo/tasks");
-const { createLead, changeLeadStage, updateLeadNotes } = require("../services/leads");
+const { createLead, changeLeadStage, updateLeadNotes, updateLeadContact } = require("../services/leads");
+const { parseContactPatch } = require("../services/leadContact");
+const { findDuplicates } = require("../services/matching");
+const { scheduledTaskOptions } = require("../services/appointments");
 const { sendMessageToLead } = require("../services/messaging");
 
 const router = express.Router();
@@ -39,6 +43,12 @@ function csvEscape(value) {
   const str = value === null || value === undefined ? "" : String(value);
   if (/[",\n\r]/.test(str)) return `"${str.replace(/"/g, '""')}"`;
   return str;
+}
+
+/** Lo minimo para avisar y abrir el otro lead, sin mandar sus datos completos. */
+async function listDuplicates(contact) {
+  const leads = await listLeads({ includeArchived: true });
+  return findDuplicates(contact, leads).map(({ id, name, stage, archivedAt }) => ({ id, name, stage, archivedAt }));
 }
 
 router.get(
@@ -87,6 +97,20 @@ router.get(
   })
 );
 
+// Antes que /leads/:id, por el mismo motivo que /leads/export.
+router.get(
+  "/leads/duplicates",
+  asyncHandler(async (req, res) => {
+    const { phone, email } = req.query;
+    res.json({
+      duplicates: await listDuplicates({
+        phone: typeof phone === "string" ? phone : null,
+        email: typeof email === "string" ? email : null,
+      }),
+    });
+  })
+);
+
 router.get(
   "/leads/:id",
   asyncHandler(async (req, res) => {
@@ -97,8 +121,13 @@ router.get(
       listActivities(req.params.id),
       listTasks(req.params.id),
     ]);
+    // Es solo un aviso: si la busqueda falla, la ficha se abre igual.
+    const duplicates = await listDuplicates(lead).catch((err) => {
+      console.error(`[crm/leads] no se pudieron buscar duplicados de ${lead.id}:`, err.message);
+      return [];
+    });
 
-    return res.json({ lead, activities, tasks });
+    return res.json({ lead, activities, tasks, duplicates });
   })
 );
 
@@ -109,10 +138,18 @@ router.patch(
     let lead = await getLead(req.params.id);
     if (!lead) return res.status(404).json({ error: "Lead not found" });
 
+    // Se valida antes de escribir: un dato invalido no debe dejar la etapa ya movida.
+    const { patch, error } = parseContactPatch(body);
+    if (error) return res.status(400).json({ error });
+    if (Object.keys(patch).length > 0) {
+      lead = (await updateLeadContact(req.params.id, patch)) || lead;
+    }
+
     // El orden importa: primero la etapa (dispara CAPI y reglas) y despues las
     // notas, como en la version original.
     if (typeof body.stage === "string") {
-      lead = (await changeLeadStage(req.params.id, body.stage)) || lead;
+      const options = body.stage === "scheduled" && lead.stage !== "scheduled" ? await scheduledTaskOptions(lead) : undefined;
+      lead = (await changeLeadStage(req.params.id, body.stage, options)) || lead;
     }
     if (typeof body.notes === "string") {
       lead = (await updateLeadNotes(req.params.id, body.notes)) || lead;
@@ -138,6 +175,23 @@ for (const [action, archived] of [["archive", true], ["restore", false]]) {
     })
   );
 }
+
+// Los de Facebook no se borran: el siguiente sync los recrearia y mandaria otro
+// "New" real a Meta. Para esos esta archivar.
+router.delete(
+  "/leads/:id",
+  requireAdmin,
+  asyncHandler(async (req, res) => {
+    const lead = await getLead(req.params.id);
+    if (!lead) return res.status(404).json({ error: "Lead not found" });
+    if (lead.source === "facebook" || lead.fbLeadgenId) {
+      return res.status(409).json({ error: "Facebook leads cannot be deleted. Archive it instead." });
+    }
+
+    await deleteLead(lead, req.user.name);
+    return res.json({ ok: true });
+  })
+);
 
 router.post(
   "/leads/:id/send",
